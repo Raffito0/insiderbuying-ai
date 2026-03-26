@@ -25,8 +25,8 @@ export default function MethodologyPage() {
     <div className="bg-[#fcf9f8]">
 
       {/* ═══ SECTION 1: HEADER ═══ */}
-      <section className="bg-[#f6f3f2] pt-[80px] pb-[80px] md:pt-[128px] md:pb-[128px] px-[20px] md:px-[32px] lg:pl-[90px]">
-        <div className="max-w-[768px]">
+      <section className="bg-[#f6f3f2] pt-[80px] pb-[80px] md:pt-[128px] md:pb-[128px] px-[20px] md:px-[32px] lg:px-[90px]">
+        <div className="max-w-[1100px] mx-auto">
           <p className="text-[12px] font-normal leading-[18px] text-[#757688] mb-[16px]">TRANSPARENCY</p>
           <h1 className="font-[var(--font-montaga)] text-[39px] md:text-[60px] font-normal leading-[1.1] md:leading-[60px] text-[#1c1b1b] mb-[16px]">
             How We Analyze
