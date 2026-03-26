@@ -16,6 +16,16 @@ const RELATED = [
   "Rare Earth Semiconductors and Allocation",
 ];
 
+export function generateStaticParams() {
+  return [
+    { slug: "great-repricing-yield-curve" },
+    { slug: "energy-giants-accumulation" },
+    { slug: "tech-insiders-commodities" },
+    { slug: "aristocrat-play-dividend" },
+    { slug: "semiconductor-forecast" },
+  ];
+}
+
 export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
   await params;
 
