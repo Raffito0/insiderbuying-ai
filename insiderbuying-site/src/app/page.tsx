@@ -133,7 +133,7 @@ export default function HomePage() {
       </section>
 
       {/* ═══ 3. HOW IT WORKS ═══ */}
-      <section className="w-full pt-[40px] px-[20px] md:px-[100px] pb-[64px] md:pb-[96px] bg-white">
+      <section id="how-it-works" className="w-full pt-[40px] px-[20px] md:px-[100px] pb-[64px] md:pb-[96px] bg-white">
         <div className="max-w-[1080px] mx-auto px-[32px]">
           <h2 className="font-[var(--font-montaga)] text-[39px] md:text-[48px] font-normal leading-[1.1] tracking-[0.5px] text-[#1c1b1b] text-center mb-[40px] md:mb-[80px]">How It Works</h2>
           <div className="flex flex-col md:flex-row justify-between gap-[40px] md:gap-[63px]">
