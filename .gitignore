@@ -1,0 +1,26 @@
+# Dependencies
+node_modules/
+__pycache__/
+
+# Next.js
+.next/
+out/
+tsconfig.tsbuildinfo
+next-env.d.ts
+
+# Environment
+.env
+.env.local
+.env*.local
+
+# Heavy assets (keep in local only)
+insiderbuying-site/figma/
+insiderbuying-site/figma-data.json
+insiderbuying-site/figma-pages-data.txt
+insiderbuying-site/CHAT LAST MESSAGES.md
+LAST MESSAGES OLD CHAT.md
+
+# Misc
+.DS_Store
+*.pyc
+.netlify/

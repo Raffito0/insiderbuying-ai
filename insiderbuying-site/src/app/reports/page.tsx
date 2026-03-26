@@ -1,0 +1,153 @@
+import Link from "next/link";
+
+const TABS = ["All Reports", "Single Stock", "Bundles", "Sector Analysis", "Dividend"];
+
+const FEATURED = {
+  title: "Magnificent 7 Report",
+  desc: "47 pages of deep-dive institutional analysis on the world\u2019s most influential technology leaders.",
+  features: ["AAPL, MSFT, GOOG, AMZN analysis", "Insider buying patterns", "Financial health scoring", "Portfolio allocation models"],
+  price: "$29.99",
+  oldPrice: "$89.93",
+};
+
+const CARDS = [
+  { ticker: "NVDA", label: "NVDA \u00b7 MONTAGA", title: "NVIDIA Deep Dive", pages: "25-page analysis", features: ["Insider buying history", "Financial breakdown", "Competitor analysis", "AI forecast model"], price: "$14.99" },
+  { ticker: "AAPL", label: "AAPL \u00b7 MONTAGA", title: "Apple Ecosystem Value", pages: "32-page analysis", features: ["Services revenue deep-dive", "Hardware cycle analysis", "Insider conviction score", "Valuation framework"], price: "$14.99" },
+  { ticker: "TSLA", label: "TSLA \u00b7 MONTAGA", title: "Tesla Full Self-Driving", pages: "28-page analysis", features: ["FSD revenue projections", "Energy business analysis", "Insider selling patterns", "Autonomous fleet model"], price: "$14.99" },
+  { ticker: "MSFT", label: "MSFT \u00b7 MONTAGA", title: "Microsoft Cloud Edge", pages: "30-page analysis", features: ["Azure growth decomposition", "AI Copilot monetization", "Enterprise moat analysis", "Insider accumulation data"], price: "$14.99" },
+  { ticker: "AMZN", label: "AMZN \u00b7 MONTAGA", title: "Amazon Logistics Alpha", pages: "24-page analysis", features: ["AWS margin analysis", "Logistics cost reduction", "Prime membership economics", "Insider transaction history"], price: "$14.99" },
+  { ticker: "S&P", label: "INDEX \u00b7 BUNDLE", title: "S&P 500 Sector Weights", pages: "50-page bundle", features: ["All 11 sectors analyzed", "Insider flow aggregation", "Conviction scoring model", "Allocation framework"], price: "$24.99", highlight: true },
+  { ticker: "AI", label: "SECTOR \u00b7 MONTAGA", title: "AI & Semi Sector Outlook", pages: "40-page analysis", features: ["Chip supply chain analysis", "Insider cluster detection", "Capex cycle forecasting", "Revenue growth modeling"], price: "$19.99" },
+  { ticker: "DIV", label: "DIVIDEND \u00b7 MONTAGA", title: "Dividend Kings 2026", pages: "35-page analysis", features: ["Top 30 dividend aristocrats", "Payout sustainability scoring", "Insider buying correlation", "Yield-growth framework"], price: "$19.99" },
+  { ticker: "HC", label: "TRENDS \u00b7 MONTAGA", title: "Healthcare Trends", pages: "26-page analysis", features: ["GLP-1 market dynamics", "Biotech insider activity", "Patent cliff analysis", "Demographic trend modeling"], price: "$14.99" },
+];
+
+const CHECK = <svg className="w-[11px] h-[8px] shrink-0" viewBox="0 0 11 8"><path d="M1 4l3 3L10 1" stroke="#006d34" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round"/></svg>;
+
+export default function ReportsPage() {
+  return (
+    <div className="bg-[#fcf9f8]">
+
+      {/* ═══ SECTION 1: HEADER ═══ */}
+      <section className="bg-[#f6f3f2] px-[20px] md:px-[48px] flex items-center min-h-[280px] md:min-h-[360px]">
+        <div className="max-w-[1184px] mx-auto flex flex-col gap-[12px] md:gap-[15px] py-[64px] md:py-[80px]">
+          <p className="text-[12px] font-semibold leading-[18px] text-[#454556] uppercase tracking-wider">Research</p>
+          <h1 className="font-[var(--font-montaga)] text-[39px] md:text-[54px] font-normal leading-[1.1] md:leading-[52px] text-[#1c1b1b]">Deep Dive Reports</h1>
+          <p className="text-[16px] md:text-[18px] font-normal leading-[26px] md:leading-[29px] text-[#454556] max-w-[672px]">
+            Comprehensive stock analysis powered by SEC insider data and AI. One-time purchase, instant download.
+          </p>
+        </div>
+      </section>
+
+      {/* ═══ SECTION 2: FILTER TABS ═══ */}
+      <section className="bg-white pt-[24px] px-[20px] md:px-[48px] overflow-x-auto">
+        <div className="max-w-[1184px] mx-auto border-b border-[#c6c5d9]">
+          <div className="flex items-center gap-[24px] md:gap-[40px]">
+            {TABS.map((tab, i) => (
+              <button
+                key={tab}
+                className={`text-[13px] md:text-[14px] leading-[20px] pb-[16px] border-b-[1px] transition-colors whitespace-nowrap ${
+                  i === 0 ? "font-bold text-[#1a1a1a] border-[#000592]" : "font-normal text-[#454556] opacity-60 border-transparent"
+                }`}
+              >
+                {tab}
+              </button>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ═══ SECTION 3: FEATURED REPORT ═══ */}
+      <section className="pt-[48px] pb-[48px] md:pt-[80px] md:pb-[80px] px-[20px] md:px-[48px]">
+        <div className="max-w-[1184px] mx-auto relative">
+          <span className="absolute top-[16px] left-[16px] z-10 bg-[#00d26a] text-white text-[10px] font-black leading-[15px] px-[12px] py-[4px] rounded-[2px]">BEST VALUE</span>
+          <div className="bg-white rounded-[8px] border border-[#f0eded] flex flex-col md:flex-row gap-[24px] md:gap-[48px] p-[24px] md:p-[40px] items-center">
+            <div className="w-full md:w-[302px] h-[280px] md:h-[403px] bg-[#f0eded] rounded-[4px] shrink-0" />
+            <div className="flex flex-col justify-center flex-1">
+              <p className="text-[11px] font-medium leading-[15px] text-[#454556] uppercase tracking-wider mb-[12px] md:mb-[16px]">BUNDLE &middot; 7 STOCKS</p>
+              <h2 className="font-[var(--font-montaga)] text-[28px] md:text-[32px] font-normal leading-[1.2] md:leading-[36px] text-[#1c1b1b] mb-[12px]">{FEATURED.title}</h2>
+              <p className="text-[16px] md:text-[18px] font-normal leading-[26px] md:leading-[28px] text-[#454556] mb-[24px] md:mb-[32px]">{FEATURED.desc}</p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-[24px] gap-y-[12px] mb-[28px] md:mb-[40px]">
+                {FEATURED.features.map((f) => (
+                  <div key={f} className="flex items-center gap-[12px]">
+                    {CHECK}
+                    <span className="text-[14px] font-normal leading-[20px] text-[#1c1b1b]">{f}</span>
+                  </div>
+                ))}
+              </div>
+              <div className="flex items-baseline gap-[16px] mb-[24px] md:mb-[32px]">
+                <span className="font-[var(--font-montaga)] text-[32px] md:text-[36px] font-normal leading-[40px] text-[#1c1b1b]">{FEATURED.price}</span>
+                <span className="text-[16px] font-normal leading-[24px] text-[#757688] line-through">{FEATURED.oldPrice}</span>
+              </div>
+              <Link href="/signup" className="inline-flex items-center justify-center w-full sm:w-[233px] h-[52px] bg-[#080f99] text-white text-[14px] font-medium leading-[20px] hover:bg-[#000592] transition-colors">
+                Download Report
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══ SECTION 4: REPORT GRID ═══ */}
+      <section className="pb-[64px] md:pb-[96px] px-[20px] md:px-[48px]">
+        <div className="max-w-[1184px] mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-[20px] md:gap-[24px]">
+          {CARDS.map((card) => (
+            <div key={card.ticker} className="bg-white rounded-[4px] shadow-[0px_1px_3px_rgba(0,0,0,0.06)] p-[24px] md:p-[32px] flex flex-col relative">
+              <div className="flex items-center justify-between mb-[16px]">
+                <div className={`w-[44px] h-[44px] md:w-[48px] md:h-[48px] rounded-[2px] flex items-center justify-center text-[12px] font-bold ${
+                  card.highlight ? "bg-[#000592] text-white" : "bg-[#f0eded] text-[#454556] opacity-70"
+                }`}>
+                  {card.ticker.slice(0, 2)}
+                </div>
+                <span className="text-[11px] font-medium leading-[16px] text-[#454556]">{card.label}</span>
+              </div>
+              <h3 className="font-[var(--font-montaga)] text-[22px] md:text-[24px] font-normal leading-[28px] text-[#1c1b1b] mb-[4px]">{card.title}</h3>
+              <p className="text-[12px] font-normal leading-[16px] text-[#454556] mb-[20px]">{card.pages}</p>
+              <div className="flex flex-col gap-[12px] mb-[24px] flex-1">
+                {card.features.map((f) => (
+                  <div key={f} className="flex items-center gap-[8px]">
+                    {CHECK}
+                    <span className="text-[12px] font-normal leading-[16px] text-[#454556]">{f}</span>
+                  </div>
+                ))}
+              </div>
+              <div className="flex items-center justify-between pt-[24px] border-t border-[#f0eded]">
+                <span className="font-[var(--font-montaga)] text-[22px] md:text-[24px] font-bold leading-[32px] text-[#1c1b1b]">{card.price}</span>
+                <Link
+                  href="/signup"
+                  className={`h-[34px] px-[16px] flex items-center justify-center rounded-[4px] text-[12px] font-bold leading-[16px] transition-colors ${
+                    card.highlight
+                      ? "bg-[#000592] text-white border border-[#000592]"
+                      : "border border-[#000592] text-[#000592] hover:bg-[#000592] hover:text-white"
+                  }`}
+                >
+                  Download
+                </Link>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ═══ SECTION 5: CUSTOM REPORT CTA ═══ */}
+      <section className="bg-white pt-[48px] pb-[48px] md:pt-[60px] md:pb-[60px] px-[20px] md:px-[32px] lg:px-[304px]">
+        <div className="max-w-[672px] mx-auto text-center">
+          <h2 className="font-[var(--font-montaga)] text-[30px] md:text-[40px] font-normal leading-[1.2] md:leading-[42px] text-[#1c1b1b] mb-[16px]">
+            Need a Custom Report?
+          </h2>
+          <p className="text-[15px] md:text-[16px] font-normal leading-[24px] md:leading-[26px] text-[#454556] mb-[16px]">
+            Request analysis on any publicly traded company. Delivered within 24 hours by our institutional research desk.
+          </p>
+          <div className="flex flex-col items-center gap-[16px] pt-[16px]">
+            <Link
+              href="mailto:research@insiderbuying.ai"
+              className="inline-flex items-center justify-center h-[54px] px-[32px] md:px-[40px] border border-[#000592] text-[14px] font-medium leading-[20px] text-[#000592] hover:bg-[#000592] hover:text-white transition-colors w-full sm:w-auto"
+            >
+              Request Custom Report
+            </Link>
+            <p className="text-[14px] font-normal leading-[20px] text-[#454556] opacity-60">Starting at $29.99</p>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}

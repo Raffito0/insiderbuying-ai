@@ -1,0 +1,372 @@
+{
+  "checked_at": "2026-03-24T00:52:29.362606",
+  "results": {
+    "available": [],
+    "possibly_available": [
+      "clawry.ai",
+      "skiply.com",
+      "agntio.com",
+      "agntio.ai",
+      "skillra.ai",
+      "clawtap.com",
+      "tapskill.ai",
+      "skillap.ai",
+      "shipagent.com",
+      "rawskill.ai",
+      "hotskill.ai",
+      "coldskill.ai",
+      "deepclaw.ai",
+      "hypeclaw.ai"
+    ],
+    "taken": [
+      "clawry.com",
+      "skillix.com",
+      "skillix.ai",
+      "agntly.com",
+      "agntly.ai",
+      "clawly.com",
+      "clawly.ai",
+      "skillry.com",
+      "skillry.ai",
+      "clawio.com",
+      "clawio.ai",
+      "skiply.ai",
+      "clawra.com",
+      "clawra.ai",
+      "skillra.com",
+      "zenclaw.com",
+      "zenclaw.ai",
+      "clawtap.ai",
+      "tapskill.com",
+      "skillap.com",
+      "clawrun.com",
+      "clawrun.ai",
+      "runagent.com",
+      "runagent.ai",
+      "shipagent.ai",
+      "agentship.com",
+      "agentship.ai",
+      "noclaw.com",
+      "noclaw.ai",
+      "superclaw.com",
+      "superclaw.ai",
+      "rawskill.com",
+      "rawclaw.com",
+      "rawclaw.ai",
+      "hotskill.com",
+      "coldskill.com",
+      "deepclaw.com",
+      "fastclaw.com",
+      "fastclaw.ai",
+      "megaclaw.com",
+      "megaclaw.ai",
+      "neoclaw.com",
+      "neoclaw.ai",
+      "hypeclaw.com",
+      "maxskill.com",
+      "maxskill.ai"
+    ]
+  },
+  "all_checks": [
+    {
+      "domain": "clawry.com",
+      "brand": "clawry",
+      "tld": ".com"
+    },
+    {
+      "domain": "clawry.ai",
+      "brand": "clawry",
+      "tld": ".ai"
+    },
+    {
+      "domain": "skillix.com",
+      "brand": "skillix",
+      "tld": ".com"
+    },
+    {
+      "domain": "skillix.ai",
+      "brand": "skillix",
+      "tld": ".ai"
+    },
+    {
+      "domain": "agntly.com",
+      "brand": "agntly",
+      "tld": ".com"
+    },
+    {
+      "domain": "agntly.ai",
+      "brand": "agntly",
+      "tld": ".ai"
+    },
+    {
+      "domain": "clawly.com",
+      "brand": "clawly",
+      "tld": ".com"
+    },
+    {
+      "domain": "clawly.ai",
+      "brand": "clawly",
+      "tld": ".ai"
+    },
+    {
+      "domain": "skillry.com",
+      "brand": "skillry",
+      "tld": ".com"
+    },
+    {
+      "domain": "skillry.ai",
+      "brand": "skillry",
+      "tld": ".ai"
+    },
+    {
+      "domain": "clawio.com",
+      "brand": "clawio",
+      "tld": ".com"
+    },
+    {
+      "domain": "clawio.ai",
+      "brand": "clawio",
+      "tld": ".ai"
+    },
+    {
+      "domain": "skiply.com",
+      "brand": "skiply",
+      "tld": ".com"
+    },
+    {
+      "domain": "skiply.ai",
+      "brand": "skiply",
+      "tld": ".ai"
+    },
+    {
+      "domain": "agntio.com",
+      "brand": "agntio",
+      "tld": ".com"
+    },
+    {
+      "domain": "agntio.ai",
+      "brand": "agntio",
+      "tld": ".ai"
+    },
+    {
+      "domain": "clawra.com",
+      "brand": "clawra",
+      "tld": ".com"
+    },
+    {
+      "domain": "clawra.ai",
+      "brand": "clawra",
+      "tld": ".ai"
+    },
+    {
+      "domain": "skillra.com",
+      "brand": "skillra",
+      "tld": ".com"
+    },
+    {
+      "domain": "skillra.ai",
+      "brand": "skillra",
+      "tld": ".ai"
+    },
+    {
+      "domain": "zenclaw.com",
+      "brand": "zenclaw",
+      "tld": ".com"
+    },
+    {
+      "domain": "zenclaw.ai",
+      "brand": "zenclaw",
+      "tld": ".ai"
+    },
+    {
+      "domain": "clawtap.com",
+      "brand": "clawtap",
+      "tld": ".com"
+    },
+    {
+      "domain": "clawtap.ai",
+      "brand": "clawtap",
+      "tld": ".ai"
+    },
+    {
+      "domain": "tapskill.com",
+      "brand": "tapskill",
+      "tld": ".com"
+    },
+    {
+      "domain": "tapskill.ai",
+      "brand": "tapskill",
+      "tld": ".ai"
+    },
+    {
+      "domain": "skillap.com",
+      "brand": "skillap",
+      "tld": ".com"
+    },
+    {
+      "domain": "skillap.ai",
+      "brand": "skillap",
+      "tld": ".ai"
+    },
+    {
+      "domain": "clawrun.com",
+      "brand": "clawrun",
+      "tld": ".com"
+    },
+    {
+      "domain": "clawrun.ai",
+      "brand": "clawrun",
+      "tld": ".ai"
+    },
+    {
+      "domain": "runagent.com",
+      "brand": "runagent",
+      "tld": ".com"
+    },
+    {
+      "domain": "runagent.ai",
+      "brand": "runagent",
+      "tld": ".ai"
+    },
+    {
+      "domain": "shipagent.com",
+      "brand": "shipagent",
+      "tld": ".com"
+    },
+    {
+      "domain": "shipagent.ai",
+      "brand": "shipagent",
+      "tld": ".ai"
+    },
+    {
+      "domain": "agentship.com",
+      "brand": "agentship",
+      "tld": ".com"
+    },
+    {
+      "domain": "agentship.ai",
+      "brand": "agentship",
+      "tld": ".ai"
+    },
+    {
+      "domain": "noclaw.com",
+      "brand": "noclaw",
+      "tld": ".com"
+    },
+    {
+      "domain": "noclaw.ai",
+      "brand": "noclaw",
+      "tld": ".ai"
+    },
+    {
+      "domain": "superclaw.com",
+      "brand": "superclaw",
+      "tld": ".com"
+    },
+    {
+      "domain": "superclaw.ai",
+      "brand": "superclaw",
+      "tld": ".ai"
+    },
+    {
+      "domain": "rawskill.com",
+      "brand": "rawskill",
+      "tld": ".com"
+    },
+    {
+      "domain": "rawskill.ai",
+      "brand": "rawskill",
+      "tld": ".ai"
+    },
+    {
+      "domain": "rawclaw.com",
+      "brand": "rawclaw",
+      "tld": ".com"
+    },
+    {
+      "domain": "rawclaw.ai",
+      "brand": "rawclaw",
+      "tld": ".ai"
+    },
+    {
+      "domain": "hotskill.com",
+      "brand": "hotskill",
+      "tld": ".com"
+    },
+    {
+      "domain": "hotskill.ai",
+      "brand": "hotskill",
+      "tld": ".ai"
+    },
+    {
+      "domain": "coldskill.com",
+      "brand": "coldskill",
+      "tld": ".com"
+    },
+    {
+      "domain": "coldskill.ai",
+      "brand": "coldskill",
+      "tld": ".ai"
+    },
+    {
+      "domain": "deepclaw.com",
+      "brand": "deepclaw",
+      "tld": ".com"
+    },
+    {
+      "domain": "deepclaw.ai",
+      "brand": "deepclaw",
+      "tld": ".ai"
+    },
+    {
+      "domain": "fastclaw.com",
+      "brand": "fastclaw",
+      "tld": ".com"
+    },
+    {
+      "domain": "fastclaw.ai",
+      "brand": "fastclaw",
+      "tld": ".ai"
+    },
+    {
+      "domain": "megaclaw.com",
+      "brand": "megaclaw",
+      "tld": ".com"
+    },
+    {
+      "domain": "megaclaw.ai",
+      "brand": "megaclaw",
+      "tld": ".ai"
+    },
+    {
+      "domain": "neoclaw.com",
+      "brand": "neoclaw",
+      "tld": ".com"
+    },
+    {
+      "domain": "neoclaw.ai",
+      "brand": "neoclaw",
+      "tld": ".ai"
+    },
+    {
+      "domain": "hypeclaw.com",
+      "brand": "hypeclaw",
+      "tld": ".com"
+    },
+    {
+      "domain": "hypeclaw.ai",
+      "brand": "hypeclaw",
+      "tld": ".ai"
+    },
+    {
+      "domain": "maxskill.com",
+      "brand": "maxskill",
+      "tld": ".com"
+    },
+    {
+      "domain": "maxskill.ai",
+      "brand": "maxskill",
+      "tld": ".ai"
+    }
+  ]
+}
