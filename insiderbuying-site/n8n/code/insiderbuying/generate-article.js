@@ -374,12 +374,29 @@ function ensureUniqueSlug(slug, existingSlugs) {
 // NocoDB helpers (for n8n Code node usage)
 // ---------------------------------------------------------------------------
 
+// Table name -> table ID mapping. Set via env vars or defaults.
+// NOCODB_BASE_URL should be: http://nocodb:8080/api/v1/db/data/noco/{BASE_ID}
+// Paths like /Keywords become /{TABLE_ID_KEYWORDS}
+function resolveTablePath(path, opts = {}) {
+  const tableMap = opts.tableMap || {};
+  // Replace /TableName with /tableId at the start of path
+  const match = path.match(/^\/([A-Za-z_]+)(.*)/);
+  if (match) {
+    const tableName = match[1];
+    const rest = match[2];
+    const tableId = tableMap[tableName];
+    if (tableId) return `/${tableId}${rest}`;
+  }
+  return path; // fallback: use path as-is
+}
+
 async function nocodbGet(path, token, opts = {}) {
   const { fetchFn, baseUrl } = opts;
   if (!fetchFn) throw new Error('fetchFn required');
 
-  const res = await fetchFn(`${baseUrl}${path}`, {
-    headers: { 'xc-auth': token },
+  const resolved = resolveTablePath(path, opts);
+  const res = await fetchFn(`${baseUrl}${resolved}`, {
+    headers: { 'xc-token': token },
   });
   if (!res.ok) return null;
   return res.json();
@@ -389,9 +406,10 @@ async function nocodbPost(path, data, token, opts = {}) {
   const { fetchFn, baseUrl } = opts;
   if (!fetchFn) throw new Error('fetchFn required');
 
-  const res = await fetchFn(`${baseUrl}${path}`, {
+  const resolved = resolveTablePath(path, opts);
+  const res = await fetchFn(`${baseUrl}${resolved}`, {
     method: 'POST',
-    headers: { 'xc-auth': token, 'Content-Type': 'application/json' },
+    headers: { 'xc-token': token, 'Content-Type': 'application/json' },
     body: JSON.stringify(data),
   });
   if (!res.ok) return null;
@@ -402,9 +420,10 @@ async function nocodbPatch(path, data, token, opts = {}) {
   const { fetchFn, baseUrl } = opts;
   if (!fetchFn) throw new Error('fetchFn required');
 
-  const res = await fetchFn(`${baseUrl}${path}`, {
+  const resolved = resolveTablePath(path, opts);
+  const res = await fetchFn(`${baseUrl}${resolved}`, {
     method: 'PATCH',
-    headers: { 'xc-auth': token, 'Content-Type': 'application/json' },
+    headers: { 'xc-token': token, 'Content-Type': 'application/json' },
     body: JSON.stringify(data),
   });
   if (!res.ok) return null;
@@ -643,6 +662,12 @@ async function generateArticle(input, helpers) {
     fetchFn,
     baseUrl: env.NOCODB_BASE_URL,
     token: env.NOCODB_API_TOKEN,
+    tableMap: {
+      Keywords: env.NOCODB_TABLE_KEYWORDS || 'Keywords',
+      Articles: env.NOCODB_TABLE_ARTICLES || 'Articles',
+      Financial_Cache: env.NOCODB_TABLE_CACHE || 'Financial_Cache',
+      Published_Images: env.NOCODB_TABLE_IMAGES || 'Published_Images',
+    },
   };
 
   // Step 1: Pick keyword

@@ -1,14 +1,14 @@
-# Stripe Setup — InsiderBuying.ai
+# Stripe Setup — EarlyInsider
 
 ## Steps (do in Stripe Dashboard)
 
 ### 1. Create Products + Prices
 
-**Product 1: InsiderBuying Pro**
+**Product 1: EarlyInsider Pro**
 - Monthly: $24.00/month, recurring, USD
 - Annual: $228.00/year ($19/month), recurring, USD
 
-**Product 2: InsiderBuying Premium**
+**Product 2: EarlyInsider Premium**
 - Monthly: $49.00/month, recurring, USD
 - Annual: $468.00/year ($39/month), recurring, USD
 
@@ -39,7 +39,7 @@ PREMIUM ($49/mo, $39/mo annual):
 **SUBSCRIBER_PREMIUM**: $25 off first month of Premium (first invoice only)
 
 ### 4. Create Webhook Endpoint
-- URL: `https://insiderbuying.ai/api/webhooks/stripe`
+- URL: `https://earlyinsider.com/api/webhooks/stripe`
 - Events:
   - `checkout.session.completed`
   - `customer.subscription.created`
@@ -51,7 +51,7 @@ PREMIUM ($49/mo, $39/mo annual):
 ### 5. Enable Customer Portal
 - Settings > Billing > Customer Portal
 - Allow: cancel subscription, update payment method
-- Branding: InsiderBuying.ai logo, navy #002A5E
+- Branding: EarlyInsider logo, navy #002A5E
 
 ### 6. Collect Keys
 ```

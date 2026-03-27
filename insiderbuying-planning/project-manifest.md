@@ -141,6 +141,17 @@ Automated finance blog + SaaS alert system. InsiderBuying.ai tracks SEC Form 4 i
 ## Architecture Change: NocoDB replaces Airtable
 **Decision made during 01-infrastructure planning**: Airtable's 1000 API calls/month limit is too restrictive with concurrent projects. NocoDB (self-hosted, PostgreSQL-backed) runs on the same VPS as n8n — zero cost, zero rate limits, localhost latency, ACID consistency. All references to "Airtable" in subsequent splits should be read as "NocoDB".
 
+## SEO Tool Stack (integrated 2026-03-27)
+Tools integrated across splits for maximum organic traffic from day 1:
+
+| Tool | Stars | Split | Purpose |
+|------|-------|-------|---------|
+| **next-seo** (garmeeh/next-seo) | 8.3k | 02-figma-site-pages | JSON-LD structured data (ArticleJsonLd, FAQPageJsonLd, etc.), OG tags, Twitter cards on every page |
+| **next-sitemap** (iamvishnusankar/next-sitemap) | 3.7k | 02-figma-site-pages | Auto sitemap generation with split files, Google News sitemap, dynamic server-side sitemap for articles |
+| **google-indexing-script** (goenning/google-indexing-script) | 7.6k | 03-dexter-content-engine | Bulk-submit new article URLs to Google Indexing API for < 48h indexation (vs weeks for new sites) |
+| **claude-seo** (AgriciDaniel/claude-seo) | 3.3k | 07-outreach-seo | 16 SEO sub-skills: site audits, schema validation, E-E-A-T scoring, GEO/AEO optimization for AI Overviews |
+| **SEO checklist** (marcobiedermann/search-engine-optimization) | 2.7k | 02-figma-site-pages | One-time validation checklist for article template (applied once, covers all future articles) |
+
 ## Total Estimated Hours: ~68-86 hours across 7 days
 
 ## Parallelization Strategy

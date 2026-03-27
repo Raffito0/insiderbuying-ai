@@ -118,9 +118,35 @@ Build 3 n8n workflows for link building outreach (W10 prospect finder, W11 email
 - Monitor deliverability (check for bounces in Outreach_Log)
 
 ## Google Search Console Setup
-- Verify insiderbuying.ai property in GSC
+- Verify earlyinsider.com property in GSC
 - Generate API credentials (service account or OAuth)
 - Store credentials securely in n8n
+
+## claude-seo Integration (AgriciDaniel/claude-seo, 3.3k stars)
+
+**Purpose**: Ongoing automated SEO quality monitoring. 16 sub-skills for site audits, schema validation, E-E-A-T scoring, and AI search optimization (GEO/AEO for Google AI Overviews, ChatGPT Search, Perplexity).
+
+**Install**: Clone repo into Claude Code skills directory. Provides `/seo` command with sub-commands.
+
+**Recurring audit schedule** (run manually or via Claude Code scheduled tasks):
+- **Weekly**: `/seo audit earlyinsider.com` — full technical SEO audit (broken links, missing meta, schema errors, Core Web Vitals)
+- **After each article template change**: `/seo schema` — validate ArticleJsonLd, FAQPageJsonLd, and other structured data
+- **Monthly**: `/seo content-quality` — E-E-A-T audit across published articles (critical for finance/YMYL content)
+- **Monthly**: `/seo geo` — AI search optimization check (are our articles appearing in Google AI Overviews?)
+
+**Programmatic SEO quality gates** (integrate into W2 article pipeline):
+- claude-seo has built-in quality gates for content-at-scale detection
+- After W2 generates an article, run `/seo content-check` on the output
+- Flags: thin content, keyword stuffing, missing E-E-A-T signals, duplicate patterns
+- This prevents Google from seeing 3 articles/day as "AI spam farm"
+
+**GEO/AEO optimization** (Google AI Overviews, Perplexity, ChatGPT Search):
+- Finance queries increasingly show AI Overviews
+- claude-seo `/seo geo` analyzes how to structure content for AI citation
+- Key tactics: clear data tables, definitive statements with sources, FAQ sections, structured data
+- This is a competitive advantage — most finance blogs don't optimize for AI search yet
+
+**DataForSEO MCP integration**: claude-seo can connect to DataForSEO via MCP for live keyword data during audits. Same API key as W1.
 
 ## Technical Notes
 - Hunter.io free tier: 25 searches/month + 50 verifications. May need to rotate between Hunter/Snov/Apollo
@@ -147,3 +173,6 @@ Build 3 n8n workflows for link building outreach (W10 prospect finder, W11 email
 - [ ] W14 detects 5+ position changes and sends Telegram alerts
 - [ ] W14 weekly summary is accurate and actionable
 - [ ] All email sending respects warmup schedule (5/day first 2 weeks, then 10/day)
+- [ ] claude-seo installed and `/seo audit earlyinsider.com` runs successfully
+- [ ] claude-seo schema validation passes for all page types (Article, FAQ, WebPage, Product)
+- [ ] claude-seo E-E-A-T audit on 10 sample articles scores acceptable for YMYL finance content

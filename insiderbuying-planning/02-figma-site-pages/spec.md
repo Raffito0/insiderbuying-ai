@@ -118,6 +118,45 @@ Build all missing site pages pixel-perfect from the Figma design file. 11 pages 
 - Permanent URL — updated monthly with latest report (W16)
 - After submit: thank you + PDF download link (from R2)
 
+## SEO Foundation (site-wide, installed here because this split owns the Next.js app)
+
+### next-seo (garmeeh/next-seo, 8.3k stars)
+- `npm install next-seo`
+- Global `<DefaultSeo>` in `layout.tsx` — site-wide OG tags, Twitter cards, site name, default image
+- Per-page `<NextSeo>` overrides for title, description, canonical URL
+- `<ArticleJsonLd>` on `/blog/[slug]` — author, datePublished, dateModified, publisher, images
+- `<FAQPageJsonLd>` on `/faq`
+- `<WebPageJsonLd>` on `/about`, `/methodology`
+- `<ProductJsonLd>` on `/pricing` for Pro subscription
+- This replaces manual `<Head>` meta tag management across all pages
+
+### next-sitemap (iamvishnusankar/next-sitemap, 3.7k stars)
+- `npm install next-sitemap`
+- `next-sitemap.config.js` at project root:
+  - `siteUrl: 'https://earlyinsider.com'`
+  - `changefreq: 'daily'` for article pages, `'weekly'` for static pages
+  - `priority: 1.0` for homepage, `0.8` for articles, `0.6` for static
+  - `generateRobotsTxt: true` (replaces manual `robots.txt`)
+  - Auto-splits sitemap at 5000 URLs (critical as articles grow)
+  - Google News sitemap support (finance articles qualify)
+- `getServerSideSitemap` for dynamic `/blog/[slug]` routes (queries article DB at request time)
+- Add `postbuild` script: `"postbuild": "next-sitemap"` in `package.json`
+- Netlify build command: `npm run build && npm run postbuild`
+
+### SEO Checklist Validation (marcobiedermann/search-engine-optimization, 2.7k stars)
+One-time checklist applied to the article template during build:
+- [ ] Proper `<title>` (55-65 chars, keyword in first half)
+- [ ] Meta description (140-155 chars)
+- [ ] Canonical URL on every page
+- [ ] Open Graph: og:title, og:description, og:image, og:url, og:type
+- [ ] Twitter Card: twitter:card=summary_large_image
+- [ ] Heading hierarchy: single H1, H2/H3 structure
+- [ ] Image alt text on all images
+- [ ] Schema markup (Article, FAQ, WebPage as appropriate)
+- [ ] Internal links (handled by W13 cross-linking)
+- [ ] Mobile-friendly (responsive, no horizontal scroll)
+- [ ] Core Web Vitals: LCP < 2.5s, FID < 100ms, CLS < 0.1
+
 ## Technical Approach
 - All pages use Figma API extraction for exact specs (spacing, typography, colors)
 - Server components by default, client components only where interactivity needed

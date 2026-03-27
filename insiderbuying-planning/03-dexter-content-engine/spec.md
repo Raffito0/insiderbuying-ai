@@ -102,6 +102,7 @@ Build the complete content generation pipeline: Dexter pre-research agent + 4 n8
 13. **Update keyword status** — set keyword status='used'
 14. **Trigger Netlify rebuild** — webhook to rebuild site with new article
 15. **Trigger W7** — X auto-post for new article
+16. **Google Indexing API submit** — call google-indexing-script to bulk-submit the new article URL for instant indexation (< 48h vs weeks for new sites)
 
 **Cost per article**: ~$0.03-0.08 (Claude) + ~$0.01-0.05 (Dexter APIs) = ~$0.04-0.13/article
 
@@ -155,6 +156,28 @@ All workflow logic in `n8n/code/insiderbuying/`:
 - `generate-image.js` — W12 Nano Banana + Puppeteer OG
 - `cross-link.js` — W13 related article finder + link inserter
 
+## Instant Indexation (google-indexing-script, goenning/google-indexing-script, 7.6k stars)
+
+**Purpose**: New sites take weeks to get pages crawled. With 3 articles/day, we need Google to discover and index new URLs within 48h, not 2-3 weeks.
+
+**Integration in W2 post-publish step (step 16)**:
+1. After Netlify rebuild webhook fires, wait 60s for deploy to complete
+2. Call Google Indexing API via n8n Code node:
+   - Endpoint: `POST https://indexing.googleapis.com/v3/urlNotifications:publish`
+   - Body: `{ "url": "https://earlyinsider.com/blog/{slug}", "type": "URL_UPDATED" }`
+   - Auth: Google Service Account with Indexing API enabled
+3. Also submit sitemap URL to Search Console API after each batch of articles
+
+**Setup requirements**:
+- Google Cloud Console: enable "Indexing API"
+- Service account with JSON key → store in n8n credentials
+- Add service account email as Owner in Google Search Console (earlyinsider.com property)
+- Rate limit: 200 requests/day (enough for 3 articles + re-submissions)
+
+**Alternative**: Run `npx google-indexing-script https://earlyinsider.com` as daily cron (reads sitemap, submits all new URLs). Can run from VPS via n8n Execute Command node.
+
+**Note**: Google Indexing API is officially for JobPosting/BroadcastEvent, but widely used for all page types (7.6k stars, no reported enforcement). Worst case: stops working, we fall back to normal sitemap-based discovery.
+
 ## Technical Notes
 - Financial Datasets API rate limits: check docs, implement exponential backoff
 - Claude Sonnet 4.6 API: use `claude-sonnet-4-6-20250514`, stream=false for JSON parsing
@@ -171,5 +194,6 @@ All workflow logic in `n8n/code/insiderbuying/`:
 - [ ] W2 articles contain zero banned phrases
 - [ ] W12 generates hero + OG images for each article
 - [ ] W13 adds cross-links to new + related articles
-- [ ] Full pipeline: keyword → Dexter → Claude → images → cross-links → Netlify rebuild runs end-to-end
+- [ ] Full pipeline: keyword → Dexter → Claude → images → cross-links → Netlify rebuild → Google Indexing submit runs end-to-end
+- [ ] Google Indexing API submits new article URL after each publish (verify in GSC)
 - [ ] 3 articles/day schedule works without overlap or race conditions

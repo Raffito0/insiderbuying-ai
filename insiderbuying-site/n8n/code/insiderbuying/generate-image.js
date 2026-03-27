@@ -345,7 +345,7 @@ async function generateImages(input, helpers) {
 
   // Step 1: Fetch article
   const articleRes = await fetchFn(`${nocodbOpts.baseUrl}/Articles/${article_id}`, {
-    headers: { 'xc-auth': nocodbOpts.token },
+    headers: { 'xc-token': nocodbOpts.token },
   });
   if (!articleRes.ok) {
     return { success: false, error: 'Article not found' };
@@ -412,7 +412,7 @@ async function generateImages(input, helpers) {
   // PATCH article with image URLs
   await fetchFn(`${nocodbOpts.baseUrl}/Articles/${article_id}`, {
     method: 'PATCH',
-    headers: { 'xc-auth': nocodbOpts.token, 'Content-Type': 'application/json' },
+    headers: { 'xc-token': nocodbOpts.token, 'Content-Type': 'application/json' },
     body: JSON.stringify({
       hero_image_url: heroUrl,
       og_image_url: ogUrl,
@@ -423,7 +423,7 @@ async function generateImages(input, helpers) {
   if (heroUrl) {
     await fetchFn(`${nocodbOpts.baseUrl}/Published_Images`, {
       method: 'POST',
-      headers: { 'xc-auth': nocodbOpts.token, 'Content-Type': 'application/json' },
+      headers: { 'xc-token': nocodbOpts.token, 'Content-Type': 'application/json' },
       body: JSON.stringify({
         article_id,
         image_type: 'hero',
@@ -436,7 +436,7 @@ async function generateImages(input, helpers) {
   if (ogUrl) {
     await fetchFn(`${nocodbOpts.baseUrl}/Published_Images`, {
       method: 'POST',
-      headers: { 'xc-auth': nocodbOpts.token, 'Content-Type': 'application/json' },
+      headers: { 'xc-token': nocodbOpts.token, 'Content-Type': 'application/json' },
       body: JSON.stringify({
         article_id,
         image_type: 'og',

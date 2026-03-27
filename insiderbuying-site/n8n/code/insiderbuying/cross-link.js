@@ -9,7 +9,13 @@
 
 'use strict';
 
-const cheerio = require('cheerio');
+// Try standard path first (local dev), then n8n persistent volume path
+let cheerio;
+try {
+  cheerio = require('cheerio');
+} catch {
+  cheerio = require('/home/node/.n8n/node_modules/cheerio');
+}
 
 // ---------------------------------------------------------------------------
 // Constants
@@ -229,7 +235,7 @@ async function crossLink(input, helpers) {
 
   const baseUrl = env.NOCODB_BASE_URL;
   const token = env.NOCODB_API_TOKEN;
-  const headers = { 'xc-auth': token };
+  const headers = { 'xc-token': token };
 
   // Step 1: Fetch new article
   const articleRes = await fetchFn(`${baseUrl}/Articles/${article_id}`, { headers });
