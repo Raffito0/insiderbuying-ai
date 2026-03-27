@@ -60,27 +60,27 @@ export default function FreeReportPage() {
   }
 
   return (
-    <div className="bg-[#fcf9f8]">
+    <div className="bg-[var(--color-bg-alt)]">
 
       {/* ═══ SECTION 1: HERO ═══ */}
-      <section className="bg-white pt-[64px] pb-[64px] md:pt-[96px] md:pb-[96px] px-[20px] md:px-[32px]">
+      <section className="bg-white pt-[var(--section-y-mobile)] pb-[var(--section-y-mobile)] md:pt-[var(--section-y)] md:pb-[var(--section-y)] px-[20px] md:px-[32px]">
         <div className="max-w-[1216px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-[40px] lg:gap-[64px] items-start">
 
           {/* Left — Text content */}
-          <div className="flex flex-col gap-[32px] max-w-[576px]">
-            <p className="text-[14px] font-bold leading-[20px] text-[#006d34] font-[var(--font-mono)]">FREE RESEARCH</p>
-            <h1 className="font-[var(--font-montaga)] text-[39px] md:text-[54px] font-normal leading-[1.1] md:leading-[60px] text-[#1c1b1b]">
+          <div className="flex flex-col gap-[var(--gap-cards)] max-w-[576px]">
+            <p className="text-[14px] font-bold leading-[20px] text-[var(--color-signal-green)] font-[var(--font-mono)]">FREE RESEARCH</p>
+            <h1 className="font-[var(--font-montaga)] text-[39px] md:text-[54px] font-normal leading-[1.1] md:leading-[60px] text-[var(--color-text)]">
               EarlyInsider<br />Backtest Report
             </h1>
-            <p className="text-[18px] font-normal leading-[28px] text-[#000ad2]">Updated March 2026</p>
-            <p className="text-[18px] font-normal leading-[29px] text-[#454556]">
+            <p className="text-[18px] font-normal leading-[28px] text-[var(--color-primary)]">Updated March 2026</p>
+            <p className="text-[18px] font-normal leading-[29px] text-[var(--color-text-secondary)]">
               Our proprietary analysis of over 50,000 SEC Form 4 filings reveals the specific CEO purchase patterns that historically precede significant market outperformance.
             </p>
             <ul className="flex flex-col gap-[16px]">
               {FEATURES.map((f) => (
                 <li key={f} className="flex items-center gap-[12px]">
                   <svg className="w-[20px] h-[20px] shrink-0" viewBox="0 0 20 20" fill="#006d34"><circle cx="10" cy="10" r="10"/><path d="M6 10l3 3 5-5" stroke="white" strokeWidth="2" fill="none"/></svg>
-                  <span className="text-[16px] font-medium leading-[24px] text-[#1c1b1b]">{f}</span>
+                  <span className="text-[16px] font-medium leading-[24px] text-[var(--color-text)]">{f}</span>
                 </li>
               ))}
             </ul>
@@ -88,23 +88,23 @@ export default function FreeReportPage() {
 
           {/* Right — Report preview card */}
           <div className="flex flex-col items-center gap-[-11px]">
-            <div className="w-full max-w-[478px] bg-white rounded-[2px] border border-[#000592] shadow-[0px_4px_24px_rgba(0,0,0,0.08)] p-[16px]">
+            <div className="w-full max-w-[478px] bg-white rounded-[2px] border border-[var(--color-primary)] shadow-[0px_4px_24px_rgba(0,0,0,0.08)] p-[16px]">
               {/* Report mockup interior */}
-              <div className="flex flex-col gap-[24px] p-[16px]">
+              <div className="flex flex-col gap-[var(--gap-items)] p-[16px]">
                 {/* Top bar */}
                 <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-bold font-[var(--font-mono)] text-[#000592] uppercase tracking-wider">EarlyInsider</span>
-                  <span className="text-[10px] font-normal text-[#757688]">March 2026</span>
+                  <span className="text-[10px] font-bold font-[var(--font-mono)] text-[var(--color-primary)] uppercase tracking-wider">EarlyInsider</span>
+                  <span className="text-[10px] font-normal text-[var(--color-text-muted)]">March 2026</span>
                 </div>
                 {/* Title */}
                 <div className="pt-[32px]">
-                  <h2 className="font-[var(--font-montaga)] text-[28px] font-normal leading-[32px] text-[#1c1b1b]">
+                  <h2 className="font-[var(--font-montaga)] text-[28px] font-normal leading-[32px] text-[var(--color-text)]">
                     The Insider Alpha<br />Strategy
                   </h2>
                 </div>
                 <div className="w-[48px] h-[6px] bg-[#006d34] rounded-full" />
                 {/* Description */}
-                <p className="text-[13px] font-normal leading-[20px] text-[#454556]">
+                <p className="text-[13px] font-normal leading-[20px] text-[var(--color-text-secondary)]">
                   Proprietary backtest analysis of 50,000+ SEC Form 4 filings. CEO buying signals vs S&P 500 benchmark.
                 </p>
               </div>
@@ -112,23 +112,23 @@ export default function FreeReportPage() {
               <div className="bg-white p-[8px] mt-[16px]">
                 <div className="flex items-end justify-center gap-[8px] h-[117px]">
                   {[40, 65, 30, 55, 75, 45, 60, 35, 70, 50].map((h, i) => (
-                    <div key={i} className="w-[28px] bg-[#000592] rounded-t-[2px]" style={{ height: `${h}px` }} />
+                    <div key={i} className="w-[28px] bg-[var(--color-primary)] rounded-t-[2px]" style={{ height: `${h}px` }} />
                   ))}
                 </div>
               </div>
               {/* Footer stats */}
-              <div className="flex items-center justify-between pt-[16px] mt-[16px] border-t border-[#f0eded]">
+              <div className="flex items-center justify-between pt-[16px] mt-[16px] border-t border-[var(--color-border-light)]">
                 <div>
-                  <p className="text-[18px] font-bold leading-[24px] text-[#006d34] font-[var(--font-mono)]">+23.4%</p>
-                  <p className="text-[10px] font-normal leading-[14px] text-[#757688]">Avg. Signal Return</p>
+                  <p className="text-[18px] font-bold leading-[24px] text-[var(--color-signal-green)] font-[var(--font-mono)]">+23.4%</p>
+                  <p className="text-[10px] font-normal leading-[14px] text-[var(--color-text-muted)]">Avg. Signal Return</p>
                 </div>
                 <div className="text-right">
-                  <p className="text-[18px] font-bold leading-[24px] text-[#1c1b1b] font-[var(--font-mono)]">68%</p>
-                  <p className="text-[10px] font-normal leading-[14px] text-[#757688]">Win Rate (12mo)</p>
+                  <p className="text-[18px] font-bold leading-[24px] text-[var(--color-text)] font-[var(--font-mono)]">68%</p>
+                  <p className="text-[10px] font-normal leading-[14px] text-[var(--color-text-muted)]">Win Rate (12mo)</p>
                 </div>
               </div>
             </div>
-            <p className="text-[14px] font-light leading-[16px] text-[#454556] text-center pt-[48px]">
+            <p className="text-[14px] font-light leading-[16px] text-[var(--color-text-secondary)] text-center pt-[48px]">
               12-14 pages &middot; Updated monthly &middot; Free forever
             </p>
           </div>
@@ -136,22 +136,22 @@ export default function FreeReportPage() {
       </section>
 
       {/* ═══ SECTION 2: EMAIL CAPTURE ═══ */}
-      <section className="bg-[#f6f3f2] pt-[64px] pb-[64px] md:pt-[96px] md:pb-[96px] px-[20px] md:px-[32px] lg:px-[390px]">
+      <section className="bg-[var(--color-bg-alt)] pt-[var(--section-y-mobile)] pb-[var(--section-y-mobile)] md:pt-[var(--section-y)] md:pb-[var(--section-y)] px-[20px] md:px-[32px]">
         <div className="max-w-[500px] mx-auto text-center">
           {submitted ? (
             <div className="py-[32px]">
-              <div className="w-[56px] h-[56px] rounded-full bg-[#006d34]/10 flex items-center justify-center mx-auto mb-[16px]">
+              <div className="w-[56px] h-[56px] rounded-full bg-[#006d34]/10 flex items-center justify-center mx-auto mb-[var(--gap-tight)]">
                 <svg className="w-[24px] h-[24px]" viewBox="0 0 24 24" fill="#006d34"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
               </div>
-              <h2 className="font-[var(--font-montaga)] text-[42px] font-normal leading-[36px] text-[#1c1b1b] mb-[12px]">Check your email!</h2>
-              <p className="text-[16px] font-normal leading-[24px] text-[#454556]">We sent the report to <strong>{email}</strong></p>
+              <h2 className="font-[var(--font-montaga)] text-[var(--text-title)] font-normal leading-[36px] text-[var(--color-text)] mb-[12px]">Check your email!</h2>
+              <p className="text-[16px] font-normal leading-[24px] text-[var(--color-text-secondary)]">We sent the report to <strong>{email}</strong></p>
             </div>
           ) : (
             <>
-              <h2 className="font-[var(--font-montaga)] text-[42px] font-normal leading-[36px] text-[#1c1b1b] mb-[12px]">
+              <h2 className="font-[var(--font-montaga)] text-[var(--text-title)] font-normal leading-[36px] text-[var(--color-text)] mb-[12px]">
                 Get the Report
               </h2>
-              <p className="text-[16px] font-normal leading-[24px] text-[#454556] mb-[32px]">
+              <p className="text-[16px] font-normal leading-[24px] text-[var(--color-text-secondary)] mb-[32px]">
                 Enter your email and we&apos;ll send it instantly.
               </p>
               <form onSubmit={handleSubmit} className="flex flex-col gap-[16px]">
@@ -161,7 +161,7 @@ export default function FreeReportPage() {
                   onChange={(e) => setEmail(e.target.value)}
                   required
                   placeholder="institutional@firm.com"
-                  className="w-full h-[55px] px-[24px] bg-white text-[16px] font-normal leading-[19px] text-[#1c1b1b] placeholder:text-[#757688] focus:outline-none focus:ring-2 focus:ring-[#000592]"
+                  className="w-full h-[55px] px-[24px] bg-white text-[16px] font-normal leading-[19px] text-[var(--color-text)] placeholder:text-[var(--color-text-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]"
                 />
                 <button
                   type="submit"
@@ -173,7 +173,7 @@ export default function FreeReportPage() {
                 {error && (
                   <p className="text-[12px] font-normal leading-[15px] text-red-600">{error}</p>
                 )}
-                <p className="text-[12px] font-normal leading-[15px] text-[#757688]">
+                <p className="text-[12px] font-normal leading-[15px] text-[var(--color-text-muted)]">
                   By clicking download, you agree to our Terms of Service and Privacy Policy.
                 </p>
               </form>
@@ -183,17 +183,17 @@ export default function FreeReportPage() {
       </section>
 
       {/* ═══ SECTION 3: WHAT YOU'LL LEARN ═══ */}
-      <section className="bg-[#fcf9f8] pt-[64px] pb-[64px] md:pt-[128px] md:pb-[128px] px-[20px] md:px-[32px] lg:px-[150px]">
+      <section className="bg-[var(--color-bg-alt)] pt-[var(--section-y-mobile)] pb-[var(--section-y-mobile)] md:pt-[var(--section-y-hero)] md:pb-[var(--section-y-hero)] px-[20px] md:px-[32px]">
         <div className="max-w-[980px] mx-auto">
-          <h2 className="font-[var(--font-montaga)] text-[32px] md:text-[42px] font-normal leading-[1.2] md:leading-[40px] text-[#1c1b1b] mb-[40px] md:mb-[80px]">
+          <h2 className="font-[var(--font-montaga)] text-[32px] md:text-[var(--text-title)] font-normal leading-[1.2] md:leading-[40px] text-[var(--color-text)] mb-[40px] md:mb-[80px]">
             What You&apos;ll Learn
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-[20px] md:gap-[32px]">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-[20px] md:gap-[var(--gap-cards)]">
             {CARDS.map((card) => (
-              <div key={card.title} className="bg-white rounded-[4px] border-[0px] border-black/0 p-[40px]">
-                <div className="w-full h-[28px] bg-[#000592] rounded-[2px] opacity-30 mb-[24px]" />
-                <h3 className="text-[20px] font-bold leading-[28px] text-[#1c1b1b] mb-[24px]">{card.title}</h3>
-                <p className="text-[16px] font-normal leading-[26px] text-[#454556]">{card.desc}</p>
+              <div key={card.title} className="bg-white border-[0px] border-black/0 p-[40px]">
+                <div className="w-full h-[28px] bg-[var(--color-primary)] rounded-[2px] opacity-30 mb-[24px]" />
+                <h3 className="text-[20px] font-bold leading-[28px] text-[var(--color-text)] mb-[24px]">{card.title}</h3>
+                <p className="text-[16px] font-normal leading-[26px] text-[var(--color-text-secondary)]">{card.desc}</p>
               </div>
             ))}
           </div>
@@ -201,19 +201,19 @@ export default function FreeReportPage() {
       </section>
 
       {/* ═══ SECTION 4: SOCIAL PROOF BAR ═══ */}
-      <section className="bg-white border-y border-[#f0eded] py-[48px] px-[32px]">
-        <p className="text-[12px] font-normal leading-[16px] text-[#757688] font-[var(--font-mono)] text-center">
+      <section className="bg-white border-y border-[var(--color-border-light)] py-[48px] px-[32px]">
+        <p className="text-[12px] font-normal leading-[16px] text-[var(--color-text-muted)] font-[var(--font-mono)] text-center">
           Powered by real SEC Form 4 data &middot; Updated monthly &middot; 100% free
         </p>
       </section>
 
       {/* ═══ SECTION 5: FINAL CTA ═══ */}
-      <section className="bg-[#002a5e] pt-[64px] pb-[64px] md:pt-[96px] md:pb-[96px] px-[20px] md:px-[32px] lg:px-[192px] relative overflow-hidden">
+      <section className="bg-[var(--color-navy)] pt-[var(--section-y-mobile)] pb-[var(--section-y-mobile)] md:pt-[var(--section-y)] md:pb-[var(--section-y)] px-[20px] md:px-[32px] relative overflow-hidden">
         {/* Abstract bg */}
         <div className="absolute left-0 top-0 bottom-0 w-[426px] opacity-10 bg-gradient-to-r from-white/20 to-transparent" />
 
         <div className="relative max-w-[896px] mx-auto text-center">
-          <h2 className="font-[var(--font-montaga)] text-[30px] md:text-[42px] font-normal leading-[1.2] md:leading-[48px] text-white mb-[16px]">
+          <h2 className="font-[var(--font-montaga)] text-[30px] md:text-[var(--text-title)] font-normal leading-[1.2] md:leading-[48px] text-white mb-[var(--gap-tight)]">
             Don&apos;t invest blind.
           </h2>
           <p className="text-[16px] md:text-[20px] font-normal leading-[26px] md:leading-[28px] text-white mb-[32px] md:mb-[48px]">
@@ -229,12 +229,12 @@ export default function FreeReportPage() {
                 value={ctaEmail}
                 onChange={(e) => setCtaEmail(e.target.value)}
                 placeholder="Enter your email"
-                className="w-full sm:flex-1 sm:min-w-0 h-[52px] md:h-[56px] px-[20px] md:px-[24px] bg-white rounded-[4px] text-[16px] font-normal leading-[19px] text-[#1c1b1b] placeholder:text-[#757688]"
+                className="w-full sm:flex-1 sm:min-w-0 h-[52px] md:h-[56px] px-[20px] md:px-[24px] bg-white text-[16px] font-normal leading-[19px] text-[var(--color-text)] placeholder:text-[var(--color-text-muted)]"
               />
               <button
                 type="submit"
                 disabled={ctaLoading}
-                className="h-[52px] md:h-[56px] px-[28px] md:px-[40px] bg-[#006d34] rounded-[4px] text-[15px] md:text-[16px] font-bold leading-[24px] text-white hover:bg-[#005c28] transition-colors shrink-0 whitespace-nowrap disabled:opacity-50"
+                className="h-[52px] md:h-[56px] px-[28px] md:px-[40px] bg-[#006d34] text-[15px] md:text-[16px] font-bold leading-[24px] text-white hover:bg-[#005c28] transition-colors shrink-0 whitespace-nowrap disabled:opacity-50"
               >
                 {ctaLoading ? "Sending..." : "Access Report"}
               </button>

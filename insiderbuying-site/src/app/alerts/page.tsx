@@ -118,42 +118,42 @@ export default function AlertsPage() {
   }, []);
 
   return (
-    <div className="bg-[#fcf9f8] min-h-screen pb-[80px] md:pb-[64px]">
+    <div className="bg-[var(--color-bg-alt)] min-h-screen pb-[80px] md:pb-[64px]">
 
       {/* ═══ HEADER ═══ */}
-      <section className="bg-[#f6f3f2] pt-[40px] md:pt-[60px] pb-[32px] md:pb-[40px]">
+      <section className="bg-[var(--color-bg-alt)] pt-[40px] md:pt-[60px] pb-[32px] md:pb-[40px]">
         <div className="max-w-[1280px] mx-auto px-[20px] md:px-[32px] flex flex-col md:flex-row md:items-end md:justify-between gap-[16px]">
           <div>
-            <p className="text-[12px] font-semibold leading-[18px] text-[#757688] uppercase tracking-wider mb-[4px]">Real-Time Data</p>
-            <h1 className="font-[var(--font-montaga)] text-[32px] md:text-[42px] font-normal leading-[1.2] md:leading-[52px] text-[#1c1b1b] mb-[4px]">Live Insider Activity</h1>
-            <p className="text-[15px] md:text-[16px] font-normal leading-[24px] md:leading-[27px] text-[#454556] opacity-80">Every SEC Form 4 filing, analyzed by AI within 60 seconds.</p>
+            <p className="text-[12px] font-semibold leading-[18px] text-[var(--color-text-muted)] uppercase tracking-wider mb-[4px]">Real-Time Data</p>
+            <h1 className="font-[var(--font-montaga)] text-[32px] md:text-[var(--text-title)] font-normal leading-[1.2] md:leading-[52px] text-[var(--color-text)] mb-[4px]">Live Insider Activity</h1>
+            <p className="text-[15px] md:text-[16px] font-normal leading-[24px] md:leading-[27px] text-[var(--color-text-secondary)] opacity-80">Every SEC Form 4 filing, analyzed by AI within 60 seconds.</p>
           </div>
-          <div className="flex items-center gap-[12px] bg-white px-[16px] py-[8px] shadow-sm rounded-[4px] self-start md:self-auto">
+          <div className="flex items-center gap-[12px] bg-white px-[16px] py-[8px] shadow-sm self-start md:self-auto">
             <div className="relative w-[12px] h-[12px]">
-              <div className="absolute inset-0 bg-[#006d34] rounded-full opacity-75" />
-              <div className="absolute inset-[2px] bg-[#006d34] rounded-full" />
+              <div className="absolute inset-0 bg-[var(--color-signal-green)] rounded-full opacity-75" />
+              <div className="absolute inset-[2px] bg-[var(--color-signal-green)] rounded-full" />
             </div>
-            <span className="text-[12px] font-medium leading-[16px] text-[#006d34]">LIVE</span>
+            <span className="text-[12px] font-medium leading-[16px] text-[var(--color-signal-green)]">LIVE</span>
           </div>
         </div>
       </section>
 
       {/* ═══ FILTER BAR ═══ */}
-      <section className="bg-white border-b border-[#c6c5d9] sticky top-[82px] z-40 overflow-x-auto">
+      <section className="bg-white border-b border-[var(--color-border)] sticky top-[82px] z-40 overflow-x-auto">
         <div className="max-w-[1280px] mx-auto px-[16px] md:px-[32px] h-[56px] flex items-center gap-[12px] md:gap-[16px] min-w-max">
           <div className="flex items-center gap-[8px] pl-[8px] md:pl-[16px]">
             <svg className="w-[12px] h-[8px]" viewBox="0 0 12 8" fill="#757688"><path d="M0 0h12M2 4h8M4 8h4" stroke="#757688" strokeWidth="2"/></svg>
-            <span className="text-[13px] md:text-[14px] font-medium leading-[20px] text-[#757688]">Filters</span>
+            <span className="text-[13px] md:text-[14px] font-medium leading-[20px] text-[var(--color-text-muted)]">Filters</span>
           </div>
           {["All Roles","All Sectors","Min Amount","Time Range"].map((f) => (
-            <button key={f} className="h-[36px] px-[10px] md:px-[12px] flex items-center gap-[6px] md:gap-[8px] border border-[#c6c5d9] bg-white text-[13px] md:text-[14px] font-normal leading-[20px] text-[#1c1b1b] whitespace-nowrap">
+            <button key={f} className="h-[36px] px-[10px] md:px-[12px] flex items-center gap-[6px] md:gap-[8px] border border-[var(--color-border)] bg-white text-[13px] md:text-[14px] font-normal leading-[20px] text-[var(--color-text)] whitespace-nowrap">
               {f}
               <svg className="w-[8px] h-[4px]" viewBox="0 0 8 4" fill="none"><path d="M0 0l4 4 4-4" stroke="#6b7280" strokeWidth="1"/></svg>
             </button>
           ))}
           <div className="ml-auto flex items-center gap-[8px]">
-            <span className="text-[12px] font-normal leading-[16px] text-[#757688] hidden md:inline">Sort by:</span>
-            <button className="h-[36px] px-[10px] md:px-[12px] flex items-center gap-[6px] md:gap-[8px] border border-[#c6c5d9] bg-white text-[13px] md:text-[14px] font-medium leading-[20px] text-[#1c1b1b] whitespace-nowrap">
+            <span className="text-[12px] font-normal leading-[16px] text-[var(--color-text-muted)] hidden md:inline">Sort by:</span>
+            <button className="h-[36px] px-[10px] md:px-[12px] flex items-center gap-[6px] md:gap-[8px] border border-[var(--color-border)] bg-white text-[13px] md:text-[14px] font-medium leading-[20px] text-[var(--color-text)] whitespace-nowrap">
               Most Recent
               <svg className="w-[8px] h-[4px]" viewBox="0 0 8 4" fill="none"><path d="M0 0l4 4 4-4" stroke="#6b7280" strokeWidth="1"/></svg>
             </button>
@@ -168,21 +168,21 @@ export default function AlertsPage() {
           {/* ALERT FEED */}
           <div className="flex-1 max-w-[888px] flex flex-col gap-[16px] md:gap-[24px]">
             {isSampleData && (
-              <div className="bg-[#f0edf6] border border-[#c6c5d9] rounded-[8px] px-[16px] py-[10px] text-[13px] font-medium leading-[20px] text-[#454556] text-center">
+              <div className="bg-[#f0edf6] border border-[var(--color-border)] px-[16px] py-[10px] text-[13px] font-medium leading-[20px] text-[var(--color-text-secondary)] text-center">
                 Sample data &mdash; live alerts coming soon
               </div>
             )}
             {alerts.map((a, i) => (
-              <div key={i} className={`bg-white rounded-[8px] border border-[#c6c5d9] p-[16px] md:p-[24px] flex flex-col gap-[16px] md:gap-[24px] ${a.isSample && !a.ai ? "opacity-60" : ""}`}>
+              <div key={i} className={`bg-white border border-[var(--color-border)] p-[16px] md:p-[24px] flex flex-col gap-[16px] md:gap-[24px] ${a.isSample && !a.ai ? "opacity-60" : ""}`}>
                 {/* Top row: avatar + name + badge + amount */}
                 <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-[12px]">
                   <div className="flex items-center gap-[12px] md:gap-[16px]">
-                    <div className="w-[40px] h-[40px] md:w-[48px] md:h-[48px] rounded-full bg-[#e5e2e1] flex items-center justify-center text-[12px] md:text-[13px] font-semibold text-[#757688] shrink-0">
+                    <div className="w-[40px] h-[40px] md:w-[48px] md:h-[48px] rounded-full bg-[var(--color-border)] flex items-center justify-center text-[12px] md:text-[13px] font-semibold text-[var(--color-text-muted)] shrink-0">
                       {a.name.split(" ").map(n => n[0]).join("").slice(0,2)}
                     </div>
                     <div className="min-w-0 flex-1">
-                      <p className="text-[16px] md:text-[18px] font-semibold leading-[24px] md:leading-[28px] text-[#1c1b1b]">{a.name}</p>
-                      <p className="text-[13px] md:text-[14px] font-normal leading-[20px] text-[#757688]">{a.title} &bull; {a.company}</p>
+                      <p className="text-[16px] md:text-[18px] font-semibold leading-[24px] md:leading-[28px] text-[var(--color-text)]">{a.name}</p>
+                      <p className="text-[13px] md:text-[14px] font-normal leading-[20px] text-[var(--color-text-muted)]">{a.title} &bull; {a.company}</p>
                     </div>
                     {/* Badge + amount inline on mobile next to name */}
                     <div className="text-right shrink-0 md:hidden">
@@ -191,7 +191,7 @@ export default function AlertsPage() {
                       }`}>
                         {a.type.toUpperCase()}
                       </span>
-                      <p className={`text-[16px] font-semibold leading-[22px] ${a.type === "buy" ? "text-[#006d34]" : "text-[#ba1a1a]"}`}>
+                      <p className={`text-[16px] font-semibold leading-[22px] ${a.type === "buy" ? "text-[var(--color-signal-green)]" : "text-[#ba1a1a]"}`}>
                         {a.amount}
                       </p>
                     </div>
@@ -203,7 +203,7 @@ export default function AlertsPage() {
                     }`}>
                       {a.type.toUpperCase()}
                     </span>
-                    <p className={`text-[24px] font-semibold leading-[32px] ${a.type === "buy" ? "text-[#006d34]" : "text-[#ba1a1a]"}`}>
+                    <p className={`text-[24px] font-semibold leading-[32px] ${a.type === "buy" ? "text-[var(--color-signal-green)]" : "text-[#ba1a1a]"}`}>
                       {a.amount}
                     </p>
                   </div>
@@ -211,30 +211,30 @@ export default function AlertsPage() {
 
                 {/* AI Analysis (blurred) */}
                 {a.ai && (
-                  <div className="relative bg-[#f6f3f2] rounded-[4px] p-[16px] md:p-[24px]">
+                  <div className="relative bg-[var(--color-bg-alt)] p-[16px] md:p-[24px]">
                     <div className="flex items-center gap-[8px] mb-[8px]">
                       <svg className="w-[13px] h-[14px]" viewBox="0 0 13 14" fill="#000592"><rect width="13" height="14" rx="2"/></svg>
-                      <span className="text-[12px] font-bold leading-[16px] text-[#000592]">AI Sentiment Analysis</span>
+                      <span className="text-[12px] font-bold leading-[16px] text-[var(--color-primary)]">AI Sentiment Analysis</span>
                     </div>
                     <div className="relative">
-                      <p className="text-[13px] md:text-[14px] font-normal leading-[20px] text-[#1c1b1b] blur-[4px] select-none">{a.ai}</p>
-                      <div className="absolute inset-0 bg-[#f6f3f2]/60 flex flex-col items-center justify-center">
+                      <p className="text-[13px] md:text-[14px] font-normal leading-[20px] text-[var(--color-text)] blur-[4px] select-none">{a.ai}</p>
+                      <div className="absolute inset-0 bg-[var(--color-bg-alt)]/60 flex flex-col items-center justify-center">
                         <svg className="w-[14px] h-[19px] mb-[8px]" viewBox="0 0 14 19" fill="#1c1b1b"><path d="M7 0a5 5 0 00-5 5v3H1a1 1 0 00-1 1v9a1 1 0 001 1h12a1 1 0 001-1V9a1 1 0 00-1-1h-1V5a5 5 0 00-5-5zm3 8V5a3 3 0 10-6 0v3h6z"/></svg>
-                        <p className="text-[13px] md:text-[14px] font-medium leading-[20px] text-[#1c1b1b] text-center">Upgrade to Pro for instant AI analysis</p>
-                        <Link href="/pricing" className="text-[12px] font-medium leading-[16px] text-[#080f99] mt-[4px]">Unlock this insight &rarr;</Link>
+                        <p className="text-[13px] md:text-[14px] font-medium leading-[20px] text-[var(--color-text)] text-center">Upgrade to Pro for instant AI analysis</p>
+                        <Link href="/pricing" className="text-[12px] font-medium leading-[16px] text-[var(--color-primary)] mt-[4px]">Unlock this insight &rarr;</Link>
                       </div>
                     </div>
                   </div>
                 )}
 
                 {!a.ai && (
-                  <div className="bg-[#f6f3f2] rounded-[4px] h-[80px]" />
+                  <div className="bg-[var(--color-bg-alt)] h-[80px]" />
                 )}
 
                 {/* Footer */}
                 <div className="flex items-center justify-between">
-                  <span className="text-[11px] md:text-[12px] font-normal leading-[16px] text-[#757688]">{a.time} &bull; SEC Form 4</span>
-                  <Link href="/pricing" className="flex items-center gap-[3px] text-[13px] md:text-[14px] font-medium leading-[20px] text-[#000592] hover:underline">
+                  <span className="text-[11px] md:text-[12px] font-normal leading-[16px] text-[var(--color-text-muted)]">{a.time} &bull; SEC Form 4</span>
+                  <Link href="/pricing" className="flex items-center gap-[3px] text-[13px] md:text-[14px] font-medium leading-[20px] text-[var(--color-primary)] hover:underline">
                     Full Analysis
                     <svg className="w-[8px] h-[8px]" viewBox="0 0 8 8" fill="#000592"><path d="M0 4h6M4 2l2 2-2 2" stroke="#000592" strokeWidth="1.5" fill="none"/></svg>
                   </Link>
@@ -244,7 +244,7 @@ export default function AlertsPage() {
 
             {/* Load More */}
             <div className="pt-[24px] md:pt-[32px] flex justify-center">
-              <button className="h-[50px] px-[32px] border border-[#c6c5d9] text-[15px] md:text-[16px] font-medium leading-[24px] text-[#1c1b1b] hover:bg-[#f6f3f2] transition-colors w-full md:w-auto">
+              <button className="h-[50px] px-[32px] border border-[var(--color-border)] text-[15px] md:text-[16px] font-medium leading-[24px] text-[var(--color-text)] hover:bg-[var(--color-bg-alt)] transition-colors w-full md:w-auto">
                 Load More Activity
               </button>
             </div>
@@ -253,31 +253,31 @@ export default function AlertsPage() {
           {/* SIDEBAR — hidden on mobile */}
           <aside className="w-[280px] shrink-0 hidden lg:flex flex-col gap-[24px]">
             {/* Watchlist */}
-            <div className="bg-white rounded-[8px] border border-[#c6c5d9] p-[24px]">
+            <div className="bg-white border border-[var(--color-border)] p-[24px]">
               <div className="flex items-center gap-[8px] mb-[16px]">
                 <svg className="w-[17px] h-[16px]" viewBox="0 0 17 16" fill="#000592"><path d="M8.5 0l2.5 5.5H17l-4.5 3.5 1.5 6L8.5 12 3 15l1.5-6L0 5.5h6z"/></svg>
-                <span className="font-[var(--font-montaga)] text-[16px] font-normal leading-[24px] text-[#1c1b1b]">Your Watchlist</span>
+                <span className="font-[var(--font-montaga)] text-[16px] font-normal leading-[24px] text-[var(--color-text)]">Your Watchlist</span>
               </div>
-              <div className="bg-[#f6f3f2] rounded-[4px] border border-[#c6c5d9] py-[32px] px-[16px] text-center">
-                <p className="text-[12px] font-normal leading-[16px] text-[#757688] mb-[16px]">Track specific companies and get<br />instant push alerts.</p>
-                <button className="bg-[#000592] text-white text-[12px] font-bold leading-[16px] px-[16px] py-[8px]">Create Watchlist</button>
+              <div className="bg-[var(--color-bg-alt)] border border-[var(--color-border)] py-[32px] px-[16px] text-center">
+                <p className="text-[12px] font-normal leading-[16px] text-[var(--color-text-muted)] mb-[16px]">Track specific companies and get<br />instant push alerts.</p>
+                <button className="bg-[var(--color-primary)] text-white text-[12px] font-bold leading-[16px] px-[16px] py-[8px]">Create Watchlist</button>
               </div>
             </div>
 
             {/* Top Buys */}
-            <div className="bg-white rounded-[8px] border border-[#c6c5d9] p-[24px]">
+            <div className="bg-white border border-[var(--color-border)] p-[24px]">
               <div className="flex items-center gap-[8px] mb-[24px]">
                 <svg className="w-[18px] h-[10px]" viewBox="0 0 18 10" fill="#006d34"><path d="M0 10L6 4l4 4L18 0" stroke="#006d34" strokeWidth="2" fill="none"/></svg>
-                <span className="font-[var(--font-montaga)] text-[16px] font-normal leading-[24px] text-[#1c1b1b]">This Week&apos;s Top Buys</span>
+                <span className="font-[var(--font-montaga)] text-[16px] font-normal leading-[24px] text-[var(--color-text)]">This Week&apos;s Top Buys</span>
               </div>
               <div className="flex flex-col gap-[16px]">
                 {TOP_BUYS.map((b) => (
                   <div key={b.ticker} className="flex items-center justify-between">
                     <div>
-                      <p className="text-[12px] font-bold leading-[16px] text-[#1c1b1b] font-[var(--font-mono)]">{b.ticker}</p>
-                      <p className="text-[11px] font-normal leading-[15px] text-[#757688]">{b.label}</p>
+                      <p className="text-[12px] font-bold leading-[16px] text-[var(--color-text)] font-[var(--font-mono)]">{b.ticker}</p>
+                      <p className="text-[11px] font-normal leading-[15px] text-[var(--color-text-muted)]">{b.label}</p>
                     </div>
-                    <span className="text-[12px] font-semibold leading-[16px] text-[#006d34]">{b.amount}</span>
+                    <span className="text-[12px] font-semibold leading-[16px] text-[var(--color-signal-green)]">{b.amount}</span>
                   </div>
                 ))}
               </div>
@@ -295,7 +295,7 @@ export default function AlertsPage() {
               Alerts delayed by <span className="font-bold">15 min</span>. Pro = real-time.
             </p>
           </div>
-          <Link href="/pricing" className="flex items-center gap-[7px] bg-[#000592] h-[36px] md:h-[40px] px-[20px] md:px-[24px] text-[14px] md:text-[16px] font-medium leading-[24px] text-white hover:bg-[#080f99] transition-colors shrink-0">
+          <Link href="/pricing" className="flex items-center gap-[7px] bg-[var(--color-primary)] h-[36px] md:h-[40px] px-[20px] md:px-[24px] text-[14px] md:text-[16px] font-medium leading-[24px] text-white hover:bg-[var(--color-primary-dark)] transition-colors shrink-0">
             Get Unlimited Alerts
             <svg className="w-[8px] h-[10px]" viewBox="0 0 8 10" fill="white"><path d="M0 0l8 5-8 5z"/></svg>
           </Link>

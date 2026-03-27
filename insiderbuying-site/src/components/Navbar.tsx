@@ -49,7 +49,7 @@ export function Navbar() {
           </Link>
           <Link
             href="/signup"
-            className="inline-flex items-center justify-center h-10 px-6 text-sm font-semibold uppercase tracking-wider text-white bg-[var(--color-navy)] rounded-lg hover:bg-[var(--color-navy-light)] transition-colors"
+            className="inline-flex items-center justify-center h-10 px-6 text-sm font-semibold uppercase tracking-wider text-white bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] transition-colors"
           >
             Start Free
           </Link>
@@ -108,7 +108,7 @@ export function Navbar() {
           </Link>
           <Link
             href="/signup"
-            className="block w-full text-center h-10 leading-10 text-sm font-semibold uppercase tracking-wider text-white bg-[var(--color-navy)] rounded-lg"
+            className="block w-full text-center h-10 leading-10 text-sm font-semibold uppercase tracking-wider text-white bg-[var(--color-primary)]"
             onClick={() => setMobileOpen(false)}
           >
             Start Free

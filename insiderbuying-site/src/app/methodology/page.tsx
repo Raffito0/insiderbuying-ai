@@ -29,35 +29,35 @@ const LIMITATIONS = [
 
 export default function MethodologyPage() {
   return (
-    <div className="bg-[#fcf9f8]">
+    <div className="bg-[var(--color-bg-alt)]">
 
       {/* ═══ SECTION 1: HEADER ═══ */}
-      <section className="bg-[#f6f3f2] pt-[80px] pb-[80px] md:pt-[128px] md:pb-[128px] px-[20px] md:px-[32px] lg:px-[90px]">
+      <section className="bg-[var(--color-bg-alt)] pt-[var(--section-y-hero-mobile)] pb-[var(--section-y-hero-mobile)] md:pt-[var(--section-y-hero)] md:pb-[var(--section-y-hero)] px-[20px] md:px-[32px]">
         <div className="max-w-[1100px] mx-auto">
-          <p className="text-[12px] font-normal leading-[18px] text-[#757688] mb-[16px]">TRANSPARENCY</p>
-          <h1 className="font-[var(--font-montaga)] text-[39px] md:text-[60px] font-normal leading-[1.1] md:leading-[60px] text-[#1c1b1b] mb-[16px]">
+          <p className="text-[12px] font-normal leading-[18px] tracking-[0.5px] text-[var(--color-text-muted)] mb-[16px]">TRANSPARENCY</p>
+          <h1 className="font-[var(--font-montaga)] text-[39px] md:text-[var(--text-display)] font-normal leading-[1.1] md:leading-[60px] text-[var(--color-text)] mb-[16px]">
             How We Analyze
           </h1>
-          <p className="text-[17px] md:text-[20px] font-normal leading-[28px] md:leading-[32px] text-[#454556] max-w-[672px] pt-[8px] md:pt-[16px]">
+          <p className="text-[17px] md:text-[20px] font-normal leading-[28px] md:leading-[32px] text-[var(--color-text-secondary)] max-w-[672px] pt-[8px] md:pt-[16px]">
             Every number in our articles comes from a verifiable source. Here&apos;s exactly how our research process works to ensure institutional-grade precision.
           </p>
         </div>
       </section>
 
       {/* ═══ SECTION 2: DATA SOURCES ═══ */}
-      <section className="bg-white pt-[64px] pb-[64px] md:pt-[96px] md:pb-[96px] px-[20px] md:px-[32px] lg:px-[90px]">
+      <section className="bg-white pt-[var(--section-y-mobile)] pb-[var(--section-y-mobile)] md:pt-[var(--section-y)] md:pb-[var(--section-y)] px-[20px] md:px-[32px]">
         <div className="max-w-[1100px] mx-auto">
-          <h2 className="font-[var(--font-montaga)] text-[32px] md:text-[48px] font-normal leading-[1.2] md:leading-[36px] text-[#1c1b1b] mb-[40px] md:mb-[64px]">
+          <h2 className="font-[var(--font-montaga)] text-[32px] md:text-[var(--text-title)] font-normal leading-[1.2] md:leading-[36px] text-[var(--color-text)] mb-[40px] md:mb-[64px]">
             Our Data Sources
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-[20px] md:gap-[32px]">
             {DATA_SOURCES.map((src) => (
-              <div key={src.title} className="bg-[#f6f3f2] rounded-[4px] border border-black/10 p-[28px] md:p-[40px] flex flex-col">
+              <div key={src.title} className="bg-[var(--color-bg-alt)] border border-black/10 p-[28px] md:p-[40px] flex flex-col">
                 <span className="text-[24px] mb-[20px] md:mb-[24px]">{src.icon}</span>
-                <h3 className="text-[18px] font-bold leading-[28px] text-[#1c1b1b] mb-[12px] md:mb-[16px]">{src.title}</h3>
-                <p className="text-[14px] font-normal leading-[23px] text-[#1c1b1b] mb-[24px] flex-1">{src.desc}</p>
-                <div className="pt-[20px] md:pt-[24px] border-t border-[#c6c5d9]">
-                  <p className="text-[12px] font-normal leading-[16px] text-[#000592]">{src.footer}</p>
+                <h3 className="text-[var(--text-subheading)] font-bold leading-[28px] text-[var(--color-text)] mb-[12px] md:mb-[16px]">{src.title}</h3>
+                <p className="text-[14px] font-normal leading-[23px] text-[var(--color-text)] mb-[24px] flex-1">{src.desc}</p>
+                <div className="pt-[20px] md:pt-[24px] border-t border-[var(--color-border)]">
+                  <p className="text-[12px] font-normal leading-[16px] text-[var(--color-primary)]">{src.footer}</p>
                 </div>
               </div>
             ))}
@@ -66,22 +66,22 @@ export default function MethodologyPage() {
       </section>
 
       {/* ═══ SECTION 3: ANALYSIS PROCESS (SIMPLE VERTICAL ON ALL SCREENS) ═══ */}
-      <section className="bg-[#f6f3f2] pt-[64px] pb-[64px] md:pt-[96px] md:pb-[96px] px-[20px] md:px-[32px] lg:px-[128px]">
+      <section className="bg-[var(--color-bg-alt)] pt-[var(--section-y-mobile)] pb-[var(--section-y-mobile)] md:pt-[var(--section-y)] md:pb-[var(--section-y)] px-[20px] md:px-[32px]">
         <div className="max-w-[1024px] mx-auto">
-          <h2 className="text-[26px] md:text-[30px] font-bold leading-[1.2] md:leading-[36px] text-[#1c1b1b] text-center mb-[48px] md:mb-[80px]">
+          <h2 className="text-[26px] md:text-[var(--text-title)] font-bold leading-[1.2] md:leading-[36px] text-[var(--color-text)] text-center mb-[48px] md:mb-[80px]">
             Our Analysis Process
           </h2>
           <div className="relative max-w-[600px] mx-auto">
             {/* Vertical line */}
-            <div className="absolute left-[6px] md:left-[6px] top-0 bottom-0 w-[1px] bg-[#c6c5d9]" />
+            <div className="absolute left-[6px] md:left-[6px] top-0 bottom-0 w-[1px] bg-[var(--color-border)]" />
             <div className="flex flex-col gap-[48px] md:gap-[64px]">
               {STEPS.map((step) => (
                 <div key={step.num} className="flex gap-[24px] md:gap-[32px]">
-                  <div className="relative z-10 w-[12px] h-[12px] rounded-full bg-[#000592] border-[4px] border-[#f6f3f2] shadow-[0px_0px_0px_2px_rgba(0,0,0,0.05)] shrink-0 mt-[4px]" />
+                  <div className="relative z-10 w-[12px] h-[12px] rounded-full bg-[var(--color-primary)] border-[4px] border-[var(--color-bg-alt)] shadow-[0px_0px_0px_2px_rgba(0,0,0,0.05)] shrink-0 mt-[4px]" />
                   <div>
-                    <p className="text-[12px] font-bold leading-[20px] tracking-[2px] text-[#000592] uppercase mb-[6px]">{step.num}</p>
-                    <h3 className="text-[20px] md:text-[24px] font-bold leading-[1.3] md:leading-[32px] text-[#1c1b1b] mb-[8px]">{step.title}</h3>
-                    <p className="text-[15px] md:text-[16px] font-normal leading-[24px] md:leading-[26px] text-[#454556]">{step.desc}</p>
+                    <p className="text-[12px] font-bold leading-[20px] tracking-[2px] text-[var(--color-primary)] uppercase mb-[6px]">{step.num}</p>
+                    <h3 className="text-[20px] md:text-[var(--text-heading)] font-bold leading-[1.3] md:leading-[32px] text-[var(--color-text)] mb-[8px]">{step.title}</h3>
+                    <p className="text-[15px] md:text-[16px] font-normal leading-[24px] md:leading-[26px] text-[var(--color-text-secondary)]">{step.desc}</p>
                   </div>
                 </div>
               ))}
@@ -91,16 +91,16 @@ export default function MethodologyPage() {
       </section>
 
       {/* ═══ SECTION 4: AI TRANSPARENCY ═══ */}
-      <section className="bg-white pt-[64px] pb-[64px] md:pt-[96px] md:pb-[96px] px-[20px] md:px-[32px] lg:px-[222px]">
-        <div className="max-w-[836px] mx-auto pl-[24px] md:pl-[64px] border-l border-[#000592]">
-          <h2 className="text-[24px] md:text-[30px] font-bold leading-[1.3] md:leading-[36px] text-[#1c1b1b] mb-[24px] md:mb-[32px]">
+      <section className="bg-white pt-[var(--section-y-mobile)] pb-[var(--section-y-mobile)] md:pt-[var(--section-y)] md:pb-[var(--section-y)] px-[20px] md:px-[32px]">
+        <div className="max-w-[836px] mx-auto pl-[24px] md:pl-[64px] border-l border-[var(--color-primary)]">
+          <h2 className="text-[24px] md:text-[var(--text-title)] font-bold leading-[1.3] md:leading-[36px] text-[var(--color-text)] mb-[24px] md:mb-[32px]">
             We Use AI — And We&apos;re Transparent About It
           </h2>
           <div className="flex flex-col gap-[20px] md:gap-[24px]">
-            <p className="text-[16px] md:text-[18px] font-normal leading-[26px] md:leading-[29px] text-[#454556]">
+            <p className="text-[16px] md:text-[18px] font-normal leading-[26px] md:leading-[29px] text-[var(--color-text-secondary)]">
               At EarlyInsider, we leverage advanced Large Language Models to synthesize vast amounts of financial data into readable, actionable insights. However, we maintain a human-in-the-loop oversight to ensure the highest standards of accuracy.
             </p>
-            <p className="text-[16px] md:text-[18px] font-normal leading-[26px] md:leading-[29px] text-[#454556]">
+            <p className="text-[16px] md:text-[18px] font-normal leading-[26px] md:leading-[29px] text-[var(--color-text-secondary)]">
               Crucially, the AI is not &ldquo;hallucinating&rdquo; data points. Every ticker symbol, purchase price, and percentage change is pulled directly from official SEC EDGAR filings via our proprietary data pipeline. The AI serves as a high-speed research analyst, identifying correlations that might take a human hours to uncover.
             </p>
           </div>
@@ -108,17 +108,17 @@ export default function MethodologyPage() {
       </section>
 
       {/* ═══ SECTION 5: LIMITATIONS ═══ */}
-      <section className="bg-[#f6f3f2] pt-[64px] pb-[64px] md:pt-[96px] md:pb-[96px] px-[20px] md:px-[32px] lg:px-[190px]">
+      <section className="bg-[var(--color-bg-alt)] pt-[var(--section-y-mobile)] pb-[var(--section-y-mobile)] md:pt-[var(--section-y)] md:pb-[var(--section-y)] px-[20px] md:px-[32px]">
         <div className="max-w-[900px] mx-auto">
-          <h2 className="text-[24px] md:text-[30px] font-bold leading-[1.3] md:leading-[36px] text-[#1c1b1b] mb-[28px] md:mb-[40px]">
+          <h2 className="text-[24px] md:text-[var(--text-title)] font-bold leading-[1.3] md:leading-[36px] text-[var(--color-text)] mb-[28px] md:mb-[40px]">
             Limitations
           </h2>
-          <div className="bg-white rounded-[4px] shadow-[0px_1px_3px_rgba(0,0,0,0.06)] p-[24px] md:p-[48px]">
+          <div className="bg-white shadow-[0px_1px_3px_rgba(0,0,0,0.06)] p-[24px] md:p-[48px]">
             <div className="flex flex-col gap-[20px] md:gap-[24px]">
               {LIMITATIONS.map((item, i) => (
                 <div key={i} className="flex gap-[12px] md:gap-[16px]">
                   <span className="text-[16px] shrink-0 pt-[2px]">{item.icon}</span>
-                  <p className="text-[15px] md:text-[16px] font-normal leading-[24px] text-[#454556]">{item.text}</p>
+                  <p className="text-[15px] md:text-[16px] font-normal leading-[24px] text-[var(--color-text-secondary)]">{item.text}</p>
                 </div>
               ))}
             </div>
@@ -127,12 +127,12 @@ export default function MethodologyPage() {
       </section>
 
       {/* ═══ SECTION 6: VERIFY OUR DATA ═══ */}
-      <section className="bg-white pt-[64px] pb-[64px] md:pt-[96px] md:pb-[96px] px-[20px] md:px-[32px] lg:px-[190px]">
+      <section className="bg-white pt-[var(--section-y-mobile)] pb-[var(--section-y-mobile)] md:pt-[var(--section-y)] md:pb-[var(--section-y)] px-[20px] md:px-[32px]">
         <div className="max-w-[900px] mx-auto text-center">
-          <h2 className="text-[24px] md:text-[30px] font-bold leading-[1.3] md:leading-[36px] text-[#1c1b1b] mb-[16px]">
+          <h2 className="text-[24px] md:text-[var(--text-title)] font-bold leading-[1.3] md:leading-[36px] text-[var(--color-text)] mb-[16px]">
             Verify Our Data
           </h2>
-          <p className="text-[16px] md:text-[18px] font-normal leading-[26px] md:leading-[28px] text-[#454556] mb-[24px] md:mb-[32px]">
+          <p className="text-[16px] md:text-[18px] font-normal leading-[26px] md:leading-[28px] text-[var(--color-text-secondary)] mb-[24px] md:mb-[32px]">
             Every data point in our articles can be independently verified.
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-[16px] md:gap-[24px]">
@@ -140,14 +140,14 @@ export default function MethodologyPage() {
               { title: "SEC EDGAR Database", desc: "Search official government filings directly to cross-reference our analysis." },
               { title: "Financial Datasets API", desc: "Review the documentation for the institutional data layer powering our platform." },
             ].map((link) => (
-              <a key={link.title} href="#" className="bg-[#f6f3f2] rounded-[4px] p-[24px] md:p-[32px] text-left hover:bg-[#eae7e7] transition-colors group">
+              <a key={link.title} href="#" className="bg-[var(--color-bg-alt)] p-[24px] md:p-[32px] text-left hover:bg-[#eae7e7] transition-colors group">
                 <div className="flex items-center justify-between mb-[12px] md:mb-[16px]">
-                  <h3 className="text-[18px] md:text-[20px] font-bold leading-[28px] text-[#1c1b1b]">{link.title}</h3>
-                  <svg className="w-[16px] h-[16px] text-[#454556] group-hover:translate-x-[2px] transition-transform shrink-0 ml-[8px]" viewBox="0 0 16 16" fill="none">
+                  <h3 className="text-[18px] md:text-[20px] font-bold leading-[28px] text-[var(--color-text)]">{link.title}</h3>
+                  <svg className="w-[16px] h-[16px] text-[var(--color-text-secondary)] group-hover:translate-x-[2px] transition-transform shrink-0 ml-[8px]" viewBox="0 0 16 16" fill="none">
                     <path d="M4 12L12 4M12 4H6M12 4v6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                   </svg>
                 </div>
-                <p className="text-[14px] font-normal leading-[20px] text-[#454556]">{link.desc}</p>
+                <p className="text-[14px] font-normal leading-[20px] text-[var(--color-text-secondary)]">{link.desc}</p>
               </a>
             ))}
           </div>

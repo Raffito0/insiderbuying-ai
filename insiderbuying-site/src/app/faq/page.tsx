@@ -41,31 +41,31 @@ export default function FaqPage() {
   }
 
   return (
-    <div className="bg-[#fcf9f8]">
+    <div className="bg-[var(--color-bg-alt)]">
 
       {/* ═══ SECTION 1: HEADER ═══ */}
-      <section className="bg-[#f6f3f2] pt-[64px] pb-[64px] md:pt-[112px] md:pb-[112px] px-[20px] md:px-[32px] lg:px-[192px]">
+      <section className="bg-[var(--color-bg-alt)] pt-[var(--section-y-hero-mobile)] pb-[var(--section-y-hero-mobile)] md:pt-[var(--section-y-hero)] md:pb-[var(--section-y-hero)] px-[20px] md:px-[32px]">
         <div className="max-w-[896px] mx-auto text-center">
-          <h1 className="font-[var(--font-montaga)] text-[39px] md:text-[54px] font-normal leading-[1.1] md:leading-[70px] text-[#1c1b1b] mb-[16px] md:mb-[24px]">
+          <h1 className="font-[var(--font-montaga)] text-[39px] md:text-[54px] font-normal leading-[1.1] md:leading-[70px] text-[var(--color-text)] mb-[var(--gap-tight)] md:mb-[24px]">
             Frequently Asked Questions
           </h1>
-          <p className="text-[16px] md:text-[18px] font-normal leading-[26px] md:leading-[29px] text-[#454556] max-w-[672px] mx-auto">
+          <p className="text-[16px] md:text-[18px] font-normal leading-[26px] md:leading-[29px] text-[var(--color-text-secondary)] max-w-[672px] mx-auto">
             Everything you need to know about our institutional-grade insider trading intelligence platform and SEC data processing.
           </p>
         </div>
       </section>
 
       {/* ═══ SECTION 2: CATEGORY TABS ═══ */}
-      <nav className="bg-white border-b border-[#c6c5d9] sticky top-[82px] z-40 overflow-x-auto">
-        <div className="max-w-[976px] mx-auto px-[20px] md:px-[32px] lg:px-[152px] flex items-center justify-start md:justify-center gap-[20px] md:gap-[32px] py-[16px]">
+      <nav className="bg-white border-b border-[var(--color-border)] sticky top-[82px] z-40 overflow-x-auto">
+        <div className="max-w-[976px] mx-auto px-[20px] md:px-[32px] flex items-center justify-start md:justify-center gap-[20px] md:gap-[32px] py-[16px]">
           {CATEGORIES.map((cat) => (
             <button
               key={cat}
               onClick={() => setActiveTab(cat)}
               className={`text-[14px] leading-[20px] pb-[16px] border-b-[1px] transition-colors whitespace-nowrap ${
                 activeTab === cat
-                  ? "font-bold text-[#000592] border-[#000592]"
-                  : "font-normal text-[#454556] border-transparent hover:text-[#1c1b1b]"
+                  ? "font-bold text-[var(--color-primary)] border-[var(--color-primary)]"
+                  : "font-normal text-[var(--color-text-secondary)] border-transparent hover:text-[var(--color-text)]"
               }`}
             >
               {cat}
@@ -75,11 +75,11 @@ export default function FaqPage() {
       </nav>
 
       {/* ═══ SECTION 3: FAQ ACCORDION ═══ */}
-      <section className="bg-white pt-[48px] pb-[48px] md:pt-[112px] md:pb-[112px] px-[20px] md:px-[32px] lg:px-[250px]">
+      <section className="bg-white pt-[var(--section-y-mobile)] pb-[var(--section-y-mobile)] md:pt-[var(--section-y)] md:pb-[var(--section-y)] px-[20px] md:px-[32px]">
         <div className="max-w-[780px] mx-auto flex flex-col gap-[48px] md:gap-[80px]">
           {FAQ_GROUPS.map((group) => (
             <div key={group.title}>
-              <h2 className="font-[var(--font-montaga)] text-[26px] md:text-[30px] font-normal leading-[32px] text-[#1c1b1b] pl-[16px] border-l-[1px] border-[#000592] mb-[24px] md:mb-[32px]">
+              <h2 className="font-[var(--font-montaga)] text-[26px] md:text-[30px] font-normal leading-[32px] text-[var(--color-text)] pl-[16px] border-l-[1px] border-[var(--color-primary)] mb-[24px] md:mb-[32px]">
                 {group.title}
               </h2>
               <div className="flex flex-col gap-[12px] md:gap-[16px]">
@@ -87,16 +87,16 @@ export default function FaqPage() {
                   const key = `${group.title}-${i}`;
                   const isOpen = openItems[key] || false;
                   return (
-                    <div key={key} className="bg-[#f6f3f2]">
+                    <div key={key} className="bg-[var(--color-bg-alt)]">
                       <button
                         onClick={() => toggle(key)}
                         className="w-full flex items-center justify-between p-[20px] md:p-[24px]"
                       >
-                        <span className="text-[15px] md:text-[16px] font-medium leading-[24px] md:leading-[28px] text-[#1c1b1b] text-left pr-[16px] md:pr-[24px]">
+                        <span className="text-[15px] md:text-[16px] font-medium leading-[24px] md:leading-[28px] text-[var(--color-text)] text-left pr-[16px] md:pr-[24px]">
                           {item.q}
                         </span>
                         <svg
-                          className={`w-[12px] h-[12px] shrink-0 text-[#1c1b1b] transition-transform ${isOpen ? "rotate-45" : ""}`}
+                          className={`w-[12px] h-[12px] shrink-0 text-[var(--color-text)] transition-transform ${isOpen ? "rotate-45" : ""}`}
                           viewBox="0 0 12 12"
                         >
                           <path d="M6 0v12M0 6h12" stroke="currentColor" strokeWidth="2" />
@@ -104,7 +104,7 @@ export default function FaqPage() {
                       </button>
                       {isOpen && (
                         <div className="px-[20px] pb-[20px] md:px-[24px] md:pb-[24px]">
-                          <p className="text-[15px] md:text-[16px] font-normal leading-[24px] md:leading-[26px] text-[#454556]">
+                          <p className="text-[15px] md:text-[16px] font-normal leading-[24px] md:leading-[26px] text-[var(--color-text-secondary)]">
                             {item.a}
                           </p>
                         </div>
@@ -119,24 +119,24 @@ export default function FaqPage() {
       </section>
 
       {/* ═══ SECTION 4: STILL HAVE QUESTIONS ═══ */}
-      <section className="bg-[#f6f3f2] pt-[64px] pb-[64px] md:pt-[112px] md:pb-[112px] px-[20px] md:px-[32px] lg:px-[192px]">
+      <section className="bg-[var(--color-bg-alt)] pt-[var(--section-y-mobile)] pb-[var(--section-y-mobile)] md:pt-[var(--section-y)] md:pb-[var(--section-y)] px-[20px] md:px-[32px]">
         <div className="max-w-[896px] mx-auto text-center">
-          <h2 className="font-[var(--font-montaga)] text-[32px] md:text-[48px] font-normal leading-[1.2] md:leading-[40px] text-[#1c1b1b] mb-[16px]">
+          <h2 className="font-[var(--font-montaga)] text-[32px] md:text-[var(--text-title)] font-normal leading-[1.2] md:leading-[40px] text-[var(--color-text)] mb-[16px]">
             Still have questions?
           </h2>
-          <p className="text-[16px] md:text-[18px] font-normal leading-[26px] md:leading-[28px] text-[#454556] max-w-[576px] mx-auto mb-[24px]">
+          <p className="text-[16px] md:text-[18px] font-normal leading-[26px] md:leading-[28px] text-[var(--color-text-secondary)] max-w-[576px] mx-auto mb-[24px]">
             Our dedicated support team and institutional analysts are available 24/7 to assist with your technical or data inquiries.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-[12px] sm:gap-[15px] pt-[24px]">
             <Link
               href="mailto:support@earlyinsider.com"
-              className="flex items-center justify-center h-[54px] md:h-[58px] px-[32px] border border-[#000592] text-[15px] md:text-[16px] font-medium leading-[24px] text-[#000592] hover:bg-[#000592] hover:text-white transition-colors w-full sm:w-auto"
+              className="flex items-center justify-center h-[54px] md:h-[58px] px-[32px] border border-[var(--color-primary)] text-[15px] md:text-[16px] font-medium leading-[24px] text-[var(--color-primary)] hover:bg-[var(--color-primary)] hover:text-white transition-colors w-full sm:w-auto"
             >
               Contact Support
             </Link>
             <Link
               href="/methodology"
-              className="flex items-center justify-center h-[54px] md:h-[58px] px-[32px] border border-[#000592] text-[15px] md:text-[16px] font-medium leading-[24px] text-[#000592] hover:bg-[#000592] hover:text-white transition-colors w-full sm:w-auto"
+              className="flex items-center justify-center h-[54px] md:h-[58px] px-[32px] border border-[var(--color-primary)] text-[15px] md:text-[16px] font-medium leading-[24px] text-[var(--color-primary)] hover:bg-[var(--color-primary)] hover:text-white transition-colors w-full sm:w-auto"
             >
               View Documentation
             </Link>
@@ -145,13 +145,13 @@ export default function FaqPage() {
       </section>
 
       {/* ═══ SECTION 5: BENTO DECORATIVE ═══ */}
-      <section className="bg-white pt-[64px] pb-[64px] md:pt-[112px] md:pb-[112px] px-[20px] md:px-[32px] lg:px-[88px]">
+      <section className="bg-white pt-[var(--section-y-mobile)] pb-[var(--section-y-mobile)] md:pt-[var(--section-y)] md:pb-[var(--section-y)] px-[20px] md:px-[32px]">
         <div className="max-w-[1104px] mx-auto grid grid-cols-1 lg:grid-cols-[725px_346px] gap-[24px] lg:gap-[33px]">
           {/* Left — Dark card */}
-          <div className="bg-[#000592] rounded-[4px] p-[32px] md:p-[48px] flex flex-col justify-between min-h-[300px] lg:h-[400px]">
+          <div className="bg-[var(--color-primary)] p-[32px] md:p-[48px] flex flex-col justify-between min-h-[300px] lg:h-[400px]">
             <div>
               <p className="text-[14px] font-normal leading-[16px] text-white/80 mb-[16px]">Intelligence Briefing</p>
-              <h3 className="font-[var(--font-montaga)] text-[28px] md:text-[40px] font-normal leading-[1.15] md:leading-[36px] text-white">
+              <h3 className="font-[var(--font-montaga)] text-[28px] md:text-[var(--text-title)] font-normal leading-[1.15] md:leading-[36px] text-white">
                 Master the markets with institutional precision.
               </h3>
             </div>
@@ -164,21 +164,21 @@ export default function FaqPage() {
           </div>
 
           {/* Right — White card */}
-          <div className="bg-white rounded-[4px] border border-[#f0eded] p-[28px] md:px-[32px] md:py-[48px] lg:py-[85px] flex flex-col justify-center">
-            <svg className="w-[100px] md:w-[282px] h-[30px] mb-[24px]" viewBox="0 0 282 30" fill="#000592">
+          <div className="bg-white border border-[var(--color-border-light)] p-[28px] md:px-[32px] md:py-[48px] lg:py-[85px] flex flex-col justify-center">
+            <svg className="w-[100px] md:w-[282px] h-[30px] mb-[24px]" viewBox="0 0 282 30" fill="var(--color-primary)">
               <rect x="0" y="5" width="30" height="20" rx="2" />
               <rect x="35" y="0" width="30" height="30" rx="2" opacity="0.6" />
               <rect x="70" y="8" width="30" height="14" rx="2" opacity="0.3" />
             </svg>
-            <h4 className="font-[var(--font-montaga)] text-[26px] md:text-[32px] font-normal leading-[1.2] md:leading-[40px] text-[#1c1b1b] mb-[16px] md:mb-[22px]">
+            <h4 className="font-[var(--font-montaga)] text-[26px] md:text-[var(--text-heading)] font-normal leading-[1.2] md:leading-[40px] text-[var(--color-text)] mb-[16px] md:mb-[22px]">
               Institutional Security
             </h4>
-            <p className="text-[14px] font-normal leading-[23px] text-[#454556] mb-[24px]">
+            <p className="text-[14px] font-normal leading-[23px] text-[var(--color-text-secondary)] mb-[24px]">
               Enterprise-grade encryption and SEC-compliant data handling for hedge funds and family offices.
             </p>
-            <Link href="/about" className="flex items-center gap-[8px] text-[14px] font-semibold leading-[20px] text-[#000592] hover:underline">
+            <Link href="/about" className="flex items-center gap-[8px] text-[14px] font-semibold leading-[20px] text-[var(--color-primary)] hover:underline">
               Learn More
-              <svg className="w-[8px] h-[8px]" viewBox="0 0 8 8" fill="none"><path d="M0 4h6M4 2l2 2-2 2" stroke="#000592" strokeWidth="1.5"/></svg>
+              <svg className="w-[8px] h-[8px]" viewBox="0 0 8 8" fill="none"><path d="M0 4h6M4 2l2 2-2 2" stroke="var(--color-primary)" strokeWidth="1.5"/></svg>
             </Link>
           </div>
         </div>
