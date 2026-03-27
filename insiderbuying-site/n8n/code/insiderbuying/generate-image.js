@@ -238,53 +238,59 @@ async function uploadToR2(key, imageBuffer, opts = {}) {
 }
 
 // ---------------------------------------------------------------------------
-// Nano Banana Pro (kie.ai) — Hero Image
+// fal.ai Flux — Hero Image
 // ---------------------------------------------------------------------------
 
 async function generateHeroImage(prompt, opts = {}) {
-  const { fetchFn, kieApiKey } = opts;
-  if (!fetchFn || !kieApiKey) return null;
+  const { fetchFn, falKey } = opts;
+  if (!fetchFn || !falKey) return null;
 
   try {
-    // Submit generation task
-    const submitRes = await fetchFn('https://api.kie.ai/api/v1/images/generations', {
+    // fal.ai queue API: submit -> poll -> get result
+    const submitRes = await fetchFn('https://queue.fal.run/fal-ai/flux/dev', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${kieApiKey}`,
+        'Authorization': `Key ${falKey}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'nano-banana-pro',
         prompt,
-        width: 1200,
-        height: 630,
-        n: 1,
+        image_size: { width: 1200, height: 630 },
+        num_images: 1,
       }),
     });
 
     if (!submitRes.ok) return null;
     const submitData = await submitRes.json();
-    const taskId = submitData?.data?.[0]?.task_id || submitData?.task_id;
-    if (!taskId) {
-      // Direct URL response
-      const url = submitData?.data?.[0]?.url;
-      if (url) return { url, binary: null };
-      return null;
+
+    // Direct result (sync mode)
+    if (submitData?.images?.[0]?.url) {
+      return { url: submitData.images[0].url, binary: null };
     }
 
-    // Poll for completion (max 60s)
+    // Async mode: poll request_id
+    const requestId = submitData?.request_id;
+    if (!requestId) return null;
+
     for (let i = 0; i < 30; i++) {
       await new Promise((r) => setTimeout(r, 2000));
-      const pollRes = await fetchFn(`https://api.kie.ai/api/v1/tasks/${taskId}`, {
-        headers: { 'Authorization': `Bearer ${kieApiKey}` },
+      const pollRes = await fetchFn(`https://queue.fal.run/fal-ai/flux/dev/requests/${requestId}/status`, {
+        headers: { 'Authorization': `Key ${falKey}` },
       });
       if (!pollRes.ok) continue;
       const pollData = await pollRes.json();
-      if (pollData?.status === 'completed' || pollData?.status === 'finished') {
-        const url = pollData?.data?.[0]?.url || pollData?.output?.url;
+
+      if (pollData?.status === 'COMPLETED') {
+        // Fetch result
+        const resultRes = await fetchFn(`https://queue.fal.run/fal-ai/flux/dev/requests/${requestId}`, {
+          headers: { 'Authorization': `Key ${falKey}` },
+        });
+        if (!resultRes.ok) return null;
+        const resultData = await resultRes.json();
+        const url = resultData?.images?.[0]?.url;
         return url ? { url, binary: null } : null;
       }
-      if (pollData?.status === 'failed') return null;
+      if (pollData?.status === 'FAILED') return null;
     }
 
     return null; // timeout
@@ -364,7 +370,7 @@ async function generateImages(input, helpers) {
 
   const heroResult = await generateHeroImage(heroPrompt, {
     fetchFn,
-    kieApiKey: env.KIE_API_KEY,
+    falKey: env.FAL_KEY,
   });
 
   if (heroResult?.url) {
