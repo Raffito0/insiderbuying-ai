@@ -1,15 +1,28 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { Suspense, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 
 export default function LoginPage() {
+  return (
+    <Suspense>
+      <LoginForm />
+    </Suspense>
+  );
+}
+
+function LoginForm() {
+  const searchParams = useSearchParams();
+  const redirectTo = searchParams.get("redirect") || "/alerts";
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [resetSent, setResetSent] = useState(false);
 
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault();
@@ -17,7 +30,7 @@ export default function LoginPage() {
     setLoading(true);
 
     if (!process.env.NEXT_PUBLIC_SUPABASE_URL) {
-      window.location.href = "/alerts";
+      window.location.href = redirectTo;
       return;
     }
 
@@ -28,7 +41,7 @@ export default function LoginPage() {
       setLoading(false);
       return;
     }
-    window.location.href = "/alerts";
+    window.location.href = redirectTo;
   }
 
   async function handleGoogle() {
@@ -36,8 +49,27 @@ export default function LoginPage() {
     const supabase = createClient();
     await supabase.auth.signInWithOAuth({
       provider: "google",
-      options: { redirectTo: `${window.location.origin}/api/auth/callback` },
+      options: { redirectTo: `${window.location.origin}/api/auth/callback?next=${encodeURIComponent(redirectTo)}` },
     });
+  }
+
+  async function handleForgotPassword() {
+    if (!email) {
+      setError("Enter your email address first, then click Forgot password.");
+      return;
+    }
+    setError("");
+    setLoading(true);
+    const supabase = createClient();
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/login?reset=true`,
+    });
+    if (error) {
+      setError(error.message);
+    } else {
+      setResetSent(true);
+    }
+    setLoading(false);
   }
 
   return (
@@ -46,7 +78,7 @@ export default function LoginPage() {
 
         {/* Logo */}
         <div className="mb-[32px]">
-          <span className="text-[20px] font-normal leading-[30px] text-[#1a1a1a]">InsiderBuying</span>
+          <span className="text-[20px] font-normal leading-[30px] text-[#1a1a1a]">EarlyInsider</span>
         </div>
 
         {/* Title */}
@@ -97,7 +129,7 @@ export default function LoginPage() {
             <div className="flex flex-col gap-[8px]">
               <div className="flex items-center justify-between w-full max-w-full">
                 <label className="text-[14px] font-medium leading-[21px] text-[#1a1a1a]">Password</label>
-                <button type="button" className="text-[14px] font-normal leading-[21px] text-[#0075e2] hover:underline">
+                <button type="button" onClick={handleForgotPassword} className="text-[14px] font-normal leading-[21px] text-[#0075e2] hover:underline">
                   Forgot password?
                 </button>
               </div>
@@ -122,6 +154,10 @@ export default function LoginPage() {
               </div>
             </div>
           </div>
+
+          {resetSent && (
+            <p className="text-[13px] text-[#006d34] mb-[8px]">Password reset link sent to <strong>{email}</strong>. Check your inbox.</p>
+          )}
 
           {error && (
             <p className="text-[13px] text-[#ba1a1a] mb-[8px]">{error}</p>

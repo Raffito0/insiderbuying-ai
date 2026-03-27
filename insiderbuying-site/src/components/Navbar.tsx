@@ -6,7 +6,7 @@ import { useState } from "react";
 const NAV_LINKS = [
   { href: "/alerts", label: "Live Alerts" },
   { href: "/reports", label: "Reports" },
-  { href: "/#how-it-works", label: "How It Works" },
+  { href: "/how-it-works", label: "How It Works" },
   { href: "/pricing", label: "Pricing" },
 ];
 
@@ -19,10 +19,10 @@ export function Navbar() {
         {/* Logo */}
         <Link href="/" className="flex items-baseline gap-0 text-xl">
           <span className="font-[var(--font-inter)] font-normal text-[var(--color-text)]">
-            Insider
+            Early
           </span>
           <span className="font-[var(--font-inter)] font-bold text-[var(--color-text)]">
-            Buying
+            Insider
           </span>
         </Link>
 

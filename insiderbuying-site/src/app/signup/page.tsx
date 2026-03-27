@@ -76,8 +76,8 @@ export default function SignUpPage() {
         <div className="relative z-10 flex flex-col justify-between h-full px-[64px] py-[40px]">
           {/* Top — Logo */}
           <div className="flex items-baseline">
-            <span className="text-[24px] leading-[32px] text-white font-normal">Insider</span>
-            <span className="text-[24px] leading-[32px] text-white font-bold">&nbsp;Buying</span>
+            <span className="text-[24px] leading-[32px] text-white font-normal">Early</span>
+            <span className="text-[24px] leading-[32px] text-white font-bold">&nbsp;Insider</span>
           </div>
 
           {/* Middle — Headline + bullets */}

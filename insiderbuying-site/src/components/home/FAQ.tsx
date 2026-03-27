@@ -13,7 +13,7 @@ const FAQS = [
   },
   {
     q: "Is this financial advice?",
-    a: "No. InsiderBuying.ai provides data and AI-powered analysis of publicly available SEC filings. All investment decisions are yours. We are not registered investment advisors.",
+    a: "No. EarlyInsider provides data and AI-powered analysis of publicly available SEC filings. All investment decisions are yours. We are not registered investment advisors.",
   },
   {
     q: "Can I create a custom watchlist?",

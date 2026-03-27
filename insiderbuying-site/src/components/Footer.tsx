@@ -6,7 +6,7 @@ export function Footer() {
       <div className="max-w-[1160px] mx-auto px-[32px]">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-[32px] mb-[40px] md:mb-[80px]">
           <div>
-            <p className="font-[var(--font-montaga)] text-[22px] leading-[28px] text-white mb-[22px]">Insider Buying</p>
+            <p className="font-[var(--font-montaga)] text-[22px] leading-[28px] text-white mb-[22px]">Early Insider</p>
             <p className="text-[14px] leading-[23px] text-[#94a3b8]">Precise signals. Real-time edge.</p>
           </div>
           <div>
@@ -50,7 +50,7 @@ export function Footer() {
           </div>
         </div>
         <div className="border-t border-white/10 pt-[16px]">
-          <p className="text-[12px] leading-[16px] text-[#64748b]">&copy; 2026 InsiderBuying.ai. Institutional Grade Data. All Rights Reserved.</p>
+          <p className="text-[12px] leading-[16px] text-[#64748b]">&copy; 2026 EarlyInsider. Institutional Grade Data. All Rights Reserved.</p>
         </div>
       </div>
     </footer>

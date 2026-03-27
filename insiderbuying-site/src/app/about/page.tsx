@@ -1,4 +1,11 @@
+import type { Metadata } from "next";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "About | EarlyInsider",
+  description:
+    "Learn about EarlyInsider — our mission, team, and how we deliver real-time SEC insider trading alerts and AI-powered stock analysis.",
+};
 
 const STEPS = [
   { icon: "📄", title: "SEC Filing", desc: "Real-time monitoring of the SEC EDGAR system for newly submitted Form 4 documents." },
@@ -20,7 +27,7 @@ export default function AboutPage() {
       {/* ═══ SECTION 1: HEADER ═══ */}
       <section className="bg-[#000592] pt-[80px] pb-[80px] md:pt-[128px] md:pb-[128px] px-[20px] md:px-[24px] flex flex-col items-center justify-center">
         <h1 className="font-[var(--font-montaga)] text-[39px] md:text-[54px] font-normal leading-[1.1] md:leading-[52px] text-white text-center mb-[16px] md:mb-[24px]">
-          About InsiderBuying
+          About EarlyInsider
         </h1>
         <p className="text-[16px] md:text-[18px] font-normal leading-[26px] md:leading-[29px] text-white text-center max-w-[620px]">
           Our mission is to democratize high-conviction insider trading data for the modern retail investor.
@@ -38,7 +45,7 @@ export default function AboutPage() {
               In the complex world of the stock market, information is the ultimate currency. Historically, high-conviction data—like knowing exactly when a CEO or CFO buys their own company&apos;s shares—was the exclusive domain of institutional architects and hedge fund managers.
             </p>
             <p className="text-[16px] md:text-[17px] font-normal leading-[28px] md:leading-[30px] text-[#1c1b1b]">
-              InsiderBuying.ai was founded to change that landscape. We monitor SEC filings 24/7, processing thousands of Form 4 submissions through our proprietary AI engine to filter out the noise and highlight the signals that actually matter.
+              EarlyInsider was founded to change that landscape. We monitor SEC filings 24/7, processing thousands of Form 4 submissions through our proprietary AI engine to filter out the noise and highlight the signals that actually matter.
             </p>
             <p className="text-[16px] md:text-[17px] font-normal leading-[28px] md:leading-[30px] text-[#1c1b1b]">
               By bridging the gap between raw regulatory data and actionable intelligence, we empower retail investors to trade with the same conviction as the insiders themselves.
@@ -112,7 +119,7 @@ export default function AboutPage() {
           </h2>
           <div className="bg-white p-[24px] md:p-[32px]">
             <p className="text-[14px] font-normal leading-[23px] text-[#5c6670]">
-              InsiderBuying.ai is a financial data provider. We are not registered investment advisors. All information provided through our platform, including alerts and reports, is for educational purposes only and does not constitute financial, legal, or tax advice. Past performance of insider trading signals does not guarantee future results. All investments carry risk, and you should consult a qualified financial advisor before making any investment decisions.
+              EarlyInsider is a financial data provider. We are not registered investment advisors. All information provided through our platform, including alerts and reports, is for educational purposes only and does not constitute financial, legal, or tax advice. Past performance of insider trading signals does not guarantee future results. All investments carry risk, and you should consult a qualified financial advisor before making any investment decisions.
             </p>
           </div>
         </div>

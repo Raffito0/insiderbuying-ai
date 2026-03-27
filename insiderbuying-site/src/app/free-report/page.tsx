@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { createClient } from "@/lib/supabase/client";
 
 const FEATURES = [
   "CEO vs. CFO buying performance gap",
@@ -19,13 +20,43 @@ export default function FreeReportPage() {
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  // Section 5 CTA form state
+  const [ctaEmail, setCtaEmail] = useState("");
+  const [ctaSubmitted, setCtaSubmitted] = useState(false);
+  const [ctaLoading, setCtaLoading] = useState(false);
+
+  async function insertSubscriber(subscriberEmail: string, source: string) {
+    const supabase = createClient();
+    const { error } = await supabase
+      .from("newsletter_subscribers")
+      .insert({ email: subscriberEmail, source });
+    // Duplicate email (unique constraint) — treat as success
+    if (error && error.code === "23505") return null;
+    return error;
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
-    await new Promise((r) => setTimeout(r, 1000));
+    setError("");
+    const err = await insertSubscriber(email, "free_report");
+    if (err) {
+      setError("Something went wrong. Please try again.");
+      setLoading(false);
+      return;
+    }
     setSubmitted(true);
     setLoading(false);
+  }
+
+  async function handleCtaSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setCtaLoading(true);
+    const err = await insertSubscriber(ctaEmail, "free_report");
+    if (!err) setCtaSubmitted(true);
+    setCtaLoading(false);
   }
 
   return (
@@ -39,7 +70,7 @@ export default function FreeReportPage() {
           <div className="flex flex-col gap-[32px] max-w-[576px]">
             <p className="text-[14px] font-bold leading-[20px] text-[#006d34] font-[var(--font-mono)]">FREE RESEARCH</p>
             <h1 className="font-[var(--font-montaga)] text-[39px] md:text-[54px] font-normal leading-[1.1] md:leading-[60px] text-[#1c1b1b]">
-              InsiderBuying<br />Backtest Report
+              EarlyInsider<br />Backtest Report
             </h1>
             <p className="text-[18px] font-normal leading-[28px] text-[#000ad2]">Updated March 2026</p>
             <p className="text-[18px] font-normal leading-[29px] text-[#454556]">
@@ -62,7 +93,7 @@ export default function FreeReportPage() {
               <div className="flex flex-col gap-[24px] p-[16px]">
                 {/* Top bar */}
                 <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-bold font-[var(--font-mono)] text-[#000592] uppercase tracking-wider">InsiderBuying.ai</span>
+                  <span className="text-[10px] font-bold font-[var(--font-mono)] text-[#000592] uppercase tracking-wider">EarlyInsider</span>
                   <span className="text-[10px] font-normal text-[#757688]">March 2026</span>
                 </div>
                 {/* Title */}
@@ -139,6 +170,9 @@ export default function FreeReportPage() {
                 >
                   {loading ? "Sending..." : "Download Free Report"}
                 </button>
+                {error && (
+                  <p className="text-[12px] font-normal leading-[15px] text-red-600">{error}</p>
+                )}
                 <p className="text-[12px] font-normal leading-[15px] text-[#757688]">
                   By clicking download, you agree to our Terms of Service and Privacy Policy.
                 </p>
@@ -185,16 +219,27 @@ export default function FreeReportPage() {
           <p className="text-[16px] md:text-[20px] font-normal leading-[26px] md:leading-[28px] text-white mb-[32px] md:mb-[48px]">
             See what executives are buying with their own money.
           </p>
-          <form className="flex flex-col sm:flex-row gap-[12px] sm:gap-[16px] max-w-[672px] mx-auto w-full">
-            <input
-              type="email"
-              placeholder="Enter your email"
-              className="w-full sm:flex-1 sm:min-w-0 h-[52px] md:h-[56px] px-[20px] md:px-[24px] bg-white rounded-[4px] text-[16px] font-normal leading-[19px] text-[#1c1b1b] placeholder:text-[#757688]"
-            />
-            <button className="h-[52px] md:h-[56px] px-[28px] md:px-[40px] bg-[#006d34] rounded-[4px] text-[15px] md:text-[16px] font-bold leading-[24px] text-white hover:bg-[#005c28] transition-colors shrink-0 whitespace-nowrap">
-              Access Report
-            </button>
-          </form>
+          {ctaSubmitted ? (
+            <p className="text-[16px] font-normal leading-[24px] text-white">Check your email at <strong>{ctaEmail}</strong> for the report!</p>
+          ) : (
+            <form onSubmit={handleCtaSubmit} className="flex flex-col sm:flex-row gap-[12px] sm:gap-[16px] max-w-[672px] mx-auto w-full">
+              <input
+                type="email"
+                required
+                value={ctaEmail}
+                onChange={(e) => setCtaEmail(e.target.value)}
+                placeholder="Enter your email"
+                className="w-full sm:flex-1 sm:min-w-0 h-[52px] md:h-[56px] px-[20px] md:px-[24px] bg-white rounded-[4px] text-[16px] font-normal leading-[19px] text-[#1c1b1b] placeholder:text-[#757688]"
+              />
+              <button
+                type="submit"
+                disabled={ctaLoading}
+                className="h-[52px] md:h-[56px] px-[28px] md:px-[40px] bg-[#006d34] rounded-[4px] text-[15px] md:text-[16px] font-bold leading-[24px] text-white hover:bg-[#005c28] transition-colors shrink-0 whitespace-nowrap disabled:opacity-50"
+              >
+                {ctaLoading ? "Sending..." : "Access Report"}
+              </button>
+            </form>
+          )}
           <p className="text-[12px] font-normal leading-[15px] text-white/60 mt-[16px]">
             Institutional Grade Intelligence
           </p>

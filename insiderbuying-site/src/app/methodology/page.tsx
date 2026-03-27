@@ -1,4 +1,11 @@
+import type { Metadata } from "next";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "Methodology | EarlyInsider",
+  description:
+    "Our data-driven methodology: how we source SEC filings, score insider trades, and generate institutional-grade stock analysis reports.",
+};
 
 const DATA_SOURCES = [
   { icon: "📄", title: "SEC Edgar Filings", desc: "Real-time monitoring of all Form 4, 13F, and Schedule 13D filings with automated parsing and classification of transaction types.", footer: "Primary source for all insider trading data" },
@@ -91,7 +98,7 @@ export default function MethodologyPage() {
           </h2>
           <div className="flex flex-col gap-[20px] md:gap-[24px]">
             <p className="text-[16px] md:text-[18px] font-normal leading-[26px] md:leading-[29px] text-[#454556]">
-              At InsiderBuying.ai, we leverage advanced Large Language Models to synthesize vast amounts of financial data into readable, actionable insights. However, we maintain a human-in-the-loop oversight to ensure the highest standards of accuracy.
+              At EarlyInsider, we leverage advanced Large Language Models to synthesize vast amounts of financial data into readable, actionable insights. However, we maintain a human-in-the-loop oversight to ensure the highest standards of accuracy.
             </p>
             <p className="text-[16px] md:text-[18px] font-normal leading-[26px] md:leading-[29px] text-[#454556]">
               Crucially, the AI is not &ldquo;hallucinating&rdquo; data points. Every ticker symbol, purchase price, and percentage change is pulled directly from official SEC EDGAR filings via our proprietary data pipeline. The AI serves as a high-speed research analyst, identifying correlations that might take a human hours to uncover.

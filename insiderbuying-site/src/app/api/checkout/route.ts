@@ -1,4 +1,4 @@
-export const dynamic = "force-static";
+export const dynamic = "force-dynamic";
 import { NextResponse } from "next/server";
 import { getStripe } from "@/lib/stripe";
 import { createClient } from "@/lib/supabase/server";
@@ -23,7 +23,7 @@ export async function POST(request: Request) {
     );
   }
 
-  const origin = request.headers.get("origin") || "https://earlyinsider.com";
+  const origin = request.headers.get("origin") || process.env.NEXT_PUBLIC_SITE_URL || "https://earlyinsider.com";
 
   const params: Stripe.Checkout.SessionCreateParams = {
     mode: "subscription",

@@ -28,11 +28,11 @@ export default function PrivacyPage() {
           </div>
           <div>
             <h2 className="text-[24px] font-bold leading-[32px] text-[#1c1b1b] mb-[12px]">5. Your Rights</h2>
-            <p className="text-[16px] leading-[26px] text-[#454556]">You have the right to access, correct, or delete your personal data at any time. You may also request a copy of your data or opt out of marketing communications. To exercise these rights, contact us at privacy@insiderbuying.ai.</p>
+            <p className="text-[16px] leading-[26px] text-[#454556]">You have the right to access, correct, or delete your personal data at any time. You may also request a copy of your data or opt out of marketing communications. To exercise these rights, contact us at privacy@earlyinsider.com.</p>
           </div>
           <div>
             <h2 className="text-[24px] font-bold leading-[32px] text-[#1c1b1b] mb-[12px]">6. Contact</h2>
-            <p className="text-[16px] leading-[26px] text-[#454556]">For privacy-related inquiries, please contact our Data Protection Officer at <a href="mailto:privacy@insiderbuying.ai" className="text-[#000592] hover:underline">privacy@insiderbuying.ai</a>.</p>
+            <p className="text-[16px] leading-[26px] text-[#454556]">For privacy-related inquiries, please contact our Data Protection Officer at <a href="mailto:privacy@earlyinsider.com" className="text-[#000592] hover:underline">privacy@earlyinsider.com</a>.</p>
           </div>
         </div>
       </section>

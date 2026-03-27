@@ -1,4 +1,5 @@
 import Link from "next/link";
+import NewsletterForm from "@/components/NewsletterForm";
 
 const TOC = [
   { num: "01", label: "The Signal in the Noise", active: true },
@@ -203,7 +204,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
               <div className="flex flex-col gap-[6px]">
                 <p className="font-[var(--font-montaga)] text-[20px] md:text-[22px] font-normal leading-[28px] text-[#1c1b1b]">Marcus Vane</p>
                 <p className="text-[14px] font-normal leading-[23px] text-[#454556]">
-                  Marcus has over 15 years of experience in equity research and quant modeling. Prior to joining InsiderBuying.ai, he served as a lead analyst at J.P. Morgan focusing on global technology supply chains.
+                  Marcus has over 15 years of experience in equity research and quant modeling. Prior to joining EarlyInsider, he served as a lead analyst at J.P. Morgan focusing on global technology supply chains.
                 </p>
                 <div className="flex gap-[16px] pt-[9px]">
                   <span className="text-[12px] font-medium leading-[16px] text-[#000592]">@marcusvane</span>
@@ -243,10 +244,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           <div className="bg-[#000592] p-[32px] pt-[31px] pb-[48px]">
             <p className="font-[var(--font-montaga)] text-[22px] font-normal leading-[22px] text-white mb-[12px]">Join the 1%</p>
             <p className="text-[12px] font-normal leading-[20px] text-[#9ba2ff] mb-[12px]">Get weekly insider summaries delivered to your terminal every Monday morning.</p>
-            <div className="flex flex-col gap-[12px] pt-[12px]">
-              <input type="email" placeholder="Email address" className="w-full h-[44px] px-[12px] bg-white text-[14px] font-normal text-[#1a1a1a] placeholder:text-[#a0a8b1]" />
-              <button className="w-full h-[40px] bg-white flex items-center justify-center text-[12px] font-medium leading-[16px] text-[#000592]">SUBSCRIBE</button>
-            </div>
+            <NewsletterForm source="blog_article" />
           </div>
         </aside>
       </div>

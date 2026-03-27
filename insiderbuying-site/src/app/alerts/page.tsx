@@ -1,12 +1,74 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import { createClient } from "@/lib/supabase/client";
 
-const ALERTS = [
-  { name: "Michael R. Bloomberg", title: "CEO", company: "Enterprise Tech Solutions (ETS)", type: "buy" as const, amount: "$1,240,500", time: "2 minutes ago", ai: "Significant insider purchase relative to previous holding patterns. Purchase occurs 48 hours before quarterly earnings release, suggesting high internal confidence in pending data points. Transaction size represents 12% of total annual compensation..." },
-  { name: "Sarah Jenkins", title: "CFO", company: "CloudStream Dynamics (CSD)", type: "sell" as const, amount: "$450,200", time: "14 minutes ago", ai: "Automatic divestment plan execution (Rule 10b5-1). Minimal impact on overall holding percentages. Transaction appears to be part of a scheduled tax-minimization strategy rather than organic bearish sentiment..." },
-  { name: "David Chen", title: "Director", company: "Meridian Systems (MSYS)", type: "buy" as const, amount: "$2.4M", time: "45 minutes ago", ai: "" },
+interface InsiderAlert {
+  id: string;
+  ticker: string;
+  company_name: string;
+  insider_name: string;
+  insider_title: string;
+  transaction_type: string;
+  shares: number;
+  price_per_share: number;
+  total_value: number;
+  filing_date: string;
+  significance_score: number;
+  ai_analysis: string | null;
+  cluster_id: string | null;
+  is_cluster_buy: boolean;
+  raw_filing_data: unknown;
+  created_at: string;
+}
+
+interface AlertDisplay {
+  name: string;
+  title: string;
+  company: string;
+  type: "buy" | "sell";
+  amount: string;
+  time: string;
+  ai: string;
+  isSample?: boolean;
+}
+
+const SAMPLE_ALERTS: AlertDisplay[] = [
+  { name: "Michael R. Bloomberg", title: "CEO", company: "Enterprise Tech Solutions (ETS)", type: "buy", amount: "$1,240,500", time: "2 minutes ago", ai: "Significant insider purchase relative to previous holding patterns. Purchase occurs 48 hours before quarterly earnings release, suggesting high internal confidence in pending data points. Transaction size represents 12% of total annual compensation...", isSample: true },
+  { name: "Sarah Jenkins", title: "CFO", company: "CloudStream Dynamics (CSD)", type: "sell", amount: "$450,200", time: "14 minutes ago", ai: "Automatic divestment plan execution (Rule 10b5-1). Minimal impact on overall holding percentages. Transaction appears to be part of a scheduled tax-minimization strategy rather than organic bearish sentiment...", isSample: true },
+  { name: "David Chen", title: "Director", company: "Meridian Systems (MSYS)", type: "buy", amount: "$2.4M", time: "45 minutes ago", ai: "", isSample: true },
 ];
+
+function formatCurrency(value: number): string {
+  if (value >= 1_000_000) return `$${(value / 1_000_000).toFixed(1)}M`;
+  if (value >= 1_000) return `$${(value / 1_000).toFixed(1)}K`.replace(".0K", "K");
+  return `$${value.toLocaleString()}`;
+}
+
+function timeAgo(dateStr: string): string {
+  const diff = Date.now() - new Date(dateStr).getTime();
+  const mins = Math.floor(diff / 60000);
+  if (mins < 1) return "just now";
+  if (mins < 60) return `${mins} minute${mins === 1 ? "" : "s"} ago`;
+  const hours = Math.floor(mins / 60);
+  if (hours < 24) return `${hours} hour${hours === 1 ? "" : "s"} ago`;
+  const days = Math.floor(hours / 24);
+  return `${days} day${days === 1 ? "" : "s"} ago`;
+}
+
+function mapAlert(row: InsiderAlert): AlertDisplay {
+  const txType = row.transaction_type?.toLowerCase();
+  return {
+    name: row.insider_name,
+    title: row.insider_title,
+    company: `${row.company_name} (${row.ticker})`,
+    type: txType === "sell" || txType === "sale" ? "sell" : "buy",
+    amount: formatCurrency(row.total_value),
+    time: timeAgo(row.created_at),
+    ai: row.ai_analysis || "",
+  };
+}
 
 const TOP_BUYS = [
   { ticker: "NVDA", label: "NVIDIA", amount: "$14.2M" },
@@ -17,6 +79,44 @@ const TOP_BUYS = [
 ];
 
 export default function AlertsPage() {
+  const [alerts, setAlerts] = useState<AlertDisplay[]>(SAMPLE_ALERTS);
+  const [isSampleData, setIsSampleData] = useState(true);
+  useEffect(() => {
+    const supabase = createClient();
+
+    // Fetch initial alerts
+    supabase
+      .from("insider_alerts")
+      .select("*")
+      .order("created_at", { ascending: false })
+      .limit(20)
+      .then(({ data }) => {
+        if (data && data.length > 0) {
+          setAlerts(data.map(mapAlert));
+          setIsSampleData(false);
+        }
+        // If empty or error, keep sample data
+      });
+
+    // Subscribe to realtime INSERTs
+    const channel = supabase
+      .channel("insider_alerts_realtime")
+      .on(
+        "postgres_changes",
+        { event: "INSERT", schema: "public", table: "insider_alerts" },
+        (payload) => {
+          const newAlert = mapAlert(payload.new as InsiderAlert);
+          setAlerts((prev) => [newAlert, ...prev]);
+          setIsSampleData(false);
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, []);
+
   return (
     <div className="bg-[#fcf9f8] min-h-screen pb-[80px] md:pb-[64px]">
 
@@ -67,8 +167,13 @@ export default function AlertsPage() {
 
           {/* ALERT FEED */}
           <div className="flex-1 max-w-[888px] flex flex-col gap-[16px] md:gap-[24px]">
-            {ALERTS.map((a, i) => (
-              <div key={i} className={`bg-white rounded-[8px] border border-[#c6c5d9] p-[16px] md:p-[24px] flex flex-col gap-[16px] md:gap-[24px] ${i === 2 ? "opacity-60" : ""}`}>
+            {isSampleData && (
+              <div className="bg-[#f0edf6] border border-[#c6c5d9] rounded-[8px] px-[16px] py-[10px] text-[13px] font-medium leading-[20px] text-[#454556] text-center">
+                Sample data &mdash; live alerts coming soon
+              </div>
+            )}
+            {alerts.map((a, i) => (
+              <div key={i} className={`bg-white rounded-[8px] border border-[#c6c5d9] p-[16px] md:p-[24px] flex flex-col gap-[16px] md:gap-[24px] ${a.isSample && !a.ai ? "opacity-60" : ""}`}>
                 {/* Top row: avatar + name + badge + amount */}
                 <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-[12px]">
                   <div className="flex items-center gap-[12px] md:gap-[16px]">
@@ -122,7 +227,7 @@ export default function AlertsPage() {
                   </div>
                 )}
 
-                {!a.ai && i === 2 && (
+                {!a.ai && (
                   <div className="bg-[#f6f3f2] rounded-[4px] h-[80px]" />
                 )}
 

@@ -1,4 +1,8 @@
+"use client";
+
 import Link from "next/link";
+import { useState } from "react";
+import { createClient } from "@/lib/supabase/client";
 
 const CATEGORIES = ["All", "Insider Buying", "Stock Analysis", "Earnings", "Dividend", "Market Commentary"];
 
@@ -34,6 +38,26 @@ const INSIDER_WIDGET = [
 ];
 
 export default function BlogPage() {
+  const [nlEmail, setNlEmail] = useState("");
+  const [nlSubmitted, setNlSubmitted] = useState(false);
+  const [nlLoading, setNlLoading] = useState(false);
+
+  async function handleNewsletterSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setNlLoading(true);
+    const supabase = createClient();
+    const { error } = await supabase
+      .from("newsletter_subscribers")
+      .insert({ email: nlEmail, source: "blog" });
+    // Duplicate email (unique constraint) — treat as success
+    if (error && error.code !== "23505") {
+      setNlLoading(false);
+      return;
+    }
+    setNlSubmitted(true);
+    setNlLoading(false);
+  }
+
   return (
     <div className="bg-[#fcf9f8] flex flex-col">
 
@@ -219,16 +243,27 @@ export default function BlogPage() {
               Receive exclusive weekly analysis directly to your terminal. No noise, just architectural precision.
             </p>
           </div>
-          <div className="flex flex-col sm:flex-row gap-[8px] w-full sm:w-auto shrink-0">
-            <input
-              type="email"
-              placeholder="Email Address"
-              className="w-full sm:w-[300px] h-[48px] bg-white px-[24px] text-[16px] font-normal leading-[19px] text-[#1a1a1a] placeholder:text-[#6b7280]"
-            />
-            <button className="h-[48px] px-[32px] bg-white text-[16px] font-medium leading-[24px] text-[#1c1b1b] hover:bg-white/90 transition-colors">
-              Subscribe
-            </button>
-          </div>
+          {nlSubmitted ? (
+            <p className="text-[16px] font-normal leading-[24px] text-white">Subscribed! Check <strong>{nlEmail}</strong> for updates.</p>
+          ) : (
+            <form onSubmit={handleNewsletterSubmit} className="flex flex-col sm:flex-row gap-[8px] w-full sm:w-auto shrink-0">
+              <input
+                type="email"
+                required
+                value={nlEmail}
+                onChange={(e) => setNlEmail(e.target.value)}
+                placeholder="Email Address"
+                className="w-full sm:w-[300px] h-[48px] bg-white px-[24px] text-[16px] font-normal leading-[19px] text-[#1a1a1a] placeholder:text-[#6b7280]"
+              />
+              <button
+                type="submit"
+                disabled={nlLoading}
+                className="h-[48px] px-[32px] bg-white text-[16px] font-medium leading-[24px] text-[#1c1b1b] hover:bg-white/90 transition-colors disabled:opacity-50"
+              >
+                {nlLoading ? "..." : "Subscribe"}
+              </button>
+            </form>
+          )}
         </div>
       </section>
     </div>

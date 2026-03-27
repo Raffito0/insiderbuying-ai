@@ -33,9 +33,9 @@ const PLANS = [
 const FAQS = [
   { q: "Is following insider buying legal?", a: "Yes. SEC Form 4 filings are public documents. Tracking and analyzing publicly available insider transaction data is completely legal." },
   { q: "How fast are the alerts?", a: "Within 60 seconds of an SEC Form 4 filing being published on EDGAR, our system parses the transaction, runs AI analysis, and delivers the alert." },
-  { q: "Do you provide investment advice?", a: "No. InsiderBuying.ai is a data and analysis platform, not a registered investment advisor. Our AI analysis is informational only." },
+  { q: "Do you provide investment advice?", a: "No. EarlyInsider is a data and analysis platform, not a registered investment advisor. Our AI analysis is informational only." },
   { q: "Can I create a custom watchlist?", a: "Yes, Pro subscribers can create custom watchlists to track specific companies and receive instant alerts." },
-  { q: "How does this compare to OpenInsider?", a: "OpenInsider provides raw SEC data. InsiderBuying.ai adds AI-powered conviction scoring, cluster detection, and institutional-grade filtering." },
+  { q: "How does this compare to OpenInsider?", a: "OpenInsider provides raw SEC data. EarlyInsider adds AI-powered conviction scoring, cluster detection, and institutional-grade filtering." },
   { q: "What is your cancellation policy?", a: "Cancel anytime with one click from your account settings. No hidden fees, no questions asked." },
 ];
 

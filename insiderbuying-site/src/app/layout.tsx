@@ -26,9 +26,24 @@ const spaceMono = Space_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "InsiderBuying.ai — Know What CEOs Are Buying",
+  metadataBase: new URL("https://earlyinsider.com"),
+  title: "EarlyInsider — Know What CEOs Are Buying Before Everyone",
   description:
     "Real-time SEC Form 4 insider trading alerts, AI-powered analysis, and deep dive stock reports. Track what executives buy before everyone else.",
+  openGraph: {
+    title: "EarlyInsider — Know What CEOs Are Buying Before Everyone",
+    description:
+      "Real-time SEC Form 4 insider trading alerts, AI-powered analysis, and deep dive stock reports. Track what executives buy before everyone else.",
+    url: "https://earlyinsider.com",
+    siteName: "EarlyInsider",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "EarlyInsider — Know What CEOs Are Buying Before Everyone",
+    description:
+      "Real-time SEC Form 4 insider trading alerts, AI-powered analysis, and deep dive stock reports. Track what executives buy before everyone else.",
+  },
 };
 
 export default function RootLayout({

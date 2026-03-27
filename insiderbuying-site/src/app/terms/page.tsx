@@ -12,15 +12,15 @@ export default function TermsPage() {
         <div className="max-w-[800px] mx-auto flex flex-col gap-[32px]">
           <div>
             <h2 className="text-[24px] font-bold leading-[32px] text-[#1c1b1b] mb-[12px]">1. Acceptance of Terms</h2>
-            <p className="text-[16px] leading-[26px] text-[#454556]">By accessing or using InsiderBuying.ai, you agree to be bound by these Terms of Service. If you do not agree to these terms, you may not use our services.</p>
+            <p className="text-[16px] leading-[26px] text-[#454556]">By accessing or using EarlyInsider, you agree to be bound by these Terms of Service. If you do not agree to these terms, you may not use our services.</p>
           </div>
           <div>
             <h2 className="text-[24px] font-bold leading-[32px] text-[#1c1b1b] mb-[12px]">2. Service Description</h2>
-            <p className="text-[16px] leading-[26px] text-[#454556]">InsiderBuying.ai provides financial data analytics, SEC Form 4 filing alerts, and AI-powered analysis of insider trading activity. Our platform aggregates publicly available data from the SEC EDGAR database and applies proprietary scoring models.</p>
+            <p className="text-[16px] leading-[26px] text-[#454556]">EarlyInsider provides financial data analytics, SEC Form 4 filing alerts, and AI-powered analysis of insider trading activity. Our platform aggregates publicly available data from the SEC EDGAR database and applies proprietary scoring models.</p>
           </div>
           <div>
             <h2 className="text-[24px] font-bold leading-[32px] text-[#1c1b1b] mb-[12px]">3. Not Financial Advice</h2>
-            <p className="text-[16px] leading-[26px] text-[#454556]">InsiderBuying.ai is not a registered investment advisor, broker-dealer, or financial planner. All information provided through our platform is for educational and informational purposes only. Nothing on this site constitutes financial, legal, or tax advice. Past performance of insider trading signals does not guarantee future results. Always consult a qualified financial advisor before making investment decisions.</p>
+            <p className="text-[16px] leading-[26px] text-[#454556]">EarlyInsider is not a registered investment advisor, broker-dealer, or financial planner. All information provided through our platform is for educational and informational purposes only. Nothing on this site constitutes financial, legal, or tax advice. Past performance of insider trading signals does not guarantee future results. Always consult a qualified financial advisor before making investment decisions.</p>
           </div>
           <div>
             <h2 className="text-[24px] font-bold leading-[32px] text-[#1c1b1b] mb-[12px]">4. Account Terms</h2>
@@ -32,15 +32,15 @@ export default function TermsPage() {
           </div>
           <div>
             <h2 className="text-[24px] font-bold leading-[32px] text-[#1c1b1b] mb-[12px]">6. Intellectual Property</h2>
-            <p className="text-[16px] leading-[26px] text-[#454556]">All content, analysis, scoring models, and proprietary data on InsiderBuying.ai are owned by us. You may not reproduce, distribute, or create derivative works from our content without written permission.</p>
+            <p className="text-[16px] leading-[26px] text-[#454556]">All content, analysis, scoring models, and proprietary data on EarlyInsider are owned by us. You may not reproduce, distribute, or create derivative works from our content without written permission.</p>
           </div>
           <div>
             <h2 className="text-[24px] font-bold leading-[32px] text-[#1c1b1b] mb-[12px]">7. Limitation of Liability</h2>
-            <p className="text-[16px] leading-[26px] text-[#454556]">InsiderBuying.ai shall not be liable for any indirect, incidental, or consequential damages arising from your use of our services. Our total liability shall not exceed the amount paid by you in the 12 months preceding the claim.</p>
+            <p className="text-[16px] leading-[26px] text-[#454556]">EarlyInsider shall not be liable for any indirect, incidental, or consequential damages arising from your use of our services. Our total liability shall not exceed the amount paid by you in the 12 months preceding the claim.</p>
           </div>
           <div>
             <h2 className="text-[24px] font-bold leading-[32px] text-[#1c1b1b] mb-[12px]">8. Contact</h2>
-            <p className="text-[16px] leading-[26px] text-[#454556]">For questions about these terms, contact us at <a href="mailto:legal@insiderbuying.ai" className="text-[#000592] hover:underline">legal@insiderbuying.ai</a>.</p>
+            <p className="text-[16px] leading-[26px] text-[#454556]">For questions about these terms, contact us at <a href="mailto:legal@earlyinsider.com" className="text-[#000592] hover:underline">legal@earlyinsider.com</a>.</p>
           </div>
         </div>
       </section>

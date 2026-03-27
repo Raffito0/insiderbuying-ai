@@ -1,4 +1,11 @@
+import type { Metadata } from "next";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "Reports | EarlyInsider",
+  description:
+    "Deep-dive stock reports, sector analysis bundles, and dividend research powered by SEC insider data and AI-driven financial modeling.",
+};
 
 const TABS = ["All Reports", "Single Stock", "Bundles", "Sector Analysis", "Dividend"];
 
@@ -139,7 +146,7 @@ export default function ReportsPage() {
           </p>
           <div className="flex flex-col items-center gap-[16px] pt-[16px]">
             <Link
-              href="mailto:research@insiderbuying.ai"
+              href="mailto:research@earlyinsider.com"
               className="inline-flex items-center justify-center h-[54px] px-[32px] md:px-[40px] border border-[#000592] text-[14px] font-medium leading-[20px] text-[#000592] hover:bg-[#000592] hover:text-white transition-colors w-full sm:w-auto"
             >
               Request Custom Report

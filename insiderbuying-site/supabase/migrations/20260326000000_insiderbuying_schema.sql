@@ -1,4 +1,4 @@
--- InsiderBuying.ai — Supabase Schema
+-- EarlyInsider — Supabase Schema
 -- Run this after creating the Supabase project
 
 -- ============================================================

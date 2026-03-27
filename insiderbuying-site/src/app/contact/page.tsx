@@ -1,4 +1,11 @@
+import type { Metadata } from "next";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "Contact | EarlyInsider",
+  description:
+    "Get in touch with the EarlyInsider team for support, partnership inquiries, or press requests.",
+};
 
 export default function ContactPage() {
   return (
@@ -18,17 +25,17 @@ export default function ContactPage() {
             <div>
               <h2 className="text-[20px] font-bold leading-[28px] text-[#1c1b1b] mb-[8px]">General Support</h2>
               <p className="text-[16px] leading-[26px] text-[#454556]">For account issues, billing questions, or technical support.</p>
-              <a href="mailto:support@insiderbuying.ai" className="text-[16px] font-medium text-[#000592] hover:underline mt-[8px] inline-block">support@insiderbuying.ai</a>
+              <a href="mailto:support@earlyinsider.com" className="text-[16px] font-medium text-[#000592] hover:underline mt-[8px] inline-block">support@earlyinsider.com</a>
             </div>
             <div>
               <h2 className="text-[20px] font-bold leading-[28px] text-[#1c1b1b] mb-[8px]">Enterprise & Partnerships</h2>
               <p className="text-[16px] leading-[26px] text-[#454556]">For institutional partnerships, API access, or custom data solutions.</p>
-              <a href="mailto:enterprise@insiderbuying.ai" className="text-[16px] font-medium text-[#000592] hover:underline mt-[8px] inline-block">enterprise@insiderbuying.ai</a>
+              <a href="mailto:enterprise@earlyinsider.com" className="text-[16px] font-medium text-[#000592] hover:underline mt-[8px] inline-block">enterprise@earlyinsider.com</a>
             </div>
             <div>
               <h2 className="text-[20px] font-bold leading-[28px] text-[#1c1b1b] mb-[8px]">Press & Media</h2>
               <p className="text-[16px] leading-[26px] text-[#454556]">For media inquiries, interviews, or data citation requests.</p>
-              <a href="mailto:press@insiderbuying.ai" className="text-[16px] font-medium text-[#000592] hover:underline mt-[8px] inline-block">press@insiderbuying.ai</a>
+              <a href="mailto:press@earlyinsider.com" className="text-[16px] font-medium text-[#000592] hover:underline mt-[8px] inline-block">press@earlyinsider.com</a>
             </div>
           </div>
         </div>

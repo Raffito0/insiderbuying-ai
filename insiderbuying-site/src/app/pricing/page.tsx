@@ -2,6 +2,28 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { createClient } from "@/lib/supabase/client";
+
+async function handleCheckout(priceId: string) {
+  const supabase = createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) {
+    window.location.href = "/signup";
+    return;
+  }
+
+  const res = await fetch("/api/checkout", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ priceId }),
+  });
+
+  const data = await res.json();
+  if (data.url) {
+    window.location.href = data.url;
+  }
+}
 
 const CHECK = <svg className="w-[14px] h-[14px] shrink-0" viewBox="0 0 14 14" fill="#006d34"><path d="M2 7l3.5 3.5L12 4" stroke="#006d34" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round"/></svg>;
 const DASH = <span className="text-[14px] text-[#c6c5d9]">&mdash;</span>;
@@ -123,9 +145,12 @@ export default function PricingPage() {
                 </li>
               ))}
             </ul>
-            <Link href="/signup" className="flex items-center justify-center h-[54px] bg-[#000592] text-[14px] font-bold leading-[20px] text-white hover:bg-[#080f99] transition-colors">
+            <button
+              onClick={() => handleCheckout(billing === "annual" ? process.env.NEXT_PUBLIC_STRIPE_PRICE_PRO_ANNUAL || "price_1TFVfHBJM1hcMsSa9wD5IcfH" : process.env.NEXT_PUBLIC_STRIPE_PRICE_PRO_MONTHLY || "price_1TFVfHBJM1hcMsSanZzyirRM")}
+              className="flex items-center justify-center h-[54px] bg-[#000592] text-[14px] font-bold leading-[20px] text-white hover:bg-[#080f99] transition-colors w-full cursor-pointer"
+            >
               Start Pro Trial
-            </Link>
+            </button>
           </div>
 
           {/* PREMIUM */}
@@ -246,7 +271,7 @@ export default function PricingPage() {
             Ready to gain an information edge?
           </h2>
           <p className="text-[16px] md:text-[18px] font-normal leading-[26px] md:leading-[28px] text-white max-w-[576px] mx-auto mb-[24px]">
-            Join over 12,000 institutional and retail investors using InsiderBuying.ai to track the smart money.
+            Join over 12,000 institutional and retail investors using EarlyInsider to track the smart money.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-[16px] sm:gap-[23px] pt-[24px]">
             <Link href="/signup" className="flex items-center justify-center h-[56px] md:h-[60px] px-[40px] bg-white text-[#002a5e] text-[14px] font-medium leading-[20px] rounded-[2px] hover:bg-white/90 transition-colors w-full sm:w-auto">

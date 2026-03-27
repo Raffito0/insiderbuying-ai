@@ -9,7 +9,7 @@ const FAQ_GROUPS = [
   {
     title: "Platform Essentials",
     items: [
-      { q: "How does InsiderBuying.ai process SEC Form 4 filings?", a: "Our automated pipeline monitors SEC EDGAR in real-time, parsing each Form 4 filing within 60 seconds of publication. We extract transaction details, cross-reference with historical data, and run AI analysis to score conviction levels." },
+      { q: "How does EarlyInsider process SEC Form 4 filings?", a: "Our automated pipeline monitors SEC EDGAR in real-time, parsing each Form 4 filing within 60 seconds of publication. We extract transaction details, cross-reference with historical data, and run AI analysis to score conviction levels." },
       { q: "What is the \"Institutional Score\" system?", a: "The score is a multi-factor calculation using proprietary precision data. It weighs the insider's historical performance, trade size relative to holdings, and cluster buy activity across the executive suite.", open: true },
       { q: "Can I export data from the platform?", a: "Pro subscribers can export alerts and analysis in CSV format. Premium users get full API access with 10,000 calls per month and Excel-compatible report exports." },
     ],
@@ -129,7 +129,7 @@ export default function FaqPage() {
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-[12px] sm:gap-[15px] pt-[24px]">
             <Link
-              href="mailto:support@insiderbuying.ai"
+              href="mailto:support@earlyinsider.com"
               className="flex items-center justify-center h-[54px] md:h-[58px] px-[32px] border border-[#000592] text-[15px] md:text-[16px] font-medium leading-[24px] text-[#000592] hover:bg-[#000592] hover:text-white transition-colors w-full sm:w-auto"
             >
               Contact Support
