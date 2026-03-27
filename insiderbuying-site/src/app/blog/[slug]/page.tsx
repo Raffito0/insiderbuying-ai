@@ -1,251 +1,307 @@
 import Link from "next/link";
-import NewsletterForm from "@/components/NewsletterForm";
+import { notFound } from "next/navigation";
 
-const TOC = [
-  { num: "01", label: "The Signal in the Noise", active: true },
-  { num: "02", label: "Technical Infrastructure", active: false },
-  { num: "03", label: "High-Conviction Scoring", active: false },
-  { num: "04", label: "Replacement Cycle Trends", active: false },
-  { num: "05", label: "Summary and Outlook", active: false },
-];
+const NOCODB_API_URL = process.env.NOCODB_API_URL!;
+const NOCODB_READONLY_TOKEN = process.env.NOCODB_READONLY_TOKEN!;
 
-const TAGS = ["#Semiconductors", "#InsiderTrading", "#GrowthInvesting", "#MacroSignals"];
+const VERDICT_COLORS: Record<string, { bg: string; text: string; border: string }> = {
+  BUY: { bg: "#dcfce7", text: "#166534", border: "#22c55e" },
+  SELL: { bg: "#fee2e2", text: "#991b1b", border: "#ef4444" },
+  CAUTION: { bg: "#fef3c7", text: "#92400e", border: "#f59e0b" },
+  WAIT: { bg: "#dbeafe", text: "#1e40af", border: "#3b82f6" },
+  NO_TRADE: { bg: "#f3f4f6", text: "#374151", border: "#6b7280" },
+};
 
-const RELATED = [
-  "The S&P Mega-Cap Insider Rotation",
-  "Decoding Q3 Filings with AI Models",
-  "Rare Earth Semiconductors and Allocation",
-];
+interface Article {
+  id: number;
+  title_text: string;
+  slug: string;
+  body_html: string;
+  hero_image_url?: string;
+  og_image_url?: string;
+  verdict_type: string;
+  verdict_text: string;
+  ticker: string;
+  meta_description: string;
+  published_at: string;
+  word_count: number;
+  key_takeaways?: string;
+  related_articles?: string;
+  author_name?: string;
+  company_name?: string;
+  sector?: string;
+}
 
-export function generateStaticParams() {
-  return [
-    { slug: "great-repricing-yield-curve" },
-    { slug: "energy-giants-accumulation" },
-    { slug: "tech-insiders-commodities" },
-    { slug: "aristocrat-play-dividend" },
-    { slug: "semiconductor-forecast" },
-  ];
+interface RelatedArticle {
+  id: number;
+  slug: string;
+  title: string;
+  verdict_type: string;
+  meta_description: string;
+}
+
+async function fetchArticle(slug: string): Promise<Article | null> {
+  const cleanSlug = slug.replace(/[^a-zA-Z0-9\-_]/g, "").slice(0, 200);
+  const where = `(slug,eq,${cleanSlug})~and(status,eq,published)`;
+  const url = `${NOCODB_API_URL}/Articles?where=${encodeURIComponent(where)}&limit=1`;
+
+  const res = await fetch(url, {
+    headers: { "xc-auth": NOCODB_READONLY_TOKEN },
+    next: { revalidate: 600 },
+  });
+
+  if (!res.ok) return null;
+  const data = await res.json();
+  return data?.list?.[0] || null;
+}
+
+function parseKeyTakeaways(kt?: string): string[] {
+  if (!kt) return [];
+  try {
+    const parsed = JSON.parse(kt);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
+
+function parseRelatedArticles(ra?: string): RelatedArticle[] {
+  if (!ra || ra === "null") return [];
+  try {
+    const parsed = JSON.parse(ra);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
+
+function extractH2Headings(html: string): string[] {
+  if (!html) return [];
+  const matches = html.match(/<h2[^>]*>([\s\S]*?)<\/h2>/gi) || [];
+  return matches.map((m) => m.replace(/<[^>]+>/g, "").trim());
+}
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const article = await fetchArticle(slug);
+  if (!article) return { title: "Article Not Found" };
+
+  return {
+    title: article.title_text,
+    description: article.meta_description,
+    openGraph: {
+      title: article.title_text,
+      description: article.meta_description,
+      type: "article",
+      publishedTime: article.published_at,
+      images: article.og_image_url ? [{ url: article.og_image_url, width: 1200, height: 630 }] : [],
+      url: `https://earlyinsider.com/blog/${article.slug}`,
+    },
+  };
 }
 
 export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
-  await params;
+  const { slug } = await params;
+  const article = await fetchArticle(slug);
+
+  if (!article) notFound();
+
+  const takeaways = parseKeyTakeaways(article.key_takeaways);
+  const related = parseRelatedArticles(article.related_articles);
+  const headings = extractH2Headings(article.body_html);
+  const readingTime = Math.max(1, Math.ceil((article.word_count || 0) / 200));
+  const vc = VERDICT_COLORS[article.verdict_type] || VERDICT_COLORS.NO_TRADE;
+
+  const formattedDate = article.published_at
+    ? new Date(article.published_at).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })
+    : "";
 
   return (
     <div className="bg-[#fcf9f8] pt-[48px] md:pt-[128px] pb-[1px]">
-      <div className="max-w-[1152px] mx-auto flex gap-[48px] lg:gap-[80px] px-[16px] md:px-[32px]">
+      {/* JSON-LD */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Article",
+            headline: article.title_text,
+            description: article.meta_description,
+            datePublished: article.published_at,
+            author: { "@type": "Person", name: article.author_name || "EarlyInsider" },
+            publisher: {
+              "@type": "Organization",
+              name: "EarlyInsider",
+              logo: { "@type": "ImageObject", url: "https://earlyinsider.com/logo.png" },
+            },
+            image: article.hero_image_url ? [article.hero_image_url] : [],
+          }),
+        }}
+      />
 
-        {/* ═══ ARTICLE ═══ */}
+      <div className="max-w-[1152px] mx-auto flex gap-[48px] lg:gap-[80px] px-[16px] md:px-[32px]">
+        {/* ARTICLE */}
         <article className="flex-1 min-w-0">
 
           {/* HEADER */}
           <div className="mb-[24px]">
-            <span className="inline-block bg-[#eae7e7] px-[12px] py-[4px] text-[12px] font-medium leading-[16px] text-[#454556] mb-[16px]">
-              Market Analysis
-            </span>
+            <div className="flex items-center gap-[8px] mb-[16px]">
+              <span
+                className="px-[12px] py-[4px] text-[12px] font-bold rounded"
+                style={{ backgroundColor: vc.bg, color: vc.text }}
+              >
+                {article.verdict_type}
+              </span>
+              <span className="text-[12px] font-medium text-[#5c6670] font-mono">{article.ticker}</span>
+              {article.sector && <span className="text-[12px] text-[#5c6670]">{article.sector}</span>}
+            </div>
+
             <h1 className="font-[var(--font-montaga)] text-[28px] md:text-[38px] font-normal leading-[1.2] md:leading-[42px] text-[#1a1a1a] mb-[12px]">
-              Institutional Positioning in Semi-Cap Equipment: The Stealth Accumulation Phase
+              {article.title_text}
             </h1>
-            <p className="text-[16px] md:text-[18px] font-normal leading-[26px] md:leading-[29px] text-[#5c6670] mb-[24px]">
-              Deciphering the surge in Form 4 filings among mid-tier semiconductor executives during the recent volatility period.
+            <p className="text-[16px] md:text-[18px] font-normal leading-[26px] text-[#5c6670] mb-[24px]">
+              {article.meta_description}
             </p>
 
-            {/* Meta bar */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between py-[20px] md:py-[24px] border-y border-[#c6c5d9] gap-[12px]">
-              <div className="flex items-center gap-[12px] md:gap-[16px]">
-                <div className="w-[40px] h-[40px] md:w-[48px] md:h-[48px] rounded-full bg-[#f0eded]" />
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between py-[20px] border-y border-[#c6c5d9] gap-[12px]">
+              <div className="flex items-center gap-[12px]">
+                <div className="w-[40px] h-[40px] rounded-full bg-[#f0eded]" />
                 <div>
-                  <p className="text-[14px] font-semibold leading-[20px] text-[#1a1a1a]">Marcus Vane</p>
-                  <p className="text-[12px] font-normal leading-[16px] text-[#5c6670]">Lead Analyst, Technology</p>
+                  <p className="text-[14px] font-semibold text-[#1a1a1a]">{article.author_name || "EarlyInsider"}</p>
+                  <p className="text-[12px] text-[#5c6670]">{article.company_name && `Covering ${article.company_name}`}</p>
                 </div>
               </div>
-              <div className="flex items-center gap-[16px] md:gap-[24px] ml-[52px] sm:ml-0">
-                <span className="flex items-center gap-[6px] text-[12px] md:text-[13px] font-normal leading-[20px] text-[#454556]">
-                  <svg className="w-[13px] h-[15px]" viewBox="0 0 13 15" fill="none"><rect x="1" y="2" width="11" height="12" rx="1" stroke="#454556" strokeWidth="1.5"/><path d="M4 0v4M9 0v4M1 6h11" stroke="#454556" strokeWidth="1.5"/></svg>
-                  Oct 24, 2024
-                </span>
-                <span className="flex items-center gap-[6px] text-[12px] md:text-[13px] font-normal leading-[20px] text-[#454556]">
-                  <svg className="w-[15px] h-[15px]" viewBox="0 0 15 15" fill="none"><circle cx="7.5" cy="7.5" r="6.5" stroke="#454556" strokeWidth="1.5"/><path d="M7.5 4v4l3 2" stroke="#454556" strokeWidth="1.5" strokeLinecap="round"/></svg>
-                  12 min read
-                </span>
+              <div className="flex items-center gap-[16px] ml-[52px] sm:ml-0">
+                <span className="text-[13px] text-[#454556]">{formattedDate}</span>
+                <span className="text-[13px] text-[#454556]">{readingTime} min read</span>
               </div>
             </div>
           </div>
 
-          {/* FEATURED IMAGE */}
-          <figure className="mb-[24px]">
-            <div className="w-full h-[220px] md:h-[438px] bg-[#f0eded] rounded-[4px]" />
-            <figcaption className="mt-[12px] md:mt-[15px] text-[12px] md:text-[13px] font-normal leading-[20px] md:leading-[21px] text-[#454556]">
-              Fig 1.1: Automated wafer inspection systems at a Tier 1 fabrication facility. Source: Global Tech Visuals.
-            </figcaption>
-          </figure>
+          {/* HERO IMAGE */}
+          {article.hero_image_url && (
+            <figure className="mb-[24px]">
+              <img src={article.hero_image_url} alt={article.title_text} className="w-full rounded-[4px]" />
+            </figure>
+          )}
+
+          {/* KEY TAKEAWAYS */}
+          {takeaways.length > 0 && (
+            <div className="bg-[#f8fafc] border border-[#e2e8f0] rounded-[8px] p-[24px] mb-[32px]">
+              <h2 className="text-[18px] font-bold text-[#1a1a1a] mb-[16px]">Key Takeaways</h2>
+              <ul className="flex flex-col gap-[12px]">
+                {takeaways.map((t, i) => (
+                  <li key={i} className="flex items-start gap-[12px]">
+                    <svg className="w-[20px] h-[20px] shrink-0 mt-[2px]" viewBox="0 0 20 20" fill={vc.border}><circle cx="10" cy="10" r="10"/><path d="M6 10l3 3 5-5" stroke="white" strokeWidth="2" fill="none"/></svg>
+                    <span className="text-[15px] leading-[24px] text-[#1c1b1b]">{t}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
 
           {/* ARTICLE BODY */}
-          <div className="mb-[48px] md:mb-[80px]">
-            <p className="text-[16px] md:text-[17px] font-normal leading-[28px] md:leading-[30px] text-[#1c1b1b] mb-[24px]">
-              The current landscape of the semiconductor equipment sector is undergoing a quiet but profound shift. While retail sentiment remains jittery due to macro headwinds, our proprietary tracking of SEC Form 4 filings reveals a different narrative. C-suite executives at critical supply-chain nodes are accumulating shares at levels not seen since the post-pandemic recovery phase.
-            </p>
+          <div
+            className="prose prose-lg max-w-none mb-[48px] [&_h2]:font-[var(--font-montaga)] [&_h2]:text-[26px] [&_h2]:md:text-[32px] [&_h2]:font-normal [&_h2]:leading-[1.2] [&_h2]:text-[#1a1a1a] [&_h2]:mt-[36px] [&_h2]:mb-[20px] [&_p]:text-[16px] [&_p]:md:text-[17px] [&_p]:leading-[28px] [&_p]:text-[#1c1b1b] [&_p]:mb-[24px] [&_table]:w-full [&_th]:bg-[#f1f5f9] [&_th]:p-[12px] [&_th]:text-left [&_th]:text-[13px] [&_th]:font-bold [&_td]:p-[12px] [&_td]:text-[14px] [&_td]:border-b [&_td]:border-[#e2e8f0] [&_blockquote]:bg-[#f1f1f1] [&_blockquote]:border-l-[3px] [&_blockquote]:border-[#000592] [&_blockquote]:p-[24px] [&_blockquote]:italic [&_a]:text-[#000592] [&_a]:underline"
+            dangerouslySetInnerHTML={{ __html: article.body_html }}
+          />
 
-            <h2 className="font-[var(--font-montaga)] text-[26px] md:text-[32px] font-normal leading-[1.2] md:leading-[42px] text-[#1a1a1a] mt-[36px] md:mt-[48px] mb-[20px] md:mb-[24px]">
-              The Signal in the Noise
-            </h2>
-
-            <p className="text-[16px] md:text-[17px] font-normal leading-[28px] md:leading-[30px] text-[#1c1b1b] mb-[24px]">
-              Historically, cluster buying—where three or more insiders buy shares within a 30-day window—serves as a high-conviction signal for future relative outperformance. We are seeing this pattern emerge in companies producing lithography and deposition equipment, particularly among mid-cap names that institutional investors have been quietly accumulating.
-            </p>
-
-            {/* Bullet list */}
-            <ul className="mb-[24px] flex flex-col gap-[12px] md:gap-[16px]">
-              {[
-                "Aggregate insider buying volume reached $45M across the sector last month.",
-                "Institutional ownership maintained a steady 84% floor during the pullback.",
-                "Relative Strength Index (RSI) shows a bullish divergence on weekly charts.",
-              ].map((item) => (
-                <li key={item} className="flex items-start gap-[12px] md:gap-[14px]">
-                  <svg className="w-[20px] h-[20px] shrink-0 mt-[2px]" viewBox="0 0 20 20" fill="#006d34"><circle cx="10" cy="10" r="10"/><path d="M6 10l3 3 5-5" stroke="white" strokeWidth="2" fill="none"/></svg>
-                  <span className="text-[16px] md:text-[17px] font-normal leading-[26px] text-[#1c1b1b]">{item}</span>
-                </li>
-              ))}
-            </ul>
-
-            {/* Blockquote */}
-            <blockquote className="bg-[#f1f1f1] border-l-[1px] border-black p-[20px] md:p-[32px] mb-[24px]">
-              <p className="text-[17px] md:text-[19px] font-normal leading-[28px] md:leading-[31px] text-[#1c1b1b] italic">
-                &ldquo;The data suggests we are at the inflection point of the replacement cycle. Insiders know the order book for 2025 is already being committed.&rdquo;
-              </p>
-            </blockquote>
-
-            <h3 className="font-[var(--font-montaga)] text-[26px] md:text-[32px] font-normal leading-[1.2] md:leading-[33px] text-[#1a1a1a] mt-[36px] md:mt-[48px] mb-[20px] md:mb-[24px]">
-              Technical Infrastructure and Scalability
-            </h3>
-
-            <p className="text-[16px] md:text-[17px] font-normal leading-[28px] md:leading-[30px] text-[#1c1b1b] mb-[24px]">
-              Monitoring these flows requires high-frequency data pipelines. For instance, our API uses the following endpoint logic to filter for &ldquo;Significant Cluster Events&rdquo;:
-            </p>
-
-            {/* Code block */}
-            <div className="bg-white p-[16px] md:p-[24px] mb-[24px] overflow-x-auto">
-              <code className="text-[13px] md:text-[14px] font-normal leading-[20px] text-[#000592] font-[var(--font-mono)] whitespace-nowrap">
-                GET /v1/signals/insider-cluster?sector=semi-cap&amp;min_confidence=0.85
-              </code>
+          {/* VERDICT */}
+          <div className="border-t-[3px] pt-[24px] mb-[48px]" style={{ borderColor: vc.border }}>
+            <div className="flex items-center gap-[12px] mb-[16px]">
+              <span className="text-[20px] font-bold" style={{ color: vc.text }}>Our Verdict:</span>
+              <span className="text-[20px] font-bold px-[12px] py-[4px] rounded" style={{ backgroundColor: vc.bg, color: vc.text }}>
+                {article.verdict_type}
+              </span>
             </div>
-
-            {/* In-article widget */}
-            <div className="bg-white flex flex-col md:flex-row md:items-center justify-between p-[24px] md:p-[40px] mb-[24px] gap-[20px]">
-              <div className="flex flex-col gap-[7px]">
-                <div className="flex items-center gap-[12px]">
-                  <span className="font-[var(--font-mono)] text-[18px] font-bold text-[#1a1a1a]">NVDA</span>
-                  <span className="bg-[#54fd8f] text-[10px] font-bold text-[#006d34] px-[8px] py-[2px] rounded-[2px]">HIGH CONVICTION</span>
-                </div>
-                <p className="text-[14px] font-normal leading-[20px] text-[#454556]">
-                  Latest Transaction: <span className="font-medium">$1.2M (CEO Purchase)</span>
-                </p>
-                <div className="flex gap-[24px] pt-[8px]">
-                  <div>
-                    <p className="text-[22px] font-bold leading-[24px] text-[#006d34] font-[var(--font-mono)]">87</p>
-                    <p className="text-[11px] font-normal leading-[16px] text-[#757688]">Conviction</p>
-                  </div>
-                  <div>
-                    <p className="text-[22px] font-bold leading-[24px] text-[#1a1a1a] font-[var(--font-mono)]">3</p>
-                    <p className="text-[11px] font-normal leading-[16px] text-[#757688]">Cluster Size</p>
-                  </div>
-                </div>
-              </div>
-              <Link href="/alerts" className="flex items-center justify-center h-[48px] md:h-[52px] px-[24px] md:px-[32px] bg-[#000592] text-white text-[14px] font-medium leading-[20px] shrink-0">
-                VIEW FULL ANALYSIS
-              </Link>
-            </div>
-
-            <p className="text-[16px] md:text-[17px] font-normal leading-[28px] md:leading-[30px] text-[#1c1b1b]">
-              In conclusion, the convergence of high-conviction insider buying and depressed valuations provides a rare window of opportunity for institutional investors. We expect the next earnings cycle to validate this thesis as margin expansion begins to reflect in reported numbers.
-            </p>
+            <p className="text-[17px] leading-[28px] text-[#1c1b1b]">{article.verdict_text}</p>
           </div>
 
-          {/* ═══ FOOTER ═══ */}
-          <div className="pt-[40px] md:pt-[80px] border-t border-[#c6c5d9]">
-            {/* Tags */}
-            <div className="flex flex-wrap gap-[8px] mb-[24px]">
-              {TAGS.map((tag) => (
-                <span key={tag} className="bg-[#eae7e7] px-[12px] py-[4px] text-[12px] font-medium leading-[18px] text-[#454556]">
-                  {tag}
-                </span>
-              ))}
+          {/* SHARE */}
+          <div className="flex items-center justify-between py-[20px] border-y border-[#c6c5d9] mb-[32px]">
+            <span className="font-[var(--font-montaga)] text-[18px] text-[#454556]">Share this Insight</span>
+            <div className="flex gap-[12px]">
+              <a
+                href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(`https://earlyinsider.com/blog/${article.slug}`)}&text=${encodeURIComponent(article.title_text)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-[40px] h-[40px] border border-[#c6c5d9] flex items-center justify-center hover:bg-[#f6f3f2] text-[14px]"
+              >
+                X
+              </a>
+              <a
+                href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(`https://earlyinsider.com/blog/${article.slug}`)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-[40px] h-[40px] border border-[#c6c5d9] flex items-center justify-center hover:bg-[#f6f3f2] text-[14px]"
+              >
+                in
+              </a>
+              <button
+                onClick={() => { if (typeof navigator !== "undefined") navigator.clipboard.writeText(`https://earlyinsider.com/blog/${article.slug}`); }}
+                className="w-[40px] h-[40px] border border-[#c6c5d9] flex items-center justify-center hover:bg-[#f6f3f2] text-[12px]"
+              >
+                Copy
+              </button>
             </div>
+          </div>
 
-            {/* Share bar */}
-            <div className="flex items-center justify-between py-[20px] md:py-[24px] border-y border-[#c6c5d9] mb-[24px]">
-              <span className="font-[var(--font-montaga)] text-[16px] md:text-[18px] font-normal leading-[20px] text-[#454556]">Share this Insight</span>
-              <div className="flex gap-[12px] md:gap-[16px]">
-                {[0, 1, 2].map((i) => (
-                  <button key={i} className="w-[36px] h-[36px] md:w-[40px] md:h-[40px] border border-[#c6c5d9] flex items-center justify-center hover:bg-[#f6f3f2] transition-colors">
-                    <div className="w-[13px] h-[13px] bg-[#454556] rounded-sm" />
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Related Articles */}
+          {/* RELATED ARTICLES */}
+          {related.length > 0 && (
             <div className="pt-[24px] pb-[40px]">
-              <h4 className="font-[var(--font-montaga)] text-[26px] md:text-[32px] font-normal leading-[1.2] md:leading-[28px] text-[#1c1b1b] mb-[24px] md:mb-[32px]">Related Articles</h4>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-[20px] md:gap-[24px]">
-                {RELATED.map((title) => (
-                  <Link key={title} href="#" className="group">
-                    <div className="w-full aspect-[4/3] bg-[#f0eded] rounded-[4px] mb-[12px] md:mb-[16px]" />
-                    <p className="text-[14px] font-medium leading-[20px] text-[#1a1a1a] group-hover:text-[#000592] transition-colors">
-                      {title}
-                    </p>
-                  </Link>
-                ))}
+              <h4 className="font-[var(--font-montaga)] text-[26px] md:text-[32px] font-normal leading-[1.2] text-[#1c1b1b] mb-[24px] md:mb-[32px]">Related Articles</h4>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-[20px] md:gap-[24px]">
+                {related.slice(0, 4).map((r) => {
+                  const rvc = VERDICT_COLORS[r.verdict_type] || VERDICT_COLORS.NO_TRADE;
+                  return (
+                    <Link key={r.id} href={`/blog/${r.slug}`} className="group">
+                      <div className="flex items-center gap-[6px] mb-[8px]">
+                        <span className="text-[10px] font-bold px-[6px] py-[1px] rounded" style={{ backgroundColor: rvc.bg, color: rvc.text }}>
+                          {r.verdict_type}
+                        </span>
+                      </div>
+                      <p className="text-[16px] font-medium leading-[22px] text-[#1a1a1a] group-hover:text-[#000592] transition-colors mb-[6px]">
+                        {r.title}
+                      </p>
+                      <p className="text-[13px] leading-[18px] text-[#5c6670] line-clamp-2">{r.meta_description}</p>
+                    </Link>
+                  );
+                })}
               </div>
             </div>
+          )}
 
-            {/* Author Bio */}
-            <div className="bg-white flex flex-col sm:flex-row gap-[20px] md:gap-[32px] p-[24px] md:p-[32px]">
-              <div className="w-[64px] h-[64px] md:w-[80px] md:h-[80px] rounded-full bg-[#f0eded] border-[2px] border-white shadow shrink-0" />
-              <div className="flex flex-col gap-[6px]">
-                <p className="font-[var(--font-montaga)] text-[20px] md:text-[22px] font-normal leading-[28px] text-[#1c1b1b]">Marcus Vane</p>
-                <p className="text-[14px] font-normal leading-[23px] text-[#454556]">
-                  Marcus has over 15 years of experience in equity research and quant modeling. Prior to joining EarlyInsider, he served as a lead analyst at J.P. Morgan focusing on global technology supply chains.
-                </p>
-                <div className="flex gap-[16px] pt-[9px]">
-                  <span className="text-[12px] font-medium leading-[16px] text-[#000592]">@marcusvane</span>
-                  <span className="text-[12px] font-medium leading-[16px] text-[#000592]">LinkedIn</span>
-                </div>
-              </div>
+          {/* AUTHOR BIO */}
+          <div className="bg-white flex flex-col sm:flex-row gap-[20px] md:gap-[32px] p-[24px] md:p-[32px] mb-[48px]">
+            <div className="w-[64px] h-[64px] md:w-[80px] md:h-[80px] rounded-full bg-[#f0eded] border-[2px] border-white shadow shrink-0" />
+            <div className="flex flex-col gap-[6px]">
+              <p className="font-[var(--font-montaga)] text-[20px] md:text-[22px] font-normal leading-[28px] text-[#1c1b1b]">
+                {article.author_name || "EarlyInsider"}
+              </p>
+              <p className="text-[14px] font-normal leading-[23px] text-[#454556]">
+                {article.author_name === "Dexter Research"
+                  ? "AI-assisted financial research powered by real-time market data, SEC filings, and proprietary analysis algorithms."
+                  : "Independent equity analyst covering public markets with a focus on insider transactions, valuation, and dividend sustainability."}
+              </p>
             </div>
           </div>
         </article>
 
-        {/* ═══ SIDEBAR ═══ */}
+        {/* SIDEBAR */}
         <aside className="w-[280px] shrink-0 hidden lg:flex flex-col gap-[40px]">
-          <div className="bg-white p-[32px]">
-            <p className="font-[var(--font-montaga)] text-[20px] font-normal leading-[16px] text-[#454556] pb-[16px] border-b border-[#c6c5d9] mb-[23px]">Contents</p>
-            <nav className="flex flex-col gap-[15px]">
-              {TOC.map((item) => (
-                <a key={item.num} href="#" className={`text-[13px] leading-[20px] ${item.active ? "font-semibold text-[#000592]" : "font-normal text-[#454556] hover:text-[#000592]"}`}>
-                  {item.num}. {item.label}
-                </a>
-              ))}
-            </nav>
-          </div>
-          <div className="bg-white p-[32px]">
-            <p className="font-[var(--font-montaga)] text-[20px] font-normal leading-[16px] text-[#454556] pb-[16px] border-b border-[#c6c5d9] mb-[24px]">Premium Reports</p>
-            <div className="flex flex-col gap-[24px]">
-              {[{ title: "Semi-Cap Deep Dive 2024", price: "$29.99" },{ title: "AI Infrastructure Report", price: "$19.99" }].map((r) => (
-                <div key={r.title} className="flex flex-col gap-[8px]">
-                  <Link href="/reports" className="text-[14px] font-medium leading-[20px] text-[#1a1a1a] hover:text-[#000592]">{r.title}</Link>
-                  <div className="flex items-center justify-between">
-                    <span className="text-[12px] font-normal leading-[16px] text-[#757688]">{r.price}</span>
-                    <Link href="/reports" className="text-[12px] font-medium leading-[16px] text-[#000592]">View &rarr;</Link>
-                  </div>
-                </div>
-              ))}
+          {/* Table of Contents */}
+          {headings.length > 0 && (
+            <div className="bg-white p-[32px] sticky top-[100px]">
+              <p className="font-[var(--font-montaga)] text-[20px] font-normal text-[#454556] pb-[16px] border-b border-[#c6c5d9] mb-[23px]">Contents</p>
+              <nav className="flex flex-col gap-[15px]">
+                {headings.map((h, i) => (
+                  <span key={i} className="text-[13px] leading-[20px] text-[#454556] hover:text-[#000592] cursor-pointer">
+                    {String(i + 1).padStart(2, "0")}. {h}
+                  </span>
+                ))}
+              </nav>
             </div>
-          </div>
-          <div className="bg-[#000592] p-[32px] pt-[31px] pb-[48px]">
-            <p className="font-[var(--font-montaga)] text-[22px] font-normal leading-[22px] text-white mb-[12px]">Join the 1%</p>
-            <p className="text-[12px] font-normal leading-[20px] text-[#9ba2ff] mb-[12px]">Get weekly insider summaries delivered to your terminal every Monday morning.</p>
-            <NewsletterForm source="blog_article" />
-          </div>
+          )}
         </aside>
       </div>
     </div>
