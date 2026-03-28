@@ -5,11 +5,11 @@ import { useState } from "react";
 
 /* ── ALERT DATA ─────────────────────────────────────────── */
 const ALERTS = [
-  { name: "Jensen Huang", title: "CEO", ticker: "NVDA", amount: "+$4,240,000", time: "2m ago", bg: "bg-[var(--color-bg-alt)]" },
-  { name: "Tim Cook", title: "CEO", ticker: "AAPL", amount: "+$2,710,000", time: "14m ago", bg: "bg-[var(--color-bg-alt)]" },
-  { name: "Satya Nadella", title: "CEO", ticker: "MSFT", amount: "+$1,420,000", time: "41m ago", bg: "bg-[var(--color-bg-alt)]" },
-  { name: "Andy Jassy", title: "CEO", ticker: "AMZN", amount: "+$1,100,000", time: "1h ago", bg: "bg-[var(--color-bg-alt)]" },
-  { name: "Mark Zuckerberg", title: "CEO", ticker: "META", amount: "+$3,830,000", time: "2h ago", bg: "bg-[var(--color-bg-alt)]" },
+  { name: "Jensen Huang", title: "CEO", ticker: "NVDA", amount: "+$4,240,000", time: "2m ago" },
+  { name: "Tim Cook", title: "CEO", ticker: "AAPL", amount: "+$2,710,000", time: "14m ago" },
+  { name: "Satya Nadella", title: "CEO", ticker: "MSFT", amount: "+$1,420,000", time: "41m ago" },
+  { name: "Andy Jassy", title: "CEO", ticker: "AMZN", amount: "+$1,100,000", time: "1h ago" },
+  { name: "Mark Zuckerberg", title: "CEO", ticker: "META", amount: "+$3,830,000", time: "2h ago" },
 ];
 
 const STATS = [
@@ -92,7 +92,7 @@ export default function HomePage() {
           {/* Desktop rows — attached block */}
           <div className="hidden lg:flex flex-col mb-[var(--gap-tight)] overflow-hidden shadow-[0px_1px_2px_rgba(0,0,0,0.05)]">
             {ALERTS.map((a, i) => (
-              <div key={i} className={`flex items-center justify-between h-[112px] px-[32px] ${a.bg} ${i > 0 ? "border-t border-[var(--color-border)]" : ""}`}>
+              <div key={i} className={`grid grid-cols-[1fr_120px_180px_80px] items-center h-[112px] px-[32px] ${i % 2 === 0 ? "bg-[var(--color-bg-alt)]" : "bg-white"} ${i > 0 ? "border-t border-[var(--color-border)]" : ""}`}>
                 <div className="flex items-center gap-[24px]">
                   <div className="w-[64px] h-[64px] rounded-full bg-[#d9d9d9] flex items-center justify-center text-[14px] font-semibold text-[color:var(--color-text-muted)]">
                     {a.name.split(" ").map(n => n[0]).join("")}
@@ -104,7 +104,7 @@ export default function HomePage() {
                 </div>
                 <span className="text-[24px] font-medium leading-[32px] text-[color:var(--color-text)]">{a.ticker}</span>
                 <span className="text-[20px] font-medium text-[color:var(--color-signal-green)]">{a.amount}</span>
-                <span className="text-[16px] font-normal text-[color:var(--color-text-secondary)]">{a.time}</span>
+                <span className="text-[16px] font-normal text-[color:var(--color-text-secondary)] text-right">{a.time}</span>
               </div>
             ))}
           </div>
