@@ -19,7 +19,7 @@ export default function ContactPage() {
         </div>
       </section>
 
-      <section className="bg-white pt-[var(--section-y-mobile)] pb-[var(--section-y-mobile)] md:pt-[var(--section-y)] md:pb-[var(--section-y)] px-[20px] md:px-[32px]">
+      <section className="bg-white pt-[48px] pb-[var(--section-y-mobile)] md:pt-[var(--section-y-mobile)] md:pb-[var(--section-y)] px-[20px] md:px-[32px]">
         <div className="max-w-[600px] mx-auto">
           <div className="flex flex-col gap-[40px]">
             <div>
