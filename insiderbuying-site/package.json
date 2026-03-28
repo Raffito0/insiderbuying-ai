@@ -20,6 +20,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@builder.io/sdk-react": "^5.2.0",
+    "@builder.io/sdk-react-nextjs": "^0.25.0",
     "@supabase/ssr": "^0.9.0",
     "@supabase/supabase-js": "^2.100.0",
     "next": "^16.2.1",
