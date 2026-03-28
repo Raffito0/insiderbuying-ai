@@ -92,7 +92,7 @@ export default function HomePage() {
           {/* Desktop rows — attached block */}
           <div className="hidden lg:flex flex-col mb-[var(--gap-tight)] overflow-hidden shadow-[0px_1px_2px_rgba(0,0,0,0.05)]">
             {ALERTS.map((a, i) => (
-              <div key={i} className={`grid grid-cols-[1fr_120px_180px_80px] items-center h-[112px] px-[32px] ${i % 2 === 0 ? "bg-[var(--color-bg-alt)]" : "bg-white"} ${i > 0 ? "border-t border-[var(--color-border)]" : ""}`}>
+              <div key={i} className={`grid grid-cols-[minmax(0,1fr)_140px_180px_100px] items-center h-[112px] px-[32px] ${i % 2 === 0 ? "bg-[var(--color-bg-alt)]" : "bg-white"} ${i > 0 ? "border-t border-[var(--color-border)]" : ""}`}>
                 <div className="flex items-center gap-[24px]">
                   <div className="w-[64px] h-[64px] rounded-full bg-[#d9d9d9] flex items-center justify-center text-[14px] font-semibold text-[color:var(--color-text-muted)]">
                     {a.name.split(" ").map(n => n[0]).join("")}
