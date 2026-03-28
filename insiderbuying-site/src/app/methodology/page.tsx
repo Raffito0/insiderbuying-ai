@@ -15,16 +15,16 @@ const DATA_SOURCES = [
 
 const STEPS = [
   { num: "STEP 01", title: "Data Collection", desc: "Automated pipelines continuously monitor SEC EDGAR for new Form 4 filings. Each filing is parsed, validated, and enriched with company fundamentals within 2\u20134 minutes." },
-  { num: "STEP 02", title: "AI Research Agent", desc: "Our Dexter research agent aggregates financial data, insider history, price action, and sector context into a structured intelligence package for analysis." },
-  { num: "STEP 03", title: "Article Generation", desc: "Claude Sonnet 4.6 generates institutional-grade analysis. Every sentence must contain a verifiable fact. A 14-point quality gate ensures publication standards." },
+  { num: "STEP 02", title: "Noise Filtering", desc: "80% of Form 4 filings are routine: scheduled 10b5-1 plan executions, small option exercises, and tax withholding. The filtering engine classifies each transaction against 14 criteria to isolate the 20% that reflect discretionary conviction." },
+  { num: "STEP 03", title: "Conviction Scoring", desc: "Each filing that passes the noise filter receives a conviction score from 0 to 100. The scoring model weighs 7 factors including trade size, executive track record, cluster activity, and sector context. A 14-point quality gate ensures publication standards." },
   { num: "STEP 04", title: "Quality Gate", desc: "Automated checks verify title length, meta descriptions, banned phrase detection, keyword placement, and verdict validation before any article is published." },
 ];
 
 const LIMITATIONS = [
-  { icon: "⚠️", text: "Reporting delays: Insiders have 2 business days to file Form 4. Some transactions are reported late. We flag late filings but cannot detect unreported trades." },
-  { icon: "📋", text: "10b5-1 Plans: Pre-scheduled trading plans create noise. Our model downweights routine plan executions but cannot always distinguish conviction from mechanical selling." },
-  { icon: "🤖", text: "AI limitations: Our analysis is probabilistic, not deterministic. Conviction scores reflect historical patterns but cannot predict future outcomes with certainty." },
-  { icon: "📉", text: "Past performance: Historical backtest results do not guarantee future performance. Markets evolve and insider signals can be noisy during regime changes." },
+  { icon: "", text: "Mandatory reporting lag. SEC Form 4 filings must be submitted within 2 business days of the transaction. EarlyInsider detects filings within seconds of SEC EDGAR publication, but the underlying trade may have occurred up to 48 hours earlier." },
+  { icon: "", text: "10b5-1 pre-planned trades. Insiders who file trades under Rule 10b5-1 plans execute on a predetermined schedule, not in response to current information. The noise filter flags known 10b5-1 transactions, but not all plans are publicly disclosed." },
+  { icon: "", text: "AI analysis scope. The analysis engine operates on public data only: SEC filings, market prices, historical fundamentals, and corporate event calendars. It cannot assess management sentiment from private communications or pending regulatory actions." },
+  { icon: "", text: "Historical performance is not predictive. Academic research demonstrates that insider purchases have historically outperformed market benchmarks. Past patterns do not guarantee future results for any individual filing or trade." },
 ];
 
 export default function MethodologyPage() {
@@ -98,10 +98,10 @@ export default function MethodologyPage() {
           </h2>
           <div className="flex flex-col gap-[20px] md:gap-[24px]">
             <p className="text-[16px] md:text-[18px] font-normal leading-[26px] md:leading-[29px] text-[color:var(--color-text-secondary)]">
-              At EarlyInsider, we leverage advanced Large Language Models to synthesize vast amounts of financial data into readable, actionable insights. However, we maintain a human-in-the-loop oversight to ensure the highest standards of accuracy.
+              The analysis engine uses large language models to generate plain-English filing context, research report narratives, and conviction score explanations. The models operate exclusively on structured data extracted from SEC filings and verified financial datasets. No model has access to material nonpublic information.
             </p>
             <p className="text-[16px] md:text-[18px] font-normal leading-[26px] md:leading-[29px] text-[color:var(--color-text-secondary)]">
-              Crucially, the AI is not &ldquo;hallucinating&rdquo; data points. Every ticker symbol, purchase price, and percentage change is pulled directly from official SEC EDGAR filings via our proprietary data pipeline. The AI serves as a high-speed research analyst, identifying correlations that might take a human hours to uncover.
+              Every AI-generated narrative is constrained by the underlying structured data. If the filing data says the CEO purchased 50,000 shares at $34.12, the narrative cannot state a different figure. Conviction scores are computed algorithmically from 7 weighted factors; the language model explains the score but does not determine it.
             </p>
           </div>
         </div>

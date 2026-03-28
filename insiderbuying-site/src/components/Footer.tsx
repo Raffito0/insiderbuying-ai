@@ -45,12 +45,12 @@ export function Footer() {
           <div>
             <p className="text-[length:var(--text-body)] leading-[24px] text-white mb-[var(--gap-items)]">Legal</p>
             <p className="text-[10px] leading-[16px] tracking-[0.5px] text-[color:var(--color-text-muted)]">
-              Legal Disclaimer: Financial data is for informational purposes only. Trading involves significant risk. Consult a professional advisor before making any investment decisions.
+              EarlyInsider provides financial data and analysis for informational purposes only. Past insider trading patterns do not guarantee future results.
             </p>
           </div>
         </div>
         <div className="border-t border-white/10 pt-[var(--gap-tight)]">
-          <p className="text-[length:var(--text-caption)] leading-[16px] text-[color:var(--color-text-muted)]">&copy; 2026 EarlyInsider. Institutional Grade Data. All Rights Reserved.</p>
+          <p className="text-[length:var(--text-caption)] leading-[16px] text-[color:var(--color-text-muted)]">&copy; 2026 EarlyInsider. All Rights Reserved.</p>
         </div>
       </div>
     </footer>

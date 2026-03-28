@@ -242,7 +242,7 @@ export default function AlertsPage() {
                         <div className="absolute inset-0 bg-[var(--color-bg-alt)]/60 flex flex-col items-center justify-center">
                           <svg className="w-[14px] h-[19px] mb-[8px]" viewBox="0 0 14 19" fill="#1c1b1b"><path d="M7 0a5 5 0 00-5 5v3H1a1 1 0 00-1 1v9a1 1 0 001 1h12a1 1 0 001-1V9a1 1 0 00-1-1h-1V5a5 5 0 00-5-5zm3 8V5a3 3 0 10-6 0v3h6z"/></svg>
                           <p className="text-[13px] md:text-[14px] font-medium leading-[20px] text-[color:var(--color-text)] text-center">
-                            {!isLoggedIn ? "Sign up for free to unlock AI analysis" : "Upgrade to Pro for instant AI analysis"}
+                            {!isLoggedIn ? "Sign up for free to unlock AI analysis" : "Upgrade to Analyst for instant AI analysis"}
                           </p>
                           <Link href={!isLoggedIn ? "/signup" : "/pricing"} className="text-[12px] font-medium leading-[16px] text-[color:var(--color-primary)] mt-[4px]">
                             {!isLoggedIn ? "Sign up free" : "Unlock this insight"} &rarr;
@@ -318,7 +318,7 @@ export default function AlertsPage() {
           <div className="flex items-center gap-[8px] md:gap-[12px]">
             <svg className="w-[18px] h-[18px] shrink-0" viewBox="0 0 18 18" fill="#777eff"><circle cx="9" cy="9" r="9"/><path d="M9 5v4M9 11v1" stroke="white" strokeWidth="2" strokeLinecap="round"/></svg>
             <p className="text-[12px] md:text-[14px] font-medium leading-[18px] md:leading-[20px] text-white">
-              Alerts delayed by <span className="font-bold">15 min</span>. Pro = real-time.
+              Alerts delayed by <span className="font-bold">15 min</span>. Analyst = real-time.
             </p>
           </div>
           <Link href="/pricing" className="flex items-center gap-[7px] bg-[var(--color-primary)] h-[36px] md:h-[40px] px-[20px] md:px-[24px] text-[14px] md:text-[16px] font-medium leading-[24px] text-white hover:bg-[var(--color-primary-dark)] transition-colors shrink-0">

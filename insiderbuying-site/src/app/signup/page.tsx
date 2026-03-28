@@ -151,7 +151,7 @@ export default function SignUpPage() {
                     plan === "pro" ? "bg-white text-[#002a5e] shadow-[0px_1px_2px_rgba(0,0,0,0.06)]" : "text-[#454556]"
                   }`}
                 >
-                  <span>Pro</span>
+                  <span>Analyst</span>
                   <span className="text-[11px] font-semibold leading-[20px] text-[#179b56]">$24/mo</span>
                 </button>
               </div>

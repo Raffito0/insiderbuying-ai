@@ -98,9 +98,9 @@ export default function BlogPage() {
       <section className="bg-[var(--color-bg-alt)] pt-[48px] pb-[48px] md:pt-[var(--section-y)] md:pb-[var(--section-y)] px-[20px] md:px-[40px]">
         <div className="max-w-[1200px] mx-auto flex flex-col gap-[12px] md:gap-[16px]">
           <p className="text-[12px] font-medium leading-[18px] text-[color:var(--color-text-secondary)]">Insights</p>
-          <h1 className="font-[var(--font-montaga)] text-[39px] md:text-[54px] font-normal leading-[1.1] md:leading-[70px] text-[color:var(--color-text)]">Blog</h1>
+          <h1 className="font-[var(--font-montaga)] text-[39px] md:text-[54px] font-normal leading-[1.1] md:leading-[70px] text-[color:var(--color-text)]">Research & Analysis</h1>
           <p className="text-[16px] md:text-[18px] font-normal leading-[26px] md:leading-[29px] text-[color:var(--color-text-secondary)] max-w-[672px]">
-            Institutional-grade market analysis, proprietary trading strategies, and executive briefings on global macro trends.
+            SEC insider trading data. Conviction-scored signals. New research published daily.
           </p>
         </div>
       </section>

@@ -30,29 +30,37 @@ const DASH = <span className="text-[14px] text-[#c6c5d9]">&mdash;</span>;
 const DOT = <svg className="w-[14px] h-[14px] shrink-0" viewBox="0 0 14 14" fill="#006d34"><circle cx="7" cy="7" r="5"/></svg>;
 
 const COMPARISON = [
-  { category: "ALERTS", rows: [
-    { feature: "Real-time SEC Form 4 alerts", free: false, pro: true, premium: true },
-    { feature: "Smart notification filters", free: false, pro: true, premium: true },
-  ]},
-  { category: "ANALYSIS", rows: [
+  { category: "DATA & ALERTS", rows: [
+    { feature: "Form 4 feed (delayed 15 min)", free: true, pro: true, premium: true },
+    { feature: "Real-time Form 4 alerts (under 60s)", free: false, pro: true, premium: true },
     { feature: "AI conviction scoring", free: false, pro: true, premium: true },
-    { feature: "Insider track record analysis", free: false, pro: false, premium: true },
+    { feature: "Plain-English analysis per filing", free: false, pro: true, premium: true },
   ]},
-  { category: "REPORTS", rows: [
-    { feature: "Monthly insider digest", free: true, pro: true, premium: true },
-    { feature: "Deep dive stock reports", free: false, pro: false, premium: true },
+  { category: "WATCHLIST & FILTERS", rows: [
+    { feature: "5 watchlist tickers", free: true, pro: true, premium: true },
+    { feature: "25 watchlist tickers with custom filters", free: false, pro: true, premium: true },
+    { feature: "Unlimited watchlist tickers", free: false, pro: false, premium: true },
   ]},
-  { category: "SUPPORT", rows: [
-    { feature: "Community access", free: true, pro: true, premium: true },
-    { feature: "Priority email support", free: false, pro: true, premium: true },
+  { category: "REPORTS & DELIVERY", rows: [
+    { feature: "Weekly insider digest email", free: true, pro: true, premium: true },
+    { feature: "Weekly AI summary with sector patterns", free: false, pro: true, premium: true },
+    { feature: "1 Deep Dive report per month", free: false, pro: true, premium: true },
+    { feature: "Unlimited Deep Dive reports", free: false, pro: false, premium: true },
+    { feature: "Email and Slack delivery", free: false, pro: true, premium: true },
+  ]},
+  { category: "INTEGRATIONS & EXPORT", rows: [
+    { feature: "API access: programmatic Form 4 data", free: false, pro: false, premium: true },
+    { feature: "Webhook integration", free: false, pro: false, premium: true },
+    { feature: "CSV and JSON data export", free: false, pro: false, premium: true },
+    { feature: "Priority custom report requests (24h)", free: false, pro: false, premium: true },
   ]},
 ];
 
 const FAQS = [
-  { q: "How accurate is the data?", a: "All data is sourced directly from SEC EDGAR filings. We parse Form 4 filings within 60 seconds of publication with 99.9% accuracy." },
-  { q: "Can I cancel my subscription anytime?", a: "Yes. Cancel with one click from your account settings. No hidden fees, no questions asked. You keep access until the end of your billing period." },
-  { q: "Do you offer a free trial for Pro?", a: "We don't offer a free trial, but our Free tier lets you experience the core alert feed. Upgrade when you need the full analysis." },
-  { q: "What payment methods do you accept?", a: "We accept all major credit cards, debit cards, and Apple Pay / Google Pay through our secure Stripe payment processor." },
+  { q: "Can I cancel anytime?", a: "Yes. Cancel from your account settings in under 30 seconds. No phone call, no retention page. Annual plans refunded pro-rata." },
+  { q: "Is this financial advice?", a: "No. EarlyInsider provides structured analysis of public SEC filing data. Conviction scores reflect pattern analysis, not recommendations." },
+  { q: "Is there a free trial?", a: "Analyst and Investor plans include a 14-day free trial. No credit card required. After 14 days, reverts to Free automatically." },
+  { q: "What payment methods do you accept?", a: "Visa, Mastercard, American Express via Stripe. Annual billing saves 20%." },
 ];
 
 export default function PricingPage() {
@@ -66,10 +74,10 @@ export default function PricingPage() {
       <section className="bg-[var(--color-bg-alt)] border-b border-[var(--color-border-light)] pt-[var(--section-y-mobile)] pb-[var(--section-y-mobile)] md:pt-[var(--section-y)] md:pb-[var(--section-y)] px-[20px] md:px-[32px]">
         <div className="max-w-[1216px] mx-auto text-center">
           <h1 className="font-[var(--font-montaga)] text-[39px] md:text-[54px] font-normal leading-[1.1] md:leading-[52px] text-[color:var(--color-text)] mb-[16px] md:mb-[24px]">
-            Simple Pricing
+            Choose Your Signal Level
           </h1>
           <p className="text-[18px] font-normal leading-[28px] text-[color:var(--color-text-secondary)]">
-            Start free. Upgrade when you need the full picture.
+            All plans include the SEC EDGAR real-time Form 4 feed. 17,325+ companies monitored continuously.
           </p>
         </div>
       </section>
@@ -111,12 +119,12 @@ export default function PricingPage() {
               </div>
             </div>
             <ul className="flex flex-col gap-[16px] mb-[40px] flex-1">
-              {["Basic SEC filing alerts","Delayed ticker data (15m)","3 Saved watchlists"].map(f => (
+              {["Delayed Form 4 feed (15-minute lag)","5 watchlist tickers","Weekly insider digest email","Basic filing data","Access to CEO Alpha Report"].map(f => (
                 <li key={f} className="flex items-center gap-[12px]">{CHECK}<span className="text-[14px] font-normal leading-[20px] text-[color:var(--color-text-secondary)]">{f}</span></li>
               ))}
             </ul>
             <Link href="/signup" className="flex items-center justify-center h-[54px] border border-[var(--color-border)] text-[14px] font-bold leading-[20px] text-[color:var(--color-text)] hover:bg-[var(--color-bg-alt)] transition-colors">
-              Sign Up Free
+              Start Monitoring — Free
             </Link>
           </div>
 
@@ -126,7 +134,7 @@ export default function PricingPage() {
               MOST POPULAR
             </div>
             <div className="mb-[30px]">
-              <p className="text-[14px] font-bold leading-[20px] text-[color:var(--color-primary)] mb-[16px]">Pro</p>
+              <p className="text-[14px] font-bold leading-[20px] text-[color:var(--color-primary)] mb-[16px]">Analyst</p>
               <div className="flex items-baseline gap-[4px]">
                 <span className="font-[var(--font-montaga)] text-[36px] font-normal leading-[40px] text-[color:var(--color-text)]">
                   ${billing === "annual" ? "24" : "29"}
@@ -136,7 +144,7 @@ export default function PricingPage() {
               {billing === "annual" && <p className="text-[12px] font-normal leading-[16px] text-[color:var(--color-text-muted)] mt-[4px]">billed annually</p>}
             </div>
             <ul className="flex flex-col gap-[16px] mb-[38px] flex-1">
-              {["Real-time SEC Form 4 alerts","Institutional ownership data","Insider score analysis","Unlimited watchlists"].map(f => (
+              {["Real-time Form 4 alerts (under 60 seconds)","AI conviction scoring on every filing","Plain-English analysis per transaction","25 watchlist tickers with custom filters","Weekly AI summary with sector patterns","1 Deep Dive report per month","Email and Slack delivery"].map(f => (
                 <li key={f} className="flex items-center gap-[12px]">
                   <div className="w-[15px] h-[15px] rounded-full bg-[var(--color-primary)] flex items-center justify-center shrink-0">
                     <svg className="w-[8px] h-[8px]" viewBox="0 0 8 8"><path d="M1 4l2 2L7 2" stroke="white" strokeWidth="1.5" fill="none"/></svg>
@@ -149,29 +157,29 @@ export default function PricingPage() {
               onClick={() => handleCheckout(billing === "annual" ? process.env.NEXT_PUBLIC_STRIPE_PRICE_PRO_ANNUAL || "price_1TFVfHBJM1hcMsSa9wD5IcfH" : process.env.NEXT_PUBLIC_STRIPE_PRICE_PRO_MONTHLY || "price_1TFVfHBJM1hcMsSanZzyirRM")}
               className="flex items-center justify-center h-[54px] bg-[var(--color-primary)] text-[14px] font-bold leading-[20px] text-white hover:bg-[var(--color-primary-dark)] transition-colors w-full cursor-pointer"
             >
-              Start Pro Trial
+              Start 14-Day Trial
             </button>
           </div>
 
           {/* PREMIUM */}
           <div className="bg-white border border-[var(--color-border-light)] p-[28px] md:p-[40px] flex flex-col">
             <div className="mb-[32px]">
-              <p className="text-[14px] font-bold leading-[20px] text-[color:var(--color-text-secondary)] mb-[16px]">Premium</p>
+              <p className="text-[14px] font-bold leading-[20px] text-[color:var(--color-text-secondary)] mb-[16px]">Investor</p>
               <div className="flex items-baseline gap-[4px]">
                 <span className="font-[var(--font-montaga)] text-[36px] font-normal leading-[40px] text-[color:var(--color-text)]">
-                  ${billing === "annual" ? "39" : "49"}
+                  ${billing === "annual" ? "84" : "99"}
                 </span>
                 <span className="text-[14px] font-normal leading-[20px] text-[color:var(--color-text-secondary)]">/mo</span>
               </div>
               {billing === "annual" && <p className="text-[12px] font-normal leading-[16px] text-[color:var(--color-text-muted)] mt-[4px]">billed annually</p>}
             </div>
             <ul className="flex flex-col gap-[16px] mb-[40px] flex-1">
-              {["API Access (10k calls/mo)","Custom Bloomberg-style terminal","1-on-1 Analyst support","Exportable CSV/Excel reports"].map(f => (
+              {["Everything in Analyst","Unlimited Deep Dive reports","API access: programmatic Form 4 data","Webhook integration","Unlimited watchlist tickers","Priority custom report requests (24h)","CSV and JSON data export"].map(f => (
                 <li key={f} className="flex items-center gap-[12px]">{CHECK}<span className="text-[14px] font-normal leading-[20px] text-[color:var(--color-text-secondary)]">{f}</span></li>
               ))}
             </ul>
             <Link href="/signup" className="flex items-center justify-center h-[54px] border border-[var(--color-border)] text-[14px] font-bold leading-[20px] text-[color:var(--color-text)] hover:bg-[var(--color-bg-alt)] transition-colors">
-              Contact Sales
+              Start 14-Day Trial
             </Link>
           </div>
         </div>
@@ -194,10 +202,10 @@ export default function PricingPage() {
                 <span className="font-[var(--font-montaga)] text-[13px] md:text-[14px] font-normal leading-[16px] text-[color:var(--color-text)]">Free</span>
               </div>
               <div className="w-[60px] md:w-[122px] py-[20px] md:py-[24px] px-[8px] md:px-[16px] text-center">
-                <span className="font-[var(--font-montaga)] text-[13px] md:text-[14px] font-normal leading-[16px] text-[color:var(--color-primary)]">Pro</span>
+                <span className="font-[var(--font-montaga)] text-[13px] md:text-[14px] font-normal leading-[16px] text-[color:var(--color-primary)]">Analyst</span>
               </div>
               <div className="w-[70px] md:w-[189px] py-[20px] md:py-[24px] px-[8px] md:px-[16px] text-center">
-                <span className="font-[var(--font-montaga)] text-[13px] md:text-[14px] font-normal leading-[16px] text-[color:var(--color-text)]">Premium</span>
+                <span className="font-[var(--font-montaga)] text-[13px] md:text-[14px] font-normal leading-[16px] text-[color:var(--color-text)]">Investor</span>
               </div>
             </div>
 
@@ -268,17 +276,17 @@ export default function PricingPage() {
         </div>
         <div className="relative max-w-[1216px] mx-auto text-center">
           <h2 className="font-[var(--font-montaga)] text-[32px] md:text-[length:var(--text-title)] font-normal leading-[1.2] md:leading-[40px] text-white mb-[16px] md:mb-[24px]">
-            Ready to gain an information edge?
+            Last week: 847 Form 4 filings across SEC EDGAR.
           </h2>
           <p className="text-[16px] md:text-[18px] font-normal leading-[26px] md:leading-[28px] text-white max-w-[576px] mx-auto mb-[24px]">
-            Join over 12,000 institutional and retail investors using EarlyInsider to track the smart money.
+            23 triggered high-conviction alerts. Free users received the Monday morning digest. Analyst subscribers had each alert within 60 seconds.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-[16px] sm:gap-[23px] pt-[24px]">
             <Link href="/signup" className="flex items-center justify-center h-[56px] md:h-[60px] px-[40px] bg-white text-[color:var(--color-navy)] text-[14px] font-medium leading-[20px] rounded-[2px] hover:bg-white/90 transition-colors w-full sm:w-auto">
-              Get Started Now
+              Start Monitoring Free
             </Link>
             <Link href="/about" className="text-[14px] font-bold leading-[20px] text-white hover:underline">
-              Book a Demo
+              View Methodology
             </Link>
           </div>
         </div>

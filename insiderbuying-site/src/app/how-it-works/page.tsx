@@ -49,10 +49,10 @@ const TECH_BLOCKS = [
   },
   {
     tag: "LLM",
-    title: "Neural Sentiment",
+    title: "Conviction Engine",
     rows: [
-      { label: "ENGINE", value: "CLAUDE-3.5-SONNET" },
-      { label: "TOKENS/SEC", value: "140" },
+      { label: "ENGINE", value: "PROPRIETARY" },
+      { label: "FACTORS", value: "7-WEIGHTED" },
       { label: "BIAS-CAL", value: "ACTIVE" },
     ],
   },
@@ -199,10 +199,10 @@ export default function HowItWorksPage() {
             PROCESS &amp; TECHNOLOGY
           </p>
           <h1 className="font-[var(--font-montaga)] text-[32px] md:text-[length:var(--text-display)] font-normal leading-[1.26] text-[color:var(--color-text)]">
-            How It Works
+            150,000+ Form 4 Filings Per Year. Most Investors See Them Late.
           </h1>
           <p className="text-[16px] md:text-[18px] font-normal leading-[29px] text-[color:var(--color-text-secondary)] max-w-[672px]">
-            Institutional-grade real-time monitoring of SEC insider filings. From raw data to actionable alerts in 60 seconds.
+            The SEC publishes insider trading disclosures on EDGAR within hours of the transaction. The data is public. The volume is unmanageable. And 80% of filings are routine noise. The 20% that represent genuine conviction buying are buried in the same feed.
           </p>
         </div>
       </section>
@@ -567,13 +567,13 @@ export default function HowItWorksPage() {
 
         <div className="relative max-w-[1200px] mx-auto px-[0px] md:px-[32px] flex flex-col md:flex-row items-center justify-between gap-[32px]">
           <h2 className="font-[var(--font-montaga)] text-[32px] md:text-[length:var(--text-title)] font-normal leading-[1.5] text-white text-center md:text-left">
-            Get the edge you&apos;ve been looking for.
+            The Data Is Public. The Speed Is Not.
           </h2>
           <Link
             href="/signup"
             className="bg-white text-black text-[18px] font-medium leading-[28px] px-[40px] py-[16px] hover:bg-gray-100 active:scale-[0.98] transition-all duration-150 shrink-0"
           >
-            Start Free Now
+            Start Monitoring Free
           </Link>
         </div>
       </section>

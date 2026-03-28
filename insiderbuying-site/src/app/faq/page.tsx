@@ -7,27 +7,30 @@ const CATEGORIES = ["All", "Getting Started", "Alerts", "Pricing", "Data & Secur
 
 const FAQ_GROUPS = [
   {
-    title: "Platform Essentials",
+    title: "Platform & Data",
     items: [
-      { q: "How does EarlyInsider process SEC Form 4 filings?", a: "Our automated pipeline monitors SEC EDGAR in real-time, parsing each Form 4 filing within 60 seconds of publication. We extract transaction details, cross-reference with historical data, and run AI analysis to score conviction levels." },
-      { q: "What is the \"Institutional Score\" system?", a: "The score is a multi-factor calculation using proprietary precision data. It weighs the insider's historical performance, trade size relative to holdings, and cluster buy activity across the executive suite.", open: true },
-      { q: "Can I export data from the platform?", a: "Pro subscribers can export alerts and analysis in CSV format. Premium users get full API access with 10,000 calls per month and Excel-compatible report exports." },
+      { q: "Where does EarlyInsider get its data?", a: "All insider trading data is sourced directly from SEC EDGAR. EarlyInsider monitors Form 3, Form 4, Form 5, and Schedule 13D/13G filings across 17,325+ public companies. Every alert includes a direct link to the original SEC EDGAR filing for independent verification." },
+      { q: "Is insider trading data legal to use?", a: "Yes. SEC Form 4 filings are public documents, published on SEC EDGAR by federal mandate under Section 16(a) of the Securities Exchange Act of 1934. Monitoring and analyzing these filings is legal and widely practiced by institutional investors.", open: true },
+      { q: "How many companies does EarlyInsider cover?", a: "17,325+ public companies listed on NYSE, NASDAQ, and OTC markets. The historical database contains 94M+ indexed records spanning over 10 years of filing, pricing, and fundamental data." },
+      { q: "How accurate is the data?", a: "Filing data is parsed directly from SEC EDGAR XBRL feeds. Parsed values are validated against the structured XML before delivery. Conviction scores are algorithmic, computed from 7 weighted factors documented on the Methodology page." },
     ],
   },
   {
-    title: "Alerts & Notifications",
+    title: "Alerts & Analysis",
     items: [
-      { q: "What is the latency for Real-time Alerts?", a: "Our system delivers alerts within 60 seconds of a Form 4 filing being published on SEC EDGAR. This includes parsing, AI analysis, and multi-channel delivery." },
-      { q: "Can I filter alerts by sector or trade size?", a: "Yes. Pro and Premium subscribers can set custom filters by sector, market cap, minimum transaction size, insider role, and conviction score threshold." },
-      { q: "How do SMS alerts work for international users?", a: "We currently support push notifications via web and mobile app globally. SMS alerts are available for US numbers on Premium plans. International SMS is on our roadmap." },
+      { q: "How fast are the alerts?", a: "Median delivery time is under 60 seconds from the moment a Form 4 filing appears on SEC EDGAR. Free-tier users receive a delayed feed with a 15-minute lag. Analyst and Investor subscribers receive filings in real-time via email, Slack, or webhook." },
+      { q: "What is a conviction score?", a: "A numeric score from 0 to 100 assigned to each Form 4 filing after noise filtering. The score weighs 7 factors: trade size vs. historical average, executive seniority and track record, cluster buying activity, timing relative to earnings, historical hit rate, sector momentum, and purchase-to-holdings ratio. Scores above 75 are classified as high-conviction." },
+      { q: "How is EarlyInsider different from OpenInsider?", a: "OpenInsider displays raw Form 4 data with no analysis, no conviction scoring, and no real-time alerting. EarlyInsider delivers parsed filings in under 60 seconds, assigns a conviction score, generates plain-English analysis, and filters out the 80% of filings that are routine noise. The Analyst plan costs $24/mo." },
+      { q: "How does EarlyInsider handle 10b5-1 pre-planned trades?", a: "The noise filter flags transactions that match known 10b5-1 plan patterns based on transaction codes, filing footnotes, and historical trading regularity. Flagged filings receive reduced conviction scores. The Methodology page lists this as a stated limitation." },
     ],
   },
   {
-    title: "Data & Compliance",
+    title: "Billing & Access",
     items: [
-      { q: "Is the data sourced directly from the SEC?", a: "Yes. All insider transaction data comes directly from SEC EDGAR Form 4 filings. We do not use third-party data providers for our core filing data." },
-      { q: "How often is the knowledge base updated?", a: "Our filing database updates in real-time as new Form 4s are published. Historical data goes back to 2018, covering over 85,000 insider transactions." },
-      { q: "Do you track Rule 10b5-1 trading plans?", a: "Yes. We flag transactions that appear to be part of pre-scheduled 10b5-1 plans. Our AI downweights these in conviction scoring since they carry less signal value." },
+      { q: "Can I cancel anytime?", a: "Yes. Cancel from your account settings page in under 30 seconds. No phone call required, no retention page, no hidden steps. Monthly plans end at the close of the current billing cycle. Annual plans are refunded pro-rata for unused months." },
+      { q: "Is there a free trial for paid plans?", a: "Analyst and Investor plans include a 14-day free trial with full access to all plan features. No credit card is required to start the trial. If you take no action after 14 days, your account automatically reverts to the Free tier." },
+      { q: "What payment methods are accepted?", a: "Visa, Mastercard, American Express, and Discover. All payments processed through Stripe (PCI Level 1 certified). Annual billing saves 20%: Analyst at $24/mo annual vs. $29/mo monthly; Investor at $84/mo annual vs. $99/mo monthly." },
+      { q: "Does EarlyInsider provide financial advice?", a: "No. EarlyInsider is a data analysis platform, not a registered investment advisor. The platform provides structured analysis of public SEC filing data and assigns conviction scores based on documented criteria. No alert constitutes a buy, sell, or hold recommendation." },
     ],
   },
 ];

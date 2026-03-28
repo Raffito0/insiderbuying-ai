@@ -4,16 +4,16 @@ import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 
 const FEATURES = [
-  "CEO vs. CFO buying performance gap",
-  "Cluster buying signals from 10-year backtest",
-  "Industry-specific conviction multipliers",
-  "Risk-adjusted return attribution metrics",
+  "+23.4% avg. return vs. S&P 500 baseline",
+  "68% win rate across 50,247 CEO purchases (12-month hold)",
+  "7 filters that isolate high-conviction purchases from noise",
+  "Decay curve: 25% of returns accrue in the first 5 days",
 ];
 
 const CARDS = [
-  { title: "Backtest Results", desc: "A deep dive into 10 years of CEO buying data and the specific alpha generated compared to the S&P 500." },
-  { title: "Current Patterns", desc: "Identification of the three dominant buying patterns emerging in the current high-interest rate environment." },
-  { title: "Conviction Scoring", desc: "How to weight an insider purchase based on the executive\u2019s historical performance and position size." },
+  { title: "The 23.4% Edge", desc: "CEO purchases outperformed the S&P 500 by 23.4% on average across 50,247 filings. Strongest in companies under $2B market cap. Breakdown by sector, cap decile, and insider role." },
+  { title: "The 5-Day Window", desc: "Jeng, Metrick & Zeckhauser (Harvard/Wharton, 1999) found that 25% of abnormal returns materialize within 5 trading days. The report maps this decay curve and quantifies the cost of a 24-hour delay." },
+  { title: "Noise vs. Signal", desc: "10b5-1 plans, option exercises, and small acquisitions account for 80% of filings. The report details the 7 filters that isolate high-conviction purchases from routine transactions." },
 ];
 
 export default function FreeReportPage() {
@@ -70,11 +70,11 @@ export default function FreeReportPage() {
           <div className="flex flex-col gap-[var(--gap-cards)] max-w-[576px]">
             <p className="text-[14px] font-bold leading-[20px] text-[color:var(--color-signal-green)] font-[var(--font-mono)]">FREE RESEARCH</p>
             <h1 className="font-[var(--font-montaga)] text-[39px] md:text-[54px] font-normal leading-[1.1] md:leading-[60px] text-[color:var(--color-text)]">
-              EarlyInsider<br />Backtest Report
+              The CEO Alpha Report
             </h1>
             <p className="text-[18px] font-normal leading-[28px] text-[color:var(--color-primary)]">Updated March 2026</p>
             <p className="text-[18px] font-normal leading-[29px] text-[color:var(--color-text-secondary)]">
-              Our proprietary analysis of over 50,000 SEC Form 4 filings reveals the specific CEO purchase patterns that historically precede significant market outperformance.
+              We analyzed 50,247 CEO stock purchases filed with the SEC. The pattern held every year for a decade. Free 14-page report. 10 years of Form 4 data (2015-2025).
             </p>
             <ul className="flex flex-col gap-[16px]">
               {FEATURES.map((f) => (

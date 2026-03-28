@@ -39,9 +39,9 @@ export default function ReportsPage() {
       <section className="bg-[var(--color-bg-alt)] px-[20px] md:px-[48px] flex items-center min-h-[280px] md:min-h-[360px]">
         <div className="max-w-[1184px] mx-auto flex flex-col gap-[12px] md:gap-[15px] py-[64px] md:py-[80px]">
           <p className="text-[12px] font-semibold leading-[18px] text-[color:var(--color-text-secondary)] uppercase tracking-wider">Research</p>
-          <h1 className="font-[var(--font-montaga)] text-[39px] md:text-[54px] font-normal leading-[1.1] md:leading-[52px] text-[color:var(--color-text)]">Deep Dive Reports</h1>
+          <h1 className="font-[var(--font-montaga)] text-[39px] md:text-[54px] font-normal leading-[1.1] md:leading-[52px] text-[color:var(--color-text)]">Institutional-Grade Research. SEC Insider Data. AI-Synthesized Analysis.</h1>
           <p className="text-[16px] md:text-[18px] font-normal leading-[26px] md:leading-[29px] text-[color:var(--color-text-secondary)] max-w-[672px]">
-            Comprehensive stock analysis powered by SEC insider data and AI. One-time purchase, instant download.
+            Deep dives on individual stocks, sectors, and dividend safety. Each report cross-references Form 4 filings with 94M+ indexed financial records. Every report includes an explicit verdict.
           </p>
         </div>
       </section>
