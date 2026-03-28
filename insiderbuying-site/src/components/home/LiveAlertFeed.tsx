@@ -51,7 +51,7 @@ export function LiveAlertFeed() {
               {/* Amount + type */}
               <div className="text-right shrink-0">
                 <span
-                  className={`inline-block text-[10px] font-bold uppercase px-2 py-0.5 rounded mb-1 ${
+                  className={`inline-block text-[11px] font-bold uppercase px-2 py-0.5 rounded mb-1 ${
                     alert.type === "BUY"
                       ? "bg-[var(--color-accent-green)] text-white"
                       : "bg-[var(--color-accent-red)] text-white"

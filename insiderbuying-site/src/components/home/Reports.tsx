@@ -51,7 +51,7 @@ export function Reports() {
               }`}
             >
               {report.badge && (
-                <span className="absolute -top-3 left-6 inline-block text-[10px] font-bold uppercase px-3 py-1 rounded-full bg-[var(--color-accent-green)] text-white">
+                <span className="absolute -top-3 left-6 inline-block text-[11px] font-bold uppercase px-3 py-1 rounded-full bg-[var(--color-accent-green)] text-white">
                   {report.badge}
                 </span>
               )}

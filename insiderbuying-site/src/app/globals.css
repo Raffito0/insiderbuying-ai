@@ -9,7 +9,7 @@
   /* ── Text ── */
   --color-text: #1C1B1B;
   --color-text-secondary: #454556;
-  --color-text-muted: #94A3B8;
+  --color-text-muted: #6B7280;
 
   /* ── Backgrounds ── */
   --color-bg-white: #FFFFFF;
@@ -28,6 +28,12 @@
 
   /* ── Link ── */
   --color-link: #000AD2;
+
+  /* ── Aliases (component compatibility) ── */
+  --color-muted: var(--color-text-muted);
+  --color-accent-green: var(--color-signal-green);
+  --color-accent-red: var(--color-signal-red);
+  --color-navy-light: #003d8a;
 
   /* ── Fonts ── */
   --font-montaga: "Montaga", serif;
@@ -62,4 +68,18 @@ body {
 
 h1, h2, h3, h4 {
   font-family: var(--font-montaga);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

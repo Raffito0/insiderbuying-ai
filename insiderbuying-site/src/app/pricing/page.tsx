@@ -87,7 +87,7 @@ export default function PricingPage() {
         <div className="bg-[var(--color-bg-alt)] p-[8px] flex items-center">
           <button
             onClick={() => setBilling("monthly")}
-            className={`h-[40px] px-[24px] md:px-[32px] text-[14px] font-semibold leading-[20px] transition-all ${
+            className={`h-[44px] px-[24px] md:px-[32px] text-[14px] font-semibold leading-[20px] transition-all ${
               billing === "monthly" ? "bg-white text-[color:var(--color-primary)] shadow-[0px_1px_2px_rgba(0,0,0,0.05)]" : "text-[color:var(--color-text-secondary)]"
             }`}
           >
@@ -100,7 +100,7 @@ export default function PricingPage() {
             }`}
           >
             Annually
-            <span className="bg-[var(--color-signal-green)] text-white text-[10px] font-bold leading-[20px] px-[8px] rounded-[2px]">SAVE 21%</span>
+            <span className="bg-[var(--color-signal-green)] text-white text-[11px] font-bold leading-[20px] px-[8px] rounded-[2px]">SAVE 21%</span>
           </button>
         </div>
       </section>
@@ -130,7 +130,7 @@ export default function PricingPage() {
 
           {/* PRO (Most Popular) */}
           <div className="bg-white border border-[var(--color-primary)] p-[28px] md:p-[40px] flex flex-col relative shadow-[0px_25px_50px_rgba(0,0,0,0.08)]">
-            <div className="absolute -top-[12px] left-1/2 -translate-x-1/2 bg-[var(--color-signal-green)] text-white text-[10px] font-extrabold leading-[15px] px-[16px] py-[4px] rounded-[2px] whitespace-nowrap">
+            <div className="absolute -top-[12px] left-1/2 -translate-x-1/2 bg-[var(--color-signal-green)] text-white text-[11px] font-extrabold leading-[15px] px-[16px] py-[4px] rounded-[2px] whitespace-nowrap">
               MOST POPULAR
             </div>
             <div className="mb-[30px]">
@@ -178,9 +178,12 @@ export default function PricingPage() {
                 <li key={f} className="flex items-center gap-[12px]">{CHECK}<span className="text-[14px] font-normal leading-[20px] text-[color:var(--color-text-secondary)]">{f}</span></li>
               ))}
             </ul>
-            <Link href="/signup" className="flex items-center justify-center h-[54px] border border-[var(--color-border)] text-[14px] font-bold leading-[20px] text-[color:var(--color-text)] hover:bg-[var(--color-bg-alt)] transition-colors">
+            <button
+              onClick={() => handleCheckout(billing === "annual" ? process.env.NEXT_PUBLIC_STRIPE_PRICE_INVESTOR_ANNUAL || "price_INVESTOR_ANNUAL_TODO" : process.env.NEXT_PUBLIC_STRIPE_PRICE_INVESTOR_MONTHLY || "price_INVESTOR_MONTHLY_TODO")}
+              className="flex items-center justify-center h-[54px] border border-[var(--color-border)] text-[14px] font-bold leading-[20px] text-[color:var(--color-text)] hover:bg-[var(--color-bg-alt)] transition-colors w-full"
+            >
               Start 14-Day Trial
-            </Link>
+            </button>
           </div>
         </div>
       </section>
@@ -192,7 +195,8 @@ export default function PricingPage() {
             Compare features
           </h2>
 
-          <div className="bg-white shadow-[0px_1px_2px_rgba(0,0,0,0.05)] overflow-hidden">
+          <div className="bg-white shadow-[0px_1px_2px_rgba(0,0,0,0.05)] overflow-y-hidden overflow-x-auto">
+            <div className="min-w-[560px] md:min-w-0">
             {/* Header */}
             <div className="flex border-b border-[var(--color-border-light)]">
               <div className="flex-1 py-[20px] md:py-[24px] px-[16px] md:px-[32px]">
@@ -214,7 +218,7 @@ export default function PricingPage() {
               <div key={cat.category}>
                 {/* Category header */}
                 <div className="bg-[#f5f5f5] py-[12px] px-[16px] md:px-[32px]">
-                  <span className="text-[11px] md:text-[12px] font-bold leading-[20px] tracking-[0.5px] text-[color:var(--color-text-muted)] uppercase">{cat.category}</span>
+                  <span className="text-[12px] font-bold leading-[20px] tracking-[0.5px] text-[color:var(--color-text-muted)] uppercase">{cat.category}</span>
                 </div>
                 {/* Rows */}
                 {cat.rows.map((row) => (
@@ -235,6 +239,7 @@ export default function PricingPage() {
                 ))}
               </div>
             ))}
+            </div>
           </div>
         </div>
       </section>
@@ -250,6 +255,7 @@ export default function PricingPage() {
               <div key={i} className="border-b border-[var(--color-border-light)] py-[20px] md:py-[24px]">
                 <button
                   onClick={() => setOpenFaq(openFaq === i ? null : i)}
+                  aria-expanded={openFaq === i}
                   className="w-full flex items-center justify-between"
                 >
                   <span className="text-[16px] md:text-[18px] font-normal leading-[28px] text-[color:var(--color-text)] text-left">{faq.q}</span>

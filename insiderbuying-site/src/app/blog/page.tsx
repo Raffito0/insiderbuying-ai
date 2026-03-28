@@ -153,7 +153,7 @@ export default function BlogPage() {
                 <div className="flex flex-col gap-[8px] md:gap-[11px]">
                   <div className="flex items-center gap-[8px]">
                     <span
-                      className="text-[10px] font-bold px-[8px] py-[2px] rounded"
+                      className="text-[12px] font-bold px-[8px] py-[2px] rounded"
                       style={{
                         backgroundColor: VERDICT_COLORS[articles[0].verdict_type]?.bg || "#f3f4f6",
                         color: VERDICT_COLORS[articles[0].verdict_type]?.text || "#374151",
@@ -161,7 +161,7 @@ export default function BlogPage() {
                     >
                       {articles[0].verdict_type}
                     </span>
-                    <span className="text-[10px] font-medium text-[color:var(--color-text-secondary)]">{articles[0].ticker}</span>
+                    <span className="text-[11px] font-medium text-[color:var(--color-text-secondary)]">{articles[0].ticker}</span>
                   </div>
                   <Link href={`/blog/${articles[0].slug}`}>
                     <h2 className="font-[var(--font-montaga)] text-[24px] md:text-[30px] font-normal leading-[1.25] md:leading-[38px] text-[color:var(--color-text)] hover:text-[color:var(--color-primary)] transition-colors">
@@ -191,7 +191,7 @@ export default function BlogPage() {
                   </div>
                   <div className="flex items-center gap-[8px] mb-[4px]">
                     <span
-                      className="text-[10px] font-bold px-[6px] py-[1px] rounded"
+                      className="text-[12px] font-bold px-[6px] py-[1px] rounded"
                       style={{
                         backgroundColor: VERDICT_COLORS[a.verdict_type]?.bg || "#f3f4f6",
                         color: VERDICT_COLORS[a.verdict_type]?.text || "#374151",
@@ -199,7 +199,7 @@ export default function BlogPage() {
                     >
                       {a.verdict_type}
                     </span>
-                    <span className="text-[10px] font-medium text-[color:var(--color-text-secondary)] font-mono">{a.ticker}</span>
+                    <span className="text-[11px] font-medium text-[color:var(--color-text-secondary)] font-mono">{a.ticker}</span>
                   </div>
                   <Link href={`/blog/${a.slug}`}>
                     <h3 className="font-[var(--font-montaga)] text-[20px] md:text-[22px] font-normal leading-[1.25] md:leading-[28px] text-[color:var(--color-text)] hover:text-[color:var(--color-primary)] transition-colors mb-[8px]">

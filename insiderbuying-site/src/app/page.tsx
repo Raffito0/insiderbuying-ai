@@ -73,7 +73,7 @@ export default function HomePage() {
       </section>
 
       {/* ═══ 1.5 LOGO TICKER ═══ */}
-      <section className="w-full py-[24px] bg-white overflow-hidden">
+      <section className="w-full py-[24px] bg-white overflow-hidden" aria-hidden="true">
         <div className="flex gap-[48px] animate-[scroll_30s_linear_infinite] whitespace-nowrap">
           {[...LOGOS, ...LOGOS].map((logo, i) => (
             <span key={i} className="text-[13px] font-medium text-[color:var(--color-text)]/60 shrink-0">{logo}</span>
@@ -116,17 +116,17 @@ export default function HomePage() {
           <div className="lg:hidden bg-[var(--color-bg-alt)] overflow-hidden mb-[var(--gap-tight)]">
             {ALERTS.map((a, i) => (
               <div key={i} className={`flex items-center gap-[12px] px-[var(--gap-tight)] py-[14px] ${i > 0 ? "border-t border-[var(--color-border)]" : ""}`}>
-                <div className="w-[40px] h-[40px] rounded-full bg-[#d9d9d9] flex items-center justify-center text-[11px] font-semibold text-[color:var(--color-text-muted)] shrink-0">
+                <div className="w-[40px] h-[40px] rounded-full bg-[#d9d9d9] flex items-center justify-center text-[12px] font-semibold text-[color:var(--color-text-muted)] shrink-0">
                   {a.name.split(" ").map(n => n[0]).join("")}
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-[14px] font-medium leading-[18px] text-[color:var(--color-text)] truncate">{a.name}</p>
-                  <p className="text-[11px] font-normal text-[color:var(--color-text-muted)]">{a.title}</p>
+                  <p className="text-[13px] font-normal text-[color:var(--color-text-muted)]">{a.title}</p>
                 </div>
                 <div className="text-right shrink-0">
                   <p className="text-[13px] font-semibold tracking-[0.5px] text-[color:var(--color-text)] font-[var(--font-mono)]">{a.ticker}</p>
                   <p className="text-[14px] font-semibold text-[color:var(--color-signal-green)]">{a.amount}</p>
-                  <p className="text-[11px] font-normal text-[color:var(--color-text-muted)]">{a.time}</p>
+                  <p className="text-[13px] font-normal text-[color:var(--color-text-muted)]">{a.time}</p>
                 </div>
               </div>
             ))}
@@ -136,7 +136,7 @@ export default function HomePage() {
       </section>
 
       {/* ═══ 3. HOW IT WORKS ═══ */}
-      <section id="how-it-works" className="w-full pt-[var(--section-y-mobile)] px-[20px] md:px-[100px] pb-[var(--section-y-mobile)] md:pb-[var(--section-y)] bg-white">
+      <section id="how-it-works" className="w-full pt-[var(--section-y-mobile)] px-[20px] pb-[var(--section-y-mobile)] md:pb-[var(--section-y)] bg-white">
         <div className="max-w-[1080px] mx-auto px-[32px]">
           <h2 className="font-[var(--font-montaga)] text-[39px] md:text-[length:var(--text-title)] font-normal leading-[1.1] tracking-[0.5px] text-[color:var(--color-text)] text-center mb-[40px] md:mb-[80px]">Three Steps. Under 60 Seconds.</h2>
           <div className="flex flex-col md:flex-row justify-between gap-[40px] md:gap-[63px]">
@@ -180,14 +180,14 @@ export default function HomePage() {
                 <div>
                   <h3 className="text-[16px] md:text-[20px] font-medium leading-[24px] md:leading-[28px] text-[color:var(--color-text)] font-[var(--font-montaga)]">NVDA / NVIDIA Corp</h3>
                   <div className="flex items-center gap-[8px] mt-[2px]">
-                    <span className="bg-[var(--color-signal-green)] text-white text-[10px] px-[8px] py-[2px] rounded-[2px]">High Conviction</span>
-                    <span className="text-[11px] md:text-[12px] tracking-[0.5px] text-[color:var(--color-text-muted)]">Alert ID: #88321-X</span>
+                    <span className="bg-[var(--color-signal-green)] text-white text-[11px] px-[8px] py-[2px] rounded-[2px]">High Conviction</span>
+                    <span className="text-[12px] tracking-[0.5px] text-[color:var(--color-text-muted)]">Alert ID: #88321-X</span>
                   </div>
                 </div>
               </div>
               <div className="text-right shrink-0 ml-[12px]">
                 <p className="text-[20px] md:text-[24px] font-bold leading-[28px] md:leading-[32px] text-[color:var(--color-signal-green)] font-[var(--font-mono)]">BUY</p>
-                <p className="text-[11px] md:text-[12px] tracking-[0.5px] text-[color:var(--color-text-muted)]">SEC Form 4</p>
+                <p className="text-[12px] tracking-[0.5px] text-[color:var(--color-text-muted)]">SEC Form 4</p>
               </div>
             </div>
           </div>
@@ -325,7 +325,7 @@ export default function HomePage() {
           <div className="max-w-[1024px] mx-auto grid grid-cols-1 md:grid-cols-3 gap-[var(--gap-items)]">
             {PLANS.map((p)=>(
               <div key={p.name} className={`bg-white p-[48px] relative ${p.border}`}>
-                {p.popular&&<div className="absolute -top-[15px] left-1/2 -translate-x-1/2 bg-[var(--color-primary)] text-white text-[10px] font-medium tracking-[1px] px-[24px] py-[4px] rounded-full whitespace-nowrap">Most Popular</div>}
+                {p.popular&&<div className="absolute -top-[15px] left-1/2 -translate-x-1/2 bg-[var(--color-primary)] text-white text-[11px] font-medium tracking-[1px] px-[24px] py-[4px] rounded-full whitespace-nowrap">Most Popular</div>}
                 <h3 className="font-[var(--font-montaga)] text-[32px] leading-[32px] tracking-[1px] text-[color:var(--color-text)] mb-[8px]">{p.name}</h3>
                 <p className="text-[14px] leading-[20px] tracking-[1px] text-[color:var(--color-text-secondary)] mb-[32px]">{p.desc}</p>
                 <div className="flex items-baseline mb-[48px]">

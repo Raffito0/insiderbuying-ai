@@ -1,13 +1,21 @@
-import type { Metadata } from "next";
-import Link from "next/link";
+"use client";
 
-export const metadata: Metadata = {
-  title: "Reports | EarlyInsider",
-  description:
-    "Deep-dive stock reports, sector analysis bundles, and dividend research powered by SEC insider data and AI-driven financial modeling.",
-};
+import Link from "next/link";
+import { useState } from "react";
 
 const TABS = ["All Reports", "Single Stock", "Bundles", "Sector Analysis", "Dividend"];
+
+const CARD_CATEGORIES: Record<string, string> = {
+  NVDA: "Single Stock",
+  AAPL: "Single Stock",
+  TSLA: "Single Stock",
+  MSFT: "Single Stock",
+  AMZN: "Single Stock",
+  "S&P": "Bundles",
+  AI: "Sector Analysis",
+  DIV: "Dividend",
+  HC: "Sector Analysis",
+};
 
 const FEATURED = {
   title: "Magnificent 7 Report",
@@ -32,6 +40,11 @@ const CARDS = [
 const CHECK = <svg className="w-[11px] h-[8px] shrink-0" viewBox="0 0 11 8"><path d="M1 4l3 3L10 1" stroke="#006d34" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round"/></svg>;
 
 export default function ReportsPage() {
+  const [activeTab, setActiveTab] = useState("All Reports");
+  const filteredCards = activeTab === "All Reports"
+    ? CARDS
+    : CARDS.filter((card) => CARD_CATEGORIES[card.ticker] === activeTab);
+
   return (
     <div className="bg-[var(--color-bg-alt)]">
 
@@ -50,11 +63,12 @@ export default function ReportsPage() {
       <section className="bg-white pt-[24px] px-[20px] md:px-[48px] overflow-x-auto">
         <div className="max-w-[1184px] mx-auto border-b border-[var(--color-border)]">
           <div className="flex items-center gap-[var(--gap-items)] md:gap-[40px]">
-            {TABS.map((tab, i) => (
+            {TABS.map((tab) => (
               <button
                 key={tab}
+                onClick={() => setActiveTab(tab)}
                 className={`text-[13px] md:text-[14px] leading-[20px] pb-[16px] border-b-[1px] transition-colors whitespace-nowrap ${
-                  i === 0 ? "font-bold text-[color:var(--color-text)] border-[var(--color-primary)]" : "font-normal text-[color:var(--color-text-secondary)] opacity-60 border-transparent"
+                  activeTab === tab ? "font-bold text-[color:var(--color-text)] border-[var(--color-primary)]" : "font-normal text-[color:var(--color-text-secondary)] opacity-60 border-transparent hover:opacity-100"
                 }`}
               >
                 {tab}
@@ -67,11 +81,11 @@ export default function ReportsPage() {
       {/* ═══ SECTION 3: FEATURED REPORT ═══ */}
       <section className="pt-[48px] pb-[48px] md:pt-[var(--section-y)] md:pb-[var(--section-y)] px-[20px] md:px-[48px]">
         <div className="max-w-[1184px] mx-auto relative">
-          <span className="absolute top-[16px] left-[16px] z-10 bg-[#00d26a] text-white text-[10px] font-black leading-[15px] px-[12px] py-[4px] rounded-[2px]">BEST VALUE</span>
+          <span className="absolute top-[16px] left-[16px] z-10 bg-[#00d26a] text-white text-[11px] font-black leading-[15px] px-[12px] py-[4px] rounded-[2px]">BEST VALUE</span>
           <div className="bg-white border border-[var(--color-border-light)] flex flex-col md:flex-row gap-[var(--gap-items)] md:gap-[48px] p-[24px] md:p-[40px] items-center">
             <div className="w-full md:w-[302px] h-[280px] md:h-[403px] bg-[var(--color-border-light)] shrink-0" />
             <div className="flex flex-col justify-center flex-1">
-              <p className="text-[11px] font-medium leading-[15px] text-[color:var(--color-text-secondary)] uppercase tracking-wider mb-[12px] md:mb-[var(--gap-tight)]">BUNDLE &middot; 7 STOCKS</p>
+              <p className="text-[12px] font-medium leading-[15px] text-[color:var(--color-text-secondary)] uppercase tracking-wider mb-[12px] md:mb-[var(--gap-tight)]">BUNDLE &middot; 7 STOCKS</p>
               <h2 className="font-[var(--font-montaga)] text-[28px] md:text-[32px] font-normal leading-[1.2] md:leading-[36px] text-[color:var(--color-text)] mb-[12px]">{FEATURED.title}</h2>
               <p className="text-[16px] md:text-[18px] font-normal leading-[26px] md:leading-[28px] text-[color:var(--color-text-secondary)] mb-[24px] md:mb-[32px]">{FEATURED.desc}</p>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-[var(--gap-items)] gap-y-[12px] mb-[28px] md:mb-[40px]">
@@ -97,7 +111,7 @@ export default function ReportsPage() {
       {/* ═══ SECTION 4: REPORT GRID ═══ */}
       <section className="pb-[64px] md:pb-[96px] px-[20px] md:px-[48px]">
         <div className="max-w-[1184px] mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-[20px] md:gap-[var(--gap-items)]">
-          {CARDS.map((card) => (
+          {filteredCards.map((card) => (
             <div key={card.ticker} className="bg-white shadow-[0px_1px_3px_rgba(0,0,0,0.06)] p-[24px] md:p-[32px] flex flex-col relative">
               <div className="flex items-center justify-between mb-[var(--gap-tight)]">
                 <div className={`w-[44px] h-[44px] md:w-[48px] md:h-[48px] rounded-[2px] flex items-center justify-center text-[12px] font-bold ${
@@ -105,7 +119,7 @@ export default function ReportsPage() {
                 }`}>
                   {card.ticker.slice(0, 2)}
                 </div>
-                <span className="text-[11px] font-medium leading-[16px] text-[color:var(--color-text-secondary)]">{card.label}</span>
+                <span className="text-[12px] font-medium leading-[16px] text-[color:var(--color-text-secondary)]">{card.label}</span>
               </div>
               <h3 className="font-[var(--font-montaga)] text-[22px] md:text-[length:var(--text-heading)] font-normal leading-[28px] text-[color:var(--color-text)] mb-[4px]">{card.title}</h3>
               <p className="text-[12px] font-normal leading-[16px] text-[color:var(--color-text-secondary)] mb-[20px]">{card.pages}</p>

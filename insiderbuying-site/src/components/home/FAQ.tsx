@@ -48,6 +48,7 @@ export function FAQ() {
               <button
                 className="w-full flex items-center justify-between p-5 text-left"
                 onClick={() => setOpenIndex(openIndex === i ? null : i)}
+                aria-expanded={openIndex === i}
               >
                 <span className="text-sm font-medium text-[color:var(--color-text)] pr-4">
                   {faq.q}

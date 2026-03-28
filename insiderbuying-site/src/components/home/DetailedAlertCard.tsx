@@ -27,7 +27,7 @@ export function DetailedAlertCard() {
                     NVDA &middot; Technology
                   </div>
                 </div>
-                <span className="ml-auto inline-block text-[10px] font-bold uppercase px-2 py-0.5 rounded bg-[var(--color-accent-green)] text-white">
+                <span className="ml-auto inline-block text-[11px] font-bold uppercase px-2 py-0.5 rounded bg-[var(--color-accent-green)] text-white">
                   BUY
                 </span>
               </div>
@@ -64,7 +64,7 @@ export function DetailedAlertCard() {
                 <p className="text-xs font-semibold uppercase tracking-widest text-[color:var(--color-muted)]">
                   AI Analysis
                 </p>
-                <span className="inline-block text-[10px] font-bold uppercase px-3 py-1 rounded-full bg-[var(--color-accent-green)]/10 text-[color:var(--color-accent-green)]">
+                <span className="inline-block text-[11px] font-bold uppercase px-3 py-1 rounded-full bg-[var(--color-accent-green)]/10 text-[color:var(--color-accent-green)]">
                   High Conviction
                 </span>
               </div>

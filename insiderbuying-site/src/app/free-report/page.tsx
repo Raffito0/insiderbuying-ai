@@ -93,8 +93,8 @@ export default function FreeReportPage() {
               <div className="flex flex-col gap-[var(--gap-items)] p-[16px]">
                 {/* Top bar */}
                 <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-bold font-[var(--font-mono)] text-[color:var(--color-primary)] uppercase tracking-wider">EarlyInsider</span>
-                  <span className="text-[10px] font-normal text-[color:var(--color-text-muted)]">March 2026</span>
+                  <span className="text-[11px] font-bold font-[var(--font-mono)] text-[color:var(--color-primary)] uppercase tracking-wider">EarlyInsider</span>
+                  <span className="text-[11px] font-normal text-[color:var(--color-text-muted)]">March 2026</span>
                 </div>
                 {/* Title */}
                 <div className="pt-[32px]">
@@ -120,11 +120,11 @@ export default function FreeReportPage() {
               <div className="flex items-center justify-between pt-[16px] mt-[16px] border-t border-[var(--color-border-light)]">
                 <div>
                   <p className="text-[18px] font-bold leading-[24px] text-[color:var(--color-signal-green)] font-[var(--font-mono)]">+23.4%</p>
-                  <p className="text-[10px] font-normal leading-[14px] text-[color:var(--color-text-muted)]">Avg. Signal Return</p>
+                  <p className="text-[11px] font-normal leading-[14px] text-[color:var(--color-text-muted)]">Avg. Signal Return</p>
                 </div>
                 <div className="text-right">
                   <p className="text-[18px] font-bold leading-[24px] text-[color:var(--color-text)] font-[var(--font-mono)]">68%</p>
-                  <p className="text-[10px] font-normal leading-[14px] text-[color:var(--color-text-muted)]">Win Rate (12mo)</p>
+                  <p className="text-[11px] font-normal leading-[14px] text-[color:var(--color-text-muted)]">Win Rate (12mo)</p>
                 </div>
               </div>
             </div>

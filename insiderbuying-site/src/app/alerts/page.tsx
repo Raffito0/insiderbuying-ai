@@ -206,7 +206,7 @@ export default function AlertsPage() {
                     </div>
                     {/* Badge + amount inline on mobile next to name */}
                     <div className="text-right shrink-0 md:hidden">
-                      <span className={`inline-block text-[11px] font-bold leading-[16px] px-[10px] py-[3px] rounded-[2px] mb-[2px] ${
+                      <span className={`inline-block text-[12px] font-bold leading-[16px] px-[10px] py-[3px] rounded-[2px] mb-[2px] ${
                         a.type === "buy" ? "bg-[#c4e6d0] text-[#007237]" : "bg-[#ffdad6] text-[#93000a]"
                       }`}>
                         {a.type.toUpperCase()}
@@ -259,7 +259,7 @@ export default function AlertsPage() {
 
                 {/* Footer */}
                 <div className="flex items-center justify-between">
-                  <span className="text-[11px] md:text-[12px] font-normal leading-[16px] text-[color:var(--color-text-muted)]">{a.time} &bull; SEC Form 4</span>
+                  <span className="text-[12px] font-normal leading-[16px] text-[color:var(--color-text-muted)]">{a.time} &bull; SEC Form 4</span>
                   <Link href="/pricing" className="flex items-center gap-[3px] text-[13px] md:text-[14px] font-medium leading-[20px] text-[color:var(--color-primary)] hover:underline">
                     Full Analysis
                     <svg className="w-[8px] h-[8px]" viewBox="0 0 8 8" fill="#000592"><path d="M0 4h6M4 2l2 2-2 2" stroke="#000592" strokeWidth="1.5" fill="none"/></svg>
@@ -301,7 +301,7 @@ export default function AlertsPage() {
                   <div key={b.ticker} className="flex items-center justify-between">
                     <div>
                       <p className="text-[12px] font-bold leading-[16px] text-[color:var(--color-text)] font-[var(--font-mono)]">{b.ticker}</p>
-                      <p className="text-[11px] font-normal leading-[15px] text-[color:var(--color-text-muted)]">{b.label}</p>
+                      <p className="text-[12px] font-normal leading-[15px] text-[color:var(--color-text-muted)]">{b.label}</p>
                     </div>
                     <span className="text-[12px] font-semibold leading-[16px] text-[color:var(--color-signal-green)]">{b.amount}</span>
                   </div>

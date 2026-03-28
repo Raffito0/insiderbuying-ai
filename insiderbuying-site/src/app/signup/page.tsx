@@ -152,7 +152,7 @@ export default function SignUpPage() {
                   }`}
                 >
                   <span>Analyst</span>
-                  <span className="text-[11px] font-semibold leading-[20px] text-[#179b56]">$24/mo</span>
+                  <span className="text-[12px] font-semibold leading-[20px] text-[#179b56]">$24/mo</span>
                 </button>
               </div>
 

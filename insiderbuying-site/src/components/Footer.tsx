@@ -44,7 +44,7 @@ export function Footer() {
           </div>
           <div>
             <p className="text-[length:var(--text-body)] leading-[24px] text-white mb-[var(--gap-items)]">Legal</p>
-            <p className="text-[10px] leading-[16px] tracking-[0.5px] text-[color:var(--color-text-muted)]">
+            <p className="text-[12px] leading-[16px] tracking-[0.5px] text-[color:var(--color-text-muted)]">
               EarlyInsider provides financial data and analysis for informational purposes only. Past insider trading patterns do not guarantee future results.
             </p>
           </div>

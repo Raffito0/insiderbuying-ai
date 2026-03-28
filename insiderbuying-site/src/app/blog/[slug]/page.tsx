@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import CopyLinkButton from "@/components/blog/CopyLinkButton";
 
 const NOCODB_API_URL = process.env.NOCODB_API_URL!;
 const NOCODB_READONLY_TOKEN = process.env.NOCODB_READONLY_TOKEN!;
@@ -237,12 +238,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
               >
                 in
               </a>
-              <button
-                onClick={() => { if (typeof navigator !== "undefined") navigator.clipboard.writeText(`https://earlyinsider.com/blog/${article.slug}`); }}
-                className="w-[40px] h-[40px] border border-[#c6c5d9] flex items-center justify-center hover:bg-[#f6f3f2] text-[12px]"
-              >
-                Copy
-              </button>
+              <CopyLinkButton slug={article.slug} />
             </div>
           </div>
 
@@ -256,7 +252,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                   return (
                     <Link key={r.id} href={`/blog/${r.slug}`} className="group">
                       <div className="flex items-center gap-[6px] mb-[8px]">
-                        <span className="text-[10px] font-bold px-[6px] py-[1px] rounded" style={{ backgroundColor: rvc.bg, color: rvc.text }}>
+                        <span className="text-[11px] font-bold px-[6px] py-[1px] rounded" style={{ backgroundColor: rvc.bg, color: rvc.text }}>
                           {r.verdict_type}
                         </span>
                       </div>

@@ -5,6 +5,14 @@ import { useState } from "react";
 
 const CATEGORIES = ["All", "Getting Started", "Alerts", "Pricing", "Data & Security", "Account"];
 
+const CATEGORY_TO_GROUPS: Record<string, string[]> = {
+  "Getting Started": ["Platform & Data"],
+  "Alerts": ["Alerts & Analysis"],
+  "Pricing": ["Billing & Access"],
+  "Data & Security": ["Platform & Data", "Security & Privacy"],
+  "Account": ["Billing & Access"],
+};
+
 const FAQ_GROUPS = [
   {
     title: "Platform & Data",
@@ -13,6 +21,17 @@ const FAQ_GROUPS = [
       { q: "Is insider trading data legal to use?", a: "Yes. SEC Form 4 filings are public documents, published on SEC EDGAR by federal mandate under Section 16(a) of the Securities Exchange Act of 1934. Monitoring and analyzing these filings is legal and widely practiced by institutional investors.", open: true },
       { q: "How many companies does EarlyInsider cover?", a: "17,325+ public companies listed on NYSE, NASDAQ, and OTC markets. The historical database contains 94M+ indexed records spanning over 10 years of filing, pricing, and fundamental data." },
       { q: "How accurate is the data?", a: "Filing data is parsed directly from SEC EDGAR XBRL feeds. Parsed values are validated against the structured XML before delivery. Conviction scores are algorithmic, computed from 7 weighted factors documented on the Methodology page." },
+    ],
+  },
+  {
+    title: "Security & Privacy",
+    items: [
+      { q: "How is my data protected?", a: "All data is encrypted in transit with TLS 1.3 and at rest with AES-256. Authentication is handled by Supabase Auth with bcrypt-hashed passwords. Session tokens are rotated on every login and expire after 24 hours of inactivity." },
+      { q: "Does EarlyInsider sell or share my personal data?", a: "No. We do not sell, rent, or share your personal information with third parties for marketing purposes. Your email, payment details, and alert preferences are used exclusively to deliver the EarlyInsider service. See our Privacy Policy for full details." },
+      { q: "Is my payment information stored on your servers?", a: "No. All payment processing is handled by Stripe, a PCI Level 1 certified payment processor. EarlyInsider never sees, stores, or has access to your full card number. Stripe tokenizes all payment data independently." },
+      { q: "Do you support two-factor authentication (2FA)?", a: "Yes. You can enable 2FA via authenticator app (TOTP) from your account settings. We recommend enabling 2FA for all accounts, especially those on Analyst or Investor plans with webhook integrations." },
+      { q: "What is your data retention policy?", a: "Account data is retained for the duration of your subscription plus 30 days after cancellation. Alert history and saved watchlists are permanently deleted 30 days after account closure. You can request immediate deletion at any time via support@earlyinsider.com." },
+      { q: "Is EarlyInsider compliant with GDPR and CCPA?", a: "Yes. EU users can exercise their right to access, rectify, or delete personal data under GDPR. California residents have equivalent rights under CCPA. Data deletion requests are processed within 72 hours. Contact privacy@earlyinsider.com for any data rights request." },
     ],
   },
   {
@@ -37,7 +56,10 @@ const FAQ_GROUPS = [
 
 export default function FaqPage() {
   const [activeTab, setActiveTab] = useState("All");
-  const [openItems, setOpenItems] = useState<Record<string, boolean>>({ "Platform Essentials-1": true });
+  const [openItems, setOpenItems] = useState<Record<string, boolean>>({ "Platform & Data-1": true });
+  const visibleGroups = activeTab === "All"
+    ? FAQ_GROUPS
+    : FAQ_GROUPS.filter(g => (CATEGORY_TO_GROUPS[activeTab] ?? []).includes(g.title));
 
   function toggle(key: string) {
     setOpenItems((prev) => ({ ...prev, [key]: !prev[key] }));
@@ -59,11 +81,13 @@ export default function FaqPage() {
       </section>
 
       {/* ═══ SECTION 2: CATEGORY TABS ═══ */}
-      <nav className="bg-white border-b border-[var(--color-border)] sticky top-[82px] z-40 overflow-x-auto">
-        <div className="max-w-[976px] mx-auto px-[20px] md:px-[32px] flex items-center justify-start md:justify-center gap-[20px] md:gap-[32px] py-[16px]">
+      <div className="bg-white border-b border-[var(--color-border)] sticky top-[82px] z-40 overflow-x-auto">
+        <div role="tablist" aria-label="FAQ Categories" className="max-w-[976px] mx-auto px-[20px] md:px-[32px] flex items-center justify-start md:justify-center gap-[20px] md:gap-[32px] py-[16px]">
           {CATEGORIES.map((cat) => (
             <button
               key={cat}
+              role="tab"
+              aria-selected={activeTab === cat}
               onClick={() => setActiveTab(cat)}
               className={`text-[14px] leading-[20px] pb-[16px] border-b-[1px] transition-colors whitespace-nowrap ${
                 activeTab === cat
@@ -75,12 +99,12 @@ export default function FaqPage() {
             </button>
           ))}
         </div>
-      </nav>
+      </div>
 
       {/* ═══ SECTION 3: FAQ ACCORDION ═══ */}
       <section className="bg-white pt-[var(--section-y-mobile)] pb-[var(--section-y-mobile)] md:pt-[var(--section-y)] md:pb-[var(--section-y)] px-[20px] md:px-[32px]">
         <div className="max-w-[780px] mx-auto flex flex-col gap-[48px] md:gap-[80px]">
-          {FAQ_GROUPS.map((group) => (
+          {visibleGroups.map((group) => (
             <div key={group.title}>
               <h2 className="font-[var(--font-montaga)] text-[26px] md:text-[30px] font-normal leading-[32px] text-[color:var(--color-text)] pl-[16px] border-l-[3px] border-[var(--color-primary)] mb-[24px] md:mb-[32px]">
                 {group.title}
@@ -93,6 +117,7 @@ export default function FaqPage() {
                     <div key={key} className="bg-[var(--color-bg-alt)]">
                       <button
                         onClick={() => toggle(key)}
+                        aria-expanded={isOpen}
                         className="w-full flex items-center justify-between p-[20px] md:p-[24px]"
                       >
                         <span className="text-[15px] md:text-[16px] font-medium leading-[24px] md:leading-[28px] text-[color:var(--color-text)] text-left pr-[16px] md:pr-[24px]">

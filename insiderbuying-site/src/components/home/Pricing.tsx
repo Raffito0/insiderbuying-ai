@@ -67,7 +67,7 @@ export function Pricing() {
 
           {/* Pro */}
           <div className="relative bg-white rounded-lg border-2 border-[var(--color-navy)] p-8 shadow-md">
-            <span className="absolute -top-3 left-1/2 -translate-x-1/2 inline-block text-[10px] font-bold uppercase px-4 py-1 rounded-full bg-[var(--color-accent-green)] text-white">
+            <span className="absolute -top-3 left-1/2 -translate-x-1/2 inline-block text-[11px] font-bold uppercase px-4 py-1 rounded-full bg-[var(--color-accent-green)] text-white">
               Most Popular
             </span>
 
