@@ -236,7 +236,7 @@ export default function BlogPage() {
       <section className="bg-[var(--color-navy)] pt-[48px] pb-[48px] md:pt-[var(--section-y-mobile)] md:pb-[var(--section-y-mobile)] px-[20px] md:px-[40px]">
         <div className="max-w-[1200px] mx-auto flex flex-col lg:flex-row items-start lg:items-center justify-between gap-[var(--gap-items)] lg:gap-[64px]">
           <div className="flex flex-col gap-[8px]">
-            <h2 className="font-[var(--font-montaga)] text-[28px] md:text-[length:var(--text-title)] font-normal leading-[1.2] md:leading-[36px] text-white">Subscribe to the Briefing</h2>
+            <h2 className="font-[var(--font-montaga)] text-[32px] md:text-[length:var(--text-title)] font-normal leading-[1.2] md:leading-[36px] text-white">Subscribe to the Briefing</h2>
             <p className="text-[15px] md:text-[16px] font-normal leading-[24px] text-white">
               Receive exclusive weekly analysis directly to your terminal. No noise, just architectural precision.
             </p>

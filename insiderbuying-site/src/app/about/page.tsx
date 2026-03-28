@@ -41,13 +41,13 @@ export default function AboutPage() {
             Transparency in Every Trade
           </h2>
           <div className="flex flex-col gap-[18px] md:gap-[22px]">
-            <p className="text-[16px] md:text-[17px] font-normal leading-[28px] md:leading-[30px] text-[color:var(--color-text)]">
+            <p className="text-[16px] md:text-[18px] font-normal leading-[28px] md:leading-[30px] text-[color:var(--color-text)]">
               In the complex world of the stock market, information is the ultimate currency. Historically, high-conviction data—like knowing exactly when a CEO or CFO buys their own company&apos;s shares—was the exclusive domain of institutional architects and hedge fund managers.
             </p>
-            <p className="text-[16px] md:text-[17px] font-normal leading-[28px] md:leading-[30px] text-[color:var(--color-text)]">
+            <p className="text-[16px] md:text-[18px] font-normal leading-[28px] md:leading-[30px] text-[color:var(--color-text)]">
               EarlyInsider was founded to change that landscape. We monitor SEC filings 24/7, processing thousands of Form 4 submissions through our proprietary AI engine to filter out the noise and highlight the signals that actually matter.
             </p>
-            <p className="text-[16px] md:text-[17px] font-normal leading-[28px] md:leading-[30px] text-[color:var(--color-text)]">
+            <p className="text-[16px] md:text-[18px] font-normal leading-[28px] md:leading-[30px] text-[color:var(--color-text)]">
               By bridging the gap between raw regulatory data and actionable intelligence, we empower retail investors to trade with the same conviction as the insiders themselves.
             </p>
           </div>
@@ -102,7 +102,7 @@ export default function AboutPage() {
               <div key={card.title} className="bg-[var(--color-bg-alt)] p-[28px] md:p-[40px]">
                 <div className="flex items-center gap-[12px] mb-[var(--gap-tight)]">
                   <span className="text-[18px]">{card.icon}</span>
-                  <span className="font-[var(--font-montaga)] text-[16px] font-normal leading-[24px] text-[color:var(--color-text)]">{card.title}</span>
+                  <span className="font-[var(--font-montaga)] text-[length:var(--text-subheading)] font-normal leading-[24px] text-[color:var(--color-text)]">{card.title}</span>
                 </div>
                 <p className="text-[14px] font-normal leading-[20px] text-[color:var(--color-text)]">{card.desc}</p>
               </div>
@@ -128,7 +128,7 @@ export default function AboutPage() {
       {/* ═══ CTA SECTION ═══ */}
       <section className="bg-white pt-[var(--section-y-mobile)] pb-[var(--section-y-mobile)] md:pt-[var(--section-y)] md:pb-[var(--section-y)] px-[20px] md:px-[32px]">
         <div className="max-w-[896px] mx-auto text-center">
-          <h2 className="font-[var(--font-montaga)] text-[30px] md:text-[36px] font-normal leading-[1.2] md:leading-[40px] text-[color:var(--color-text)] mb-[24px] md:mb-[32px]">
+          <h2 className="font-[var(--font-montaga)] text-[32px] md:text-[length:var(--text-title)] font-normal leading-[1.2] md:leading-[40px] text-[color:var(--color-text)] mb-[24px] md:mb-[32px]">
             Ready to follow the smart money?
           </h2>
           <Link

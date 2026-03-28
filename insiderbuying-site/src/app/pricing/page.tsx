@@ -68,7 +68,7 @@ export default function PricingPage() {
           <h1 className="font-[var(--font-montaga)] text-[39px] md:text-[54px] font-normal leading-[1.1] md:leading-[52px] text-[color:var(--color-text)] mb-[16px] md:mb-[24px]">
             Simple Pricing
           </h1>
-          <p className="text-[18px] md:text-[20px] font-normal leading-[28px] text-[color:var(--color-text-secondary)]">
+          <p className="text-[18px] font-normal leading-[28px] text-[color:var(--color-text-secondary)]">
             Start free. Upgrade when you need the full picture.
           </p>
         </div>
@@ -244,13 +244,13 @@ export default function PricingPage() {
                   onClick={() => setOpenFaq(openFaq === i ? null : i)}
                   className="w-full flex items-center justify-between"
                 >
-                  <span className="text-[15px] md:text-[16px] font-normal leading-[24px] text-[color:var(--color-text)] text-left">{faq.q}</span>
+                  <span className="text-[16px] md:text-[18px] font-normal leading-[28px] text-[color:var(--color-text)] text-left">{faq.q}</span>
                   <svg className={`w-[12px] h-[12px] shrink-0 ml-[16px] text-[color:var(--color-text)] transition-transform ${openFaq === i ? "rotate-45" : ""}`} viewBox="0 0 12 12">
                     <path d="M6 0v12M0 6h12" stroke="currentColor" strokeWidth="2" />
                   </svg>
                 </button>
                 {openFaq === i && (
-                  <p className="mt-[16px] text-[14px] font-normal leading-[22px] text-[color:var(--color-text-secondary)]">{faq.a}</p>
+                  <p className="mt-[16px] text-[15px] md:text-[16px] font-normal leading-[24px] md:leading-[26px] text-[color:var(--color-text-secondary)]">{faq.a}</p>
                 )}
               </div>
             ))}

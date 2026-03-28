@@ -23,17 +23,17 @@ export default function ContactPage() {
         <div className="max-w-[600px] mx-auto">
           <div className="flex flex-col gap-[40px]">
             <div>
-              <h2 className="text-[20px] font-bold leading-[28px] text-[color:var(--color-text)] mb-[8px]">General Support</h2>
+              <h2 className="font-[var(--font-montaga)] text-[20px] font-bold leading-[28px] text-[color:var(--color-text)] mb-[8px]">General Support</h2>
               <p className="text-[16px] leading-[26px] text-[color:var(--color-text-secondary)]">For account issues, billing questions, or technical support.</p>
               <a href="mailto:support@earlyinsider.com" className="text-[16px] font-medium text-[color:var(--color-primary)] hover:underline mt-[8px] inline-block">support@earlyinsider.com</a>
             </div>
             <div>
-              <h2 className="text-[20px] font-bold leading-[28px] text-[color:var(--color-text)] mb-[8px]">Enterprise & Partnerships</h2>
+              <h2 className="font-[var(--font-montaga)] text-[20px] font-bold leading-[28px] text-[color:var(--color-text)] mb-[8px]">Enterprise & Partnerships</h2>
               <p className="text-[16px] leading-[26px] text-[color:var(--color-text-secondary)]">For institutional partnerships, API access, or custom data solutions.</p>
               <a href="mailto:enterprise@earlyinsider.com" className="text-[16px] font-medium text-[color:var(--color-primary)] hover:underline mt-[8px] inline-block">enterprise@earlyinsider.com</a>
             </div>
             <div>
-              <h2 className="text-[20px] font-bold leading-[28px] text-[color:var(--color-text)] mb-[8px]">Press & Media</h2>
+              <h2 className="font-[var(--font-montaga)] text-[20px] font-bold leading-[28px] text-[color:var(--color-text)] mb-[8px]">Press & Media</h2>
               <p className="text-[16px] leading-[26px] text-[color:var(--color-text-secondary)]">For media inquiries, interviews, or data citation requests.</p>
               <a href="mailto:press@earlyinsider.com" className="text-[16px] font-medium text-[color:var(--color-primary)] hover:underline mt-[8px] inline-block">press@earlyinsider.com</a>
             </div>

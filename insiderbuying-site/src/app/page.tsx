@@ -80,7 +80,7 @@ export default function HomePage() {
       </section>
 
       {/* ═══ 2. LIVE ALERT FEED ═══ */}
-      <section className="w-full py-[var(--section-y-mobile)] px-[20px] md:pt-[var(--section-y)] md:pr-[91px] md:pb-[var(--section-y)] md:pl-[91px] bg-white">
+      <section className="w-full py-[var(--section-y-mobile)] px-[20px] md:pt-[var(--section-y)] md:px-[48px] md:pb-[var(--section-y)] bg-white">
         <div className="max-w-[1154px] mx-auto">
           <div className="flex flex-col items-center lg:flex-row lg:items-center gap-[12px] lg:gap-[var(--gap-tight)] mb-[24px]">
             <div className="flex items-center gap-[8px] bg-[#00de16]/20 px-[12px] py-[4px] rounded-full">
@@ -133,7 +133,7 @@ export default function HomePage() {
       </section>
 
       {/* ═══ 3. HOW IT WORKS ═══ */}
-      <section id="how-it-works" className="w-full pt-[40px] px-[20px] md:px-[100px] pb-[var(--section-y-mobile)] md:pb-[var(--section-y)] bg-white">
+      <section id="how-it-works" className="w-full pt-[var(--section-y-mobile)] px-[20px] md:px-[100px] pb-[var(--section-y-mobile)] md:pb-[var(--section-y)] bg-white">
         <div className="max-w-[1080px] mx-auto px-[32px]">
           <h2 className="font-[var(--font-montaga)] text-[39px] md:text-[length:var(--text-title)] font-normal leading-[1.1] tracking-[0.5px] text-[color:var(--color-text)] text-center mb-[40px] md:mb-[80px]">How It Works</h2>
           <div className="flex flex-col md:flex-row justify-between gap-[40px] md:gap-[63px]">
@@ -153,12 +153,12 @@ export default function HomePage() {
       </section>
 
       {/* ═══ 4. WHY INSIDER BUYING MATTERS ═══ */}
-      <section className="w-full py-[var(--section-y-mobile)] px-[20px] md:pt-[var(--section-y)] md:pr-[98px] md:pb-[var(--section-y)] md:pl-[98px] bg-[var(--color-bg-alt)]">
+      <section className="w-full py-[var(--section-y-mobile)] px-[20px] md:pt-[var(--section-y)] md:px-[48px] md:pb-[var(--section-y)] bg-[var(--color-bg-alt)]">
         <h2 className="font-[var(--font-montaga)] text-[39px] md:text-[length:var(--text-title)] font-normal leading-[1.1] tracking-[0.5px] text-[color:var(--color-text)] max-w-[1084px] mx-auto mb-[32px] text-center lg:text-left">Why Insider Buying Matters</h2>
         <div className="max-w-[1084px] mx-auto grid grid-cols-1 md:grid-cols-3 gap-[var(--gap-items)]">
           {STATS.map((s) => (
-            <div key={s.value} className="bg-white pt-[15px] pr-[29px] pb-[30px] pl-[29px]">
-              <p className="font-[var(--font-montaga)] text-[40px] lg:text-[48px] font-normal leading-[84px] tracking-[0.5px] text-[color:var(--color-text)]">{s.value}</p>
+            <div key={s.value} className="bg-white p-[32px]">
+              <p className="font-[var(--font-montaga)] text-[40px] lg:text-[48px] font-normal leading-[1.1] tracking-[0.5px] text-[color:var(--color-text)]">{s.value}</p>
               <p className="font-[var(--font-montaga)] text-[20px] font-normal leading-[28px] text-[color:var(--color-text)] mb-[6px]">{s.label}</p>
               <p className="text-[16px] font-normal leading-[23px] text-[color:var(--color-text-secondary)] mb-[4px]">{s.desc}</p>
               <p className="text-[13px] font-normal leading-[23px] tracking-[0.5px] text-[color:var(--color-text-muted)]">{s.source}</p>
@@ -168,7 +168,7 @@ export default function HomePage() {
       </section>
 
       {/* ═══ 5. DETAILED ALERT CARD ═══ */}
-      <section className="w-full py-[var(--section-y-mobile)] px-[20px] md:pt-[var(--section-y)] md:pr-[98px] md:pb-[54px] md:pl-[98px] bg-white">
+      <section className="w-full py-[var(--section-y-mobile)] px-[20px] md:pt-[var(--section-y)] md:px-[48px] md:pb-[54px] bg-white">
         <div className="max-w-[1084px] mx-auto border border-black/10 overflow-hidden">
           <div className="bg-[var(--color-bg-alt)] border-b border-black/10 px-[var(--gap-tight)] py-[20px] md:px-[32px] md:py-[32px]">
             <div className="flex items-center justify-between">
@@ -237,7 +237,7 @@ export default function HomePage() {
       </section>
 
       {/* ═══ 6. CHARTS ═══ */}
-      <section className="w-full py-[var(--section-y-mobile)] px-[20px] md:pt-[var(--section-y)] md:pr-[68px] md:pb-[102px] md:pl-[68px] bg-[var(--color-bg-alt)]">
+      <section className="w-full py-[var(--section-y-mobile)] px-[20px] md:pt-[var(--section-y)] md:px-[48px] md:pb-[102px] bg-[var(--color-bg-alt)]">
         <div className="max-w-[1144px] mx-auto px-[32px]">
           <h2 className="font-[var(--font-montaga)] text-[39px] md:text-[length:var(--text-title)] font-normal leading-[1.1] tracking-[0.5px] text-[color:var(--color-text)] mb-[40px] md:mb-[64px] text-center lg:text-left">See the Pattern</h2>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-[var(--gap-items)] lg:gap-[var(--gap-cards)]">
@@ -250,14 +250,14 @@ export default function HomePage() {
                   <path d="M0 150C50 145 100 140 150 130S250 110 300 100S380 85 436 70" stroke="#00d26a" strokeWidth="3"/>
                 </svg>
               </div>
-              <div className="flex justify-between mt-[var(--gap-tight)]">{["Jan","Mar","May","Jul","Sep","Nov"].map(m=><span key={m} className="text-[10px] tracking-[0.5px] text-[color:var(--color-text-muted)]">{m}</span>)}</div>
+              <div className="flex justify-between mt-[var(--gap-tight)]">{["Jan","Mar","May","Jul","Sep","Nov"].map(m=><span key={m} className="text-[12px] tracking-[0.5px] text-[color:var(--color-text-muted)]">{m}</span>)}</div>
             </div>
             <div className="bg-white p-[40px] h-[400px]">
               <p className="text-[18px] leading-[28px] text-[color:var(--color-text)] mb-[32px]">Monthly Insider Buying Activity ($B)</p>
               <div className="flex items-end justify-center gap-[12px] h-[229px] px-[var(--gap-tight)]">
                 {[91,137,68,183,114,217,103].map((h,i)=>(<div key={i} className="w-[47px] bg-[var(--color-primary)]" style={{height:`${h}px`}}/>))}
               </div>
-              <div className="flex justify-between px-[var(--gap-tight)] mt-[var(--gap-tight)]">{["Jul","Aug","Sep","Oct","Nov","Dec","Jan"].map(m=><span key={m} className="text-[10px] tracking-[0.5px] text-[color:var(--color-text-muted)]">{m}</span>)}</div>
+              <div className="flex justify-between px-[var(--gap-tight)] mt-[var(--gap-tight)]">{["Jul","Aug","Sep","Oct","Nov","Dec","Jan"].map(m=><span key={m} className="text-[12px] tracking-[0.5px] text-[color:var(--color-text-muted)]">{m}</span>)}</div>
             </div>
           </div>
         </div>
@@ -267,7 +267,7 @@ export default function HomePage() {
       <section className="w-full py-[var(--section-y-mobile)] md:pt-[var(--section-y)] md:pb-[var(--section-y)] bg-[var(--color-primary-dark)] overflow-x-clip">
         <div className="max-w-[1136px] mx-auto px-[20px] md:px-[32px]">
           <h2 className="font-[var(--font-montaga)] text-[39px] md:text-[length:var(--text-title)] leading-[1.2] tracking-[0.5px] text-white text-center mb-[12px]">Deep Dive Reports</h2>
-          <p className="text-[16px] leading-[24px] text-[color:var(--color-text-muted)] text-center mb-[37px]">Comprehensive stock analysis powered by SEC data and AI.</p>
+          <p className="text-[16px] leading-[24px] text-white/70 text-center mb-[37px]">Comprehensive stock analysis powered by SEC data and AI.</p>
           {/* Desktop: 3-col grid / Mobile: horizontal scroll carousel */}
           <div className="hidden lg:grid grid-cols-3 gap-[var(--gap-items)] px-[50px] mb-[37px]">
             {REPORTS.map((r)=>(
@@ -346,10 +346,10 @@ export default function HomePage() {
             {FAQS.map((faq,i)=>(
               <div key={i} className="border-b border-[var(--color-border-light)] pb-[24px]">
                 <button onClick={()=>setOpenFaq(openFaq===i?null:i)} className="w-full flex items-center justify-between">
-                  <span className="text-[18px] leading-[28px] text-[color:var(--color-text)] text-left">{faq.q}</span>
+                  <span className="text-[16px] md:text-[18px] leading-[28px] text-[color:var(--color-text)] text-left">{faq.q}</span>
                   <svg className={`w-[12px] h-[12px] shrink-0 ml-[var(--gap-tight)] text-[color:var(--color-text-muted)] transition-transform ${openFaq===i?"rotate-45":""}`} viewBox="0 0 12 12"><path d="M6 0v12M0 6h12" stroke="currentColor" strokeWidth="2"/></svg>
                 </button>
-                {openFaq===i&&<p className="mt-[var(--gap-tight)] text-[16px] leading-[26px] text-[color:var(--color-text-secondary)]">{faq.a}</p>}
+                {openFaq===i&&<p className="mt-[var(--gap-tight)] text-[15px] md:text-[16px] leading-[24px] md:leading-[26px] text-[color:var(--color-text-secondary)]">{faq.a}</p>}
               </div>
             ))}
           </div>
@@ -360,7 +360,7 @@ export default function HomePage() {
       <section className="w-full bg-[var(--color-bg-dark)] py-[var(--section-y-mobile)] md:py-[var(--section-y-hero)]">
         <div className="max-w-[1216px] mx-auto px-[32px] text-center">
           <h2 className="font-[var(--font-montaga)] text-[39px] md:text-[length:var(--text-title)] leading-[1.2] tracking-[0.5px] text-white mb-[var(--gap-tight)]">You&apos;ll know in 60 seconds.</h2>
-          <p className="text-[20px] leading-[28px] text-[color:var(--color-text-muted)] max-w-[672px] mx-auto mb-[32px]">Don&apos;t wait for the morning news. Join thousands of sophisticated investors receiving institutional-grade insider data delivered in real-time.</p>
+          <p className="text-[20px] leading-[28px] text-white/60 max-w-[672px] mx-auto mb-[32px]">Don&apos;t wait for the morning news. Join thousands of sophisticated investors receiving institutional-grade insider data delivered in real-time.</p>
           <Link href="/signup" className="inline-flex items-center justify-center h-[56px] px-[48px] bg-[var(--color-primary)] text-white text-[16px] font-medium hover:bg-[var(--color-primary-dark)] transition-colors">Start Free</Link>
         </div>
       </section>

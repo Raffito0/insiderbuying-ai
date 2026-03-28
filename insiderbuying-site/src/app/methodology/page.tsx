@@ -38,7 +38,7 @@ export default function MethodologyPage() {
           <h1 className="font-[var(--font-montaga)] text-[39px] md:text-[length:var(--text-display)] font-normal leading-[1.1] md:leading-[60px] text-[color:var(--color-text)] mb-[16px]">
             How We Analyze
           </h1>
-          <p className="text-[17px] md:text-[20px] font-normal leading-[28px] md:leading-[32px] text-[color:var(--color-text-secondary)] max-w-[672px] pt-[8px] md:pt-[16px]">
+          <p className="text-[17px] md:text-[18px] font-normal leading-[28px] md:leading-[32px] text-[color:var(--color-text-secondary)] max-w-[672px] pt-[8px] md:pt-[16px]">
             Every number in our articles comes from a verifiable source. Here&apos;s exactly how our research process works to ensure institutional-grade precision.
           </p>
         </div>
@@ -68,7 +68,7 @@ export default function MethodologyPage() {
       {/* ═══ SECTION 3: ANALYSIS PROCESS (SIMPLE VERTICAL ON ALL SCREENS) ═══ */}
       <section className="bg-[var(--color-bg-alt)] pt-[var(--section-y-mobile)] pb-[var(--section-y-mobile)] md:pt-[var(--section-y)] md:pb-[var(--section-y)] px-[20px] md:px-[32px]">
         <div className="max-w-[1024px] mx-auto">
-          <h2 className="text-[26px] md:text-[length:var(--text-title)] font-bold leading-[1.2] md:leading-[36px] text-[color:var(--color-text)] text-center mb-[48px] md:mb-[80px]">
+          <h2 className="font-[var(--font-montaga)] text-[26px] md:text-[length:var(--text-title)] font-normal leading-[1.2] md:leading-[36px] text-[color:var(--color-text)] text-center mb-[48px] md:mb-[80px]">
             Our Analysis Process
           </h2>
           <div className="relative max-w-[600px] mx-auto">
@@ -93,7 +93,7 @@ export default function MethodologyPage() {
       {/* ═══ SECTION 4: AI TRANSPARENCY ═══ */}
       <section className="bg-white pt-[var(--section-y-mobile)] pb-[var(--section-y-mobile)] md:pt-[var(--section-y)] md:pb-[var(--section-y)] px-[20px] md:px-[32px]">
         <div className="max-w-[836px] mx-auto pl-[24px] md:pl-[64px] border-l border-[var(--color-primary)]">
-          <h2 className="text-[24px] md:text-[length:var(--text-title)] font-bold leading-[1.3] md:leading-[36px] text-[color:var(--color-text)] mb-[24px] md:mb-[32px]">
+          <h2 className="font-[var(--font-montaga)] text-[24px] md:text-[length:var(--text-title)] font-normal leading-[1.3] md:leading-[36px] text-[color:var(--color-text)] mb-[24px] md:mb-[32px]">
             We Use AI — And We&apos;re Transparent About It
           </h2>
           <div className="flex flex-col gap-[20px] md:gap-[24px]">
@@ -110,7 +110,7 @@ export default function MethodologyPage() {
       {/* ═══ SECTION 5: LIMITATIONS ═══ */}
       <section className="bg-[var(--color-bg-alt)] pt-[var(--section-y-mobile)] pb-[var(--section-y-mobile)] md:pt-[var(--section-y)] md:pb-[var(--section-y)] px-[20px] md:px-[32px]">
         <div className="max-w-[900px] mx-auto">
-          <h2 className="text-[24px] md:text-[length:var(--text-title)] font-bold leading-[1.3] md:leading-[36px] text-[color:var(--color-text)] mb-[28px] md:mb-[40px]">
+          <h2 className="font-[var(--font-montaga)] text-[24px] md:text-[length:var(--text-title)] font-normal leading-[1.3] md:leading-[36px] text-[color:var(--color-text)] mb-[28px] md:mb-[40px]">
             Limitations
           </h2>
           <div className="bg-white shadow-[0px_1px_3px_rgba(0,0,0,0.06)] p-[24px] md:p-[48px]">
@@ -129,7 +129,7 @@ export default function MethodologyPage() {
       {/* ═══ SECTION 6: VERIFY OUR DATA ═══ */}
       <section className="bg-white pt-[var(--section-y-mobile)] pb-[var(--section-y-mobile)] md:pt-[var(--section-y)] md:pb-[var(--section-y)] px-[20px] md:px-[32px]">
         <div className="max-w-[900px] mx-auto text-center">
-          <h2 className="text-[24px] md:text-[length:var(--text-title)] font-bold leading-[1.3] md:leading-[36px] text-[color:var(--color-text)] mb-[16px]">
+          <h2 className="font-[var(--font-montaga)] text-[24px] md:text-[length:var(--text-title)] font-normal leading-[1.3] md:leading-[36px] text-[color:var(--color-text)] mb-[16px]">
             Verify Our Data
           </h2>
           <p className="text-[16px] md:text-[18px] font-normal leading-[26px] md:leading-[28px] text-[color:var(--color-text-secondary)] mb-[24px] md:mb-[32px]">

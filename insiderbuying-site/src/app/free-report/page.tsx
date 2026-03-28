@@ -183,7 +183,7 @@ export default function FreeReportPage() {
       </section>
 
       {/* ═══ SECTION 3: WHAT YOU'LL LEARN ═══ */}
-      <section className="bg-[var(--color-bg-alt)] pt-[var(--section-y-mobile)] pb-[var(--section-y-mobile)] md:pt-[var(--section-y-hero)] md:pb-[var(--section-y-hero)] px-[20px] md:px-[32px]">
+      <section className="bg-[var(--color-bg-alt)] pt-[var(--section-y-mobile)] pb-[var(--section-y-mobile)] md:pt-[var(--section-y)] md:pb-[var(--section-y-hero)] px-[20px] md:px-[32px]">
         <div className="max-w-[980px] mx-auto">
           <h2 className="font-[var(--font-montaga)] text-[32px] md:text-[length:var(--text-title)] font-normal leading-[1.2] md:leading-[40px] text-[color:var(--color-text)] mb-[40px] md:mb-[80px]">
             What You&apos;ll Learn
@@ -192,7 +192,7 @@ export default function FreeReportPage() {
             {CARDS.map((card) => (
               <div key={card.title} className="bg-white border-[0px] border-black/0 p-[40px]">
                 <div className="w-full h-[28px] bg-[var(--color-primary)] rounded-[2px] opacity-30 mb-[24px]" />
-                <h3 className="text-[20px] font-bold leading-[28px] text-[color:var(--color-text)] mb-[24px]">{card.title}</h3>
+                <h3 className="font-[var(--font-montaga)] text-[20px] font-bold leading-[28px] text-[color:var(--color-text)] mb-[24px]">{card.title}</h3>
                 <p className="text-[16px] font-normal leading-[26px] text-[color:var(--color-text-secondary)]">{card.desc}</p>
               </div>
             ))}

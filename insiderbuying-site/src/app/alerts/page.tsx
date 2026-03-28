@@ -237,7 +237,7 @@ export default function AlertsPage() {
                       <span className="text-[12px] font-bold leading-[16px] text-[color:var(--color-primary)]">AI Sentiment Analysis</span>
                     </div>
                     <div className="relative">
-                      <p className={`text-[13px] md:text-[14px] font-normal leading-[20px] text-[color:var(--color-text)] ${!isPro ? "blur-[4px] select-none" : ""}`}>{a.ai}</p>
+                      <p className={`text-[13px] md:text-[14px] font-normal leading-[22px] text-[color:var(--color-text)] ${!isPro ? "blur-[4px] select-none" : ""}`}>{a.ai}</p>
                       {!isPro && (
                         <div className="absolute inset-0 bg-[var(--color-bg-alt)]/60 flex flex-col items-center justify-center">
                           <svg className="w-[14px] h-[19px] mb-[8px]" viewBox="0 0 14 19" fill="#1c1b1b"><path d="M7 0a5 5 0 00-5 5v3H1a1 1 0 00-1 1v9a1 1 0 001 1h12a1 1 0 001-1V9a1 1 0 00-1-1h-1V5a5 5 0 00-5-5zm3 8V5a3 3 0 10-6 0v3h6z"/></svg>
@@ -282,7 +282,7 @@ export default function AlertsPage() {
             <div className="bg-white border border-[var(--color-border)] p-[24px]">
               <div className="flex items-center gap-[8px] mb-[16px]">
                 <svg className="w-[17px] h-[16px]" viewBox="0 0 17 16" fill="#000592"><path d="M8.5 0l2.5 5.5H17l-4.5 3.5 1.5 6L8.5 12 3 15l1.5-6L0 5.5h6z"/></svg>
-                <span className="font-[var(--font-montaga)] text-[16px] font-normal leading-[24px] text-[color:var(--color-text)]">Your Watchlist</span>
+                <span className="font-[var(--font-montaga)] text-[length:var(--text-subheading)] font-normal leading-[24px] text-[color:var(--color-text)]">Your Watchlist</span>
               </div>
               <div className="bg-[var(--color-bg-alt)] border border-[var(--color-border)] py-[32px] px-[16px] text-center">
                 <p className="text-[12px] font-normal leading-[16px] text-[color:var(--color-text-muted)] mb-[16px]">Track specific companies and get<br />instant push alerts.</p>
@@ -294,7 +294,7 @@ export default function AlertsPage() {
             <div className="bg-white border border-[var(--color-border)] p-[24px]">
               <div className="flex items-center gap-[8px] mb-[24px]">
                 <svg className="w-[18px] h-[10px]" viewBox="0 0 18 10" fill="#006d34"><path d="M0 10L6 4l4 4L18 0" stroke="#006d34" strokeWidth="2" fill="none"/></svg>
-                <span className="font-[var(--font-montaga)] text-[16px] font-normal leading-[24px] text-[color:var(--color-text)]">This Week&apos;s Top Buys</span>
+                <span className="font-[var(--font-montaga)] text-[length:var(--text-subheading)] font-normal leading-[24px] text-[color:var(--color-text)]">This Week&apos;s Top Buys</span>
               </div>
               <div className="flex flex-col gap-[16px]">
                 {TOP_BUYS.map((b) => (

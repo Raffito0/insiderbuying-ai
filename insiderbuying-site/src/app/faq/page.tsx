@@ -46,7 +46,7 @@ export default function FaqPage() {
       {/* ═══ SECTION 1: HEADER ═══ */}
       <section className="bg-[var(--color-bg-alt)] pt-[var(--section-y-hero-mobile)] pb-[var(--section-y-hero-mobile)] md:pt-[var(--section-y-hero)] md:pb-[var(--section-y-hero)] px-[20px] md:px-[32px]">
         <div className="max-w-[896px] mx-auto text-center">
-          <h1 className="font-[var(--font-montaga)] text-[39px] md:text-[54px] font-normal leading-[1.1] md:leading-[70px] text-[color:var(--color-text)] mb-[var(--gap-tight)] md:mb-[24px]">
+          <h1 className="font-[var(--font-montaga)] text-[39px] md:text-[54px] font-normal leading-[1.1] md:leading-[60px] text-[color:var(--color-text)] mb-[var(--gap-tight)] md:mb-[24px]">
             Frequently Asked Questions
           </h1>
           <p className="text-[16px] md:text-[18px] font-normal leading-[26px] md:leading-[29px] text-[color:var(--color-text-secondary)] max-w-[672px] mx-auto">
@@ -79,7 +79,7 @@ export default function FaqPage() {
         <div className="max-w-[780px] mx-auto flex flex-col gap-[48px] md:gap-[80px]">
           {FAQ_GROUPS.map((group) => (
             <div key={group.title}>
-              <h2 className="font-[var(--font-montaga)] text-[26px] md:text-[30px] font-normal leading-[32px] text-[color:var(--color-text)] pl-[16px] border-l-[1px] border-[var(--color-primary)] mb-[24px] md:mb-[32px]">
+              <h2 className="font-[var(--font-montaga)] text-[26px] md:text-[30px] font-normal leading-[32px] text-[color:var(--color-text)] pl-[16px] border-l-[3px] border-[var(--color-primary)] mb-[24px] md:mb-[32px]">
                 {group.title}
               </h2>
               <div className="flex flex-col gap-[12px] md:gap-[16px]">
