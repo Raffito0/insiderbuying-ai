@@ -249,7 +249,7 @@ export default defineStackbitConfig({
       .filter((doc) => doc.modelName && ["HomePage", "AboutPage", "PricingPage", "HowItWorksPage", "FreeReportPage", "BlogPage", "MethodologyPage"].includes(doc.modelName))
       .map((doc) => ({
         stableId: doc.id,
-        urlPath: (doc.fields?.urlPath as string) || "/",
+        urlPath: (doc.fields?.urlPath as unknown as string) || "/",
         document: doc,
       }));
   },
