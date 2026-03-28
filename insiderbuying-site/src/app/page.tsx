@@ -92,8 +92,8 @@ export default function HomePage() {
           {/* Desktop rows — attached block */}
           <div className="hidden lg:flex flex-col mb-[var(--gap-tight)] overflow-hidden shadow-[0px_1px_2px_rgba(0,0,0,0.05)]">
             {ALERTS.map((a, i) => (
-              <div key={i} className={`grid grid-cols-[minmax(0,1fr)_140px_180px_100px] items-center h-[112px] px-[32px] ${i % 2 === 0 ? "bg-[var(--color-bg-alt)]" : "bg-white"} ${i > 0 ? "border-t border-[var(--color-border)]" : ""}`}>
-                <div className="flex items-center gap-[24px]">
+              <div key={i} className={`flex items-center justify-between h-[112px] px-[32px] ${i % 2 === 0 ? "bg-[var(--color-bg-alt)]" : "bg-white"} ${i > 0 ? "border-t border-[var(--color-border)]" : ""}`}>
+                <div className="flex items-center gap-[24px] w-[280px] shrink-0">
                   <div className="w-[64px] h-[64px] rounded-full bg-[#d9d9d9] flex items-center justify-center text-[14px] font-semibold text-[color:var(--color-text-muted)]">
                     {a.name.split(" ").map(n => n[0]).join("")}
                   </div>
@@ -104,7 +104,7 @@ export default function HomePage() {
                 </div>
                 <span className="text-[24px] font-medium leading-[32px] text-[color:var(--color-text)]">{a.ticker}</span>
                 <span className="text-[20px] font-medium text-[color:var(--color-signal-green)]">{a.amount}</span>
-                <span className="text-[16px] font-normal text-[color:var(--color-text-secondary)] text-right">{a.time}</span>
+                <span className="text-[16px] font-normal text-[color:var(--color-text-secondary)]">{a.time}</span>
               </div>
             ))}
           </div>
