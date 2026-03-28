@@ -450,14 +450,11 @@ export default function HowItWorksPage() {
           {/* Timeline */}
           <div className="max-w-[1024px] mx-auto mb-[32px] md:mb-[48px]">
             {/* Desktop: horizontal timeline */}
-            <div className="hidden md:block">
-              {/* Line */}
-              <div className="relative mx-[16px]">
-                <div className="h-[2px] bg-gradient-to-r from-[#000592] via-[#c6c5d9] to-[#006d34]" />
-              </div>
-
+            <div className="hidden md:block relative">
               {/* Steps */}
-              <div className="grid grid-cols-5 gap-0 -mt-[1px]">
+              <div className="relative z-10 grid grid-cols-5 gap-0">
+                {/* Line — centered on icons (36px = half of 72px icon height) */}
+                <div className="absolute left-[10%] right-[10%] top-[36px] -translate-y-1/2 h-[2px] bg-gradient-to-r from-[#000592] via-[#c6c5d9] to-[#006d34] z-0" />
                 {TIMELINE_STEPS.map((step, i) => {
                   const Icon = STEP_ICONS[i];
                   const isFirst = step.active;
