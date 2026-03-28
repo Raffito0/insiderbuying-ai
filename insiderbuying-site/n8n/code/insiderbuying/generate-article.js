@@ -32,6 +32,7 @@ const FALSE_POSITIVE_TICKERS = new Set([
 ]);
 
 const BANNED_PHRASES = [
+  // -- Original filler/cliche phrases --
   "it's worth noting", "it remains to be seen", "having said that",
   "on the other hand", "in conclusion", "at the end of the day",
   "all in all", "needless to say", "it goes without saying",
@@ -42,6 +43,43 @@ const BANNED_PHRASES = [
   "at first glance", "interestingly enough",
   "it's important to note", "as always", "stay tuned",
   "that being said",
+  // -- Humanizer #1: Significance inflation --
+  "stands as a testament", "serves as a testament", "is a testament",
+  "pivotal moment", "pivotal role", "crucial role", "vital role",
+  "key turning point", "indelible mark", "setting the stage",
+  "marking a shift", "evolving landscape", "enduring legacy",
+  "shaping the future", "underscores the importance",
+  "highlights the significance", "reflects broader trends",
+  // -- Humanizer #3: Superficial -ing analyses --
+  "highlighting the", "underscoring the", "emphasizing the",
+  "showcasing how", "reflecting the", "symbolizing the",
+  "fostering a", "cultivating a", "encompassing a",
+  // -- Humanizer #4: Promotional language --
+  "vibrant", "nestled", "breathtaking", "groundbreaking",
+  "must-visit", "stunning", "in the heart of",
+  // -- Humanizer #5: Weasel attributions --
+  "experts argue", "experts believe", "industry reports suggest",
+  "observers have noted", "some critics argue",
+  // -- Humanizer #6: Formulaic challenges --
+  "despite these challenges", "despite its challenges",
+  "continues to thrive", "future looks bright",
+  "exciting times lie ahead", "journey toward excellence",
+  // -- Humanizer #7: Overused AI vocabulary --
+  "delve", "tapestry", "interplay", "intricate", "intricacies",
+  "garner", "foster", "landscape of", "rich tapestry",
+  // -- Humanizer #8: Copula avoidance --
+  "serves as a", "stands as a", "boasts a", "represents a key",
+  // -- Humanizer #9: Negative parallelism --
+  "not only", "it's not just about",
+  // -- Humanizer #19-21: Chat artifacts --
+  "i hope this helps", "certainly!", "of course!",
+  "you're absolutely right", "great question",
+  "let me know if", "here is a",
+  // -- Humanizer #22-24: Filler/hedging/generic --
+  "in order to", "due to the fact that", "at this point in time",
+  "in the event that", "has the ability to",
+  "it could potentially", "might have some effect",
+  "the future looks bright", "a step in the right direction",
 ];
 
 const ALLOWED_TAGS = new Set([
@@ -273,6 +311,236 @@ function qualityGate(article, primaryKeyword, targetLength, articleType) {
   }
 
   return { pass: failures.length === 0, failures };
+}
+
+// ---------------------------------------------------------------------------
+// SEO Score (Step 8.7)
+// ---------------------------------------------------------------------------
+
+/**
+ * Compute a 0-100 SEO score for the article.
+ * Checks: keyword density, heading structure, internal links,
+ * readability (Flesch-Kincaid approximation), meta completeness.
+ * Returns { score, breakdown, pass } where pass = score >= 70.
+ */
+function seoScore(article, primaryKeyword) {
+  const breakdown = {};
+  const bodyText = (article.body_html || '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+  const words = bodyText.split(/\s+/).filter(Boolean);
+  const wordCount = words.length;
+  const kwLower = (primaryKeyword || '').toLowerCase();
+  const kwWords = kwLower.split(/\s+/).filter((w) => w.length > 2);
+
+  // 1. Keyword density (target 1.0-2.5%, max 20 pts)
+  if (kwWords.length > 0 && wordCount > 0) {
+    const bodyLower = bodyText.toLowerCase();
+    // Count occurrences of the most specific keyword word
+    const mainWord = kwWords.reduce((a, b) => a.length >= b.length ? a : b, '');
+    const regex = new RegExp('\\b' + mainWord.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\b', 'gi');
+    const matches = bodyLower.match(regex) || [];
+    const density = (matches.length / wordCount) * 100;
+    if (density >= 1.0 && density <= 2.5) {
+      breakdown.keywordDensity = 20;
+    } else if (density >= 0.5 && density <= 3.5) {
+      breakdown.keywordDensity = 12;
+    } else {
+      breakdown.keywordDensity = 5;
+    }
+  } else {
+    breakdown.keywordDensity = 0;
+  }
+
+  // 2. Heading structure (max 20 pts)
+  const h2s = (article.body_html || '').match(/<h2[^>]*>/gi) || [];
+  const h3s = (article.body_html || '').match(/<h3[^>]*>/gi) || [];
+  let headingScore = 0;
+  if (h2s.length >= 3) headingScore += 10;
+  else if (h2s.length >= 2) headingScore += 7;
+  else if (h2s.length >= 1) headingScore += 4;
+  if (h3s.length >= 1) headingScore += 5;
+  // Keyword in H2 (already checked in quality gate, reward here)
+  const h2Text = (article.body_html || '').match(/<h2[^>]*>([\s\S]*?)<\/h2>/gi) || [];
+  const kwInH2 = h2Text.some((h) => kwWords.some((w) => h.toLowerCase().includes(w)));
+  if (kwInH2) headingScore += 5;
+  breakdown.headingStructure = Math.min(headingScore, 20);
+
+  // 3. Internal links (max 10 pts)
+  const internalLinks = ((article.body_html || '').match(/href=["']\/[^"']+["']/g) || []).length;
+  breakdown.internalLinks = internalLinks >= 3 ? 10 : internalLinks >= 1 ? 6 : 0;
+
+  // 4. Readability — Flesch-Kincaid approximation (max 20 pts)
+  // FK = 0.39 * (words/sentences) + 11.8 * (syllables/words) - 15.59
+  // We approximate syllables by counting vowel groups
+  const sentences = bodyText.split(/[.!?]+/).filter((s) => s.trim().length > 0);
+  const sentenceCount = Math.max(sentences.length, 1);
+  const avgWordsPerSentence = wordCount / sentenceCount;
+  let syllableCount = 0;
+  for (const word of words) {
+    const vowelGroups = word.toLowerCase().match(/[aeiouy]+/g) || [];
+    syllableCount += Math.max(vowelGroups.length, 1);
+  }
+  const avgSyllablesPerWord = syllableCount / Math.max(wordCount, 1);
+  const fkGrade = 0.39 * avgWordsPerSentence + 11.8 * avgSyllablesPerWord - 15.59;
+  // Target: 8-10 grade level
+  if (fkGrade >= 7 && fkGrade <= 11) {
+    breakdown.readability = 20;
+  } else if (fkGrade >= 5 && fkGrade <= 13) {
+    breakdown.readability = 12;
+  } else {
+    breakdown.readability = 5;
+  }
+
+  // 5. Meta completeness (max 15 pts)
+  let metaScore = 0;
+  if (article.title && article.title.length >= 50 && article.title.length <= 70) metaScore += 5;
+  if (article.meta_description && article.meta_description.length >= 130 && article.meta_description.length <= 160) metaScore += 5;
+  if (article.slug && article.slug.length > 0) metaScore += 5;
+  breakdown.metaCompleteness = metaScore;
+
+  // 6. Content length relative to type (max 15 pts)
+  if (wordCount >= 1200) {
+    breakdown.contentLength = 15;
+  } else if (wordCount >= 800) {
+    breakdown.contentLength = 10;
+  } else {
+    breakdown.contentLength = 3;
+  }
+
+  const total = Object.values(breakdown).reduce((a, b) => a + b, 0);
+  return {
+    score: Math.min(total, 100),
+    breakdown,
+    pass: total >= 70,
+  };
+}
+
+// ---------------------------------------------------------------------------
+// AI Detection Score (Step 8.8)
+// ---------------------------------------------------------------------------
+
+// AI-signature word list (high-frequency in AI text, low in human text)
+const AI_SIGNAL_WORDS = [
+  'additionally', 'furthermore', 'moreover', 'consequently',
+  'delve', 'crucial', 'pivotal', 'underscore', 'underscores',
+  'landscape', 'tapestry', 'interplay', 'intricate',
+  'foster', 'fostering', 'garner', 'garnered',
+  'showcase', 'showcasing', 'showcased',
+  'highlight', 'highlighting', 'highlighted',
+  'enhance', 'enhancing', 'enhanced',
+  'emphasize', 'emphasizing', 'emphasized',
+  'vibrant', 'robust', 'comprehensive', 'noteworthy',
+  'commendable', 'meticulous', 'nuanced',
+  'testament', 'realm', 'paradigm',
+  'multifaceted', 'groundbreaking',
+];
+
+/**
+ * Compute an AI detection risk score (0-100, lower = more human).
+ * Checks: AI signal word density, sentence length uniformity,
+ * paragraph structure repetitiveness, banned phrase remnants.
+ * Returns { score, signals, pass } where pass = score <= 40.
+ */
+function aiDetectionScore(article) {
+  const bodyText = (article.body_html || '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+  const words = bodyText.split(/\s+/).filter(Boolean);
+  const wordCount = words.length;
+  const signals = [];
+
+  if (wordCount === 0) return { score: 0, signals: [], pass: true };
+
+  // 1. AI signal word density (0-35 pts)
+  const bodyLower = bodyText.toLowerCase();
+  let aiWordHits = 0;
+  for (const word of AI_SIGNAL_WORDS) {
+    const regex = new RegExp('\\b' + word + '\\b', 'gi');
+    const matches = bodyLower.match(regex) || [];
+    aiWordHits += matches.length;
+  }
+  const aiWordDensity = (aiWordHits / wordCount) * 100;
+  let aiWordScore = 0;
+  if (aiWordDensity > 3) {
+    aiWordScore = 35;
+    signals.push(`High AI vocabulary density: ${aiWordDensity.toFixed(1)}% (${aiWordHits} hits)`);
+  } else if (aiWordDensity > 1.5) {
+    aiWordScore = 20;
+    signals.push(`Moderate AI vocabulary: ${aiWordDensity.toFixed(1)}%`);
+  } else if (aiWordDensity > 0.5) {
+    aiWordScore = 8;
+  }
+
+  // 2. Sentence length uniformity (0-25 pts)
+  // Humans vary sentence length wildly; AI tends toward uniform lengths
+  const sentences = bodyText.split(/[.!?]+/).filter((s) => s.trim().length > 5);
+  if (sentences.length >= 5) {
+    const lengths = sentences.map((s) => s.trim().split(/\s+/).length);
+    const avgLen = lengths.reduce((a, b) => a + b, 0) / lengths.length;
+    const variance = lengths.reduce((sum, l) => sum + Math.pow(l - avgLen, 2), 0) / lengths.length;
+    const coeffVar = Math.sqrt(variance) / avgLen; // coefficient of variation
+    // Human text: CV typically 0.4-0.8. AI text: CV typically 0.2-0.35
+    let uniformScore = 0;
+    if (coeffVar < 0.25) {
+      uniformScore = 25;
+      signals.push(`Very uniform sentence lengths (CV=${coeffVar.toFixed(2)})`);
+    } else if (coeffVar < 0.35) {
+      uniformScore = 15;
+      signals.push(`Somewhat uniform sentences (CV=${coeffVar.toFixed(2)})`);
+    } else if (coeffVar < 0.45) {
+      uniformScore = 5;
+    }
+    aiWordScore += uniformScore; // reuse variable for total
+  }
+
+  // 3. Paragraph opening repetition (0-20 pts)
+  // AI tends to start paragraphs with similar structures
+  const paragraphs = (article.body_html || '').match(/<p[^>]*>([\s\S]*?)<\/p>/gi) || [];
+  if (paragraphs.length >= 4) {
+    const openers = paragraphs.map((p) => {
+      const text = p.replace(/<[^>]+>/g, '').trim();
+      return text.split(/\s+/).slice(0, 3).join(' ').toLowerCase();
+    });
+    // Check for repeated opening patterns (e.g., "The company's", "The company's")
+    const firstWords = paragraphs.map((p) => p.replace(/<[^>]+>/g, '').trim().split(/\s+/)[0]?.toLowerCase());
+    const wordCounts = {};
+    for (const w of firstWords) {
+      if (w) wordCounts[w] = (wordCounts[w] || 0) + 1;
+    }
+    const maxRepeat = Math.max(...Object.values(wordCounts));
+    const repeatRatio = maxRepeat / paragraphs.length;
+    if (repeatRatio > 0.5) {
+      aiWordScore += 20;
+      signals.push(`${(repeatRatio * 100).toFixed(0)}% of paragraphs start with same word`);
+    } else if (repeatRatio > 0.35) {
+      aiWordScore += 10;
+      signals.push(`${(repeatRatio * 100).toFixed(0)}% paragraph opener repetition`);
+    }
+  }
+
+  // 4. Em dash overuse (0-10 pts) — Humanizer #13
+  const emDashCount = (bodyText.match(/\u2014|---?/g) || []).length;
+  const emDashPer1000 = (emDashCount / wordCount) * 1000;
+  if (emDashPer1000 > 5) {
+    aiWordScore += 10;
+    signals.push(`Em dash overuse: ${emDashCount} in ${wordCount} words`);
+  } else if (emDashPer1000 > 2.5) {
+    aiWordScore += 5;
+  }
+
+  // 5. "Not only...but also" / negative parallelism (0-10 pts) — Humanizer #9
+  const negParallel = (bodyLower.match(/not only\b.*?\bbut\b/g) || []).length +
+                       (bodyLower.match(/it's not just\b/g) || []).length;
+  if (negParallel >= 2) {
+    aiWordScore += 10;
+    signals.push(`${negParallel} negative parallelisms found`);
+  } else if (negParallel === 1) {
+    aiWordScore += 3;
+  }
+
+  const finalScore = Math.min(aiWordScore, 100);
+  return {
+    score: finalScore,
+    signals,
+    pass: finalScore <= 40,
+  };
 }
 
 // ---------------------------------------------------------------------------
@@ -801,6 +1069,24 @@ async function generateArticle(input, helpers) {
     retryFeedback = gate.failures.join('; ');
   }
 
+  // Step 8.7: SEO Score
+  const seo = seoScore(article, keyword.keyword);
+  article._seoScore = seo.score;
+  article._seoBreakdown = seo.breakdown;
+  if (!seo.pass) {
+    // Log warning but don't block — SEO score is advisory
+    article.confidence_notes = (article.confidence_notes || '') +
+      ` [SEO score ${seo.score}/100 below 70 threshold]`;
+  }
+
+  // Step 8.8: AI Detection Score
+  const aiCheck = aiDetectionScore(article);
+  article._aiDetectionScore = aiCheck.score;
+  if (!aiCheck.pass) {
+    article.confidence_notes = (article.confidence_notes || '') +
+      ` [AI detection risk ${aiCheck.score}/100: ${aiCheck.signals.join(', ')}]`;
+  }
+
   // Step 8.6: Ensure unique slug
   const existingSlugsRes = await nocodbGet(
     `/Articles?fields=slug&where=(slug,like,${article.slug}%)`,
@@ -857,6 +1143,8 @@ module.exports = {
   buildToolSchema,
   extractToolResult,
   qualityGate,
+  seoScore,
+  aiDetectionScore,
   sanitizeHtml,
   ensureUniqueSlug,
 
@@ -883,4 +1171,5 @@ module.exports = {
   FALSE_POSITIVE_TICKERS,
   ALLOWED_TAGS,
   REQUIRED_ARTICLE_FIELDS,
+  AI_SIGNAL_WORDS,
 };
