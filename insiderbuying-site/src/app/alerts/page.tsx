@@ -81,6 +81,8 @@ const TOP_BUYS = [
 export default function AlertsPage() {
   const [alerts, setAlerts] = useState<AlertDisplay[]>(SAMPLE_ALERTS);
   const [isSampleData, setIsSampleData] = useState(true);
+  const [isPro, setIsPro] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   useEffect(() => {
     const supabase = createClient();
 
@@ -97,6 +99,24 @@ export default function AlertsPage() {
         }
         // If empty or error, keep sample data
       });
+
+    // Check subscription tier
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      if (!user) return;
+      setIsLoggedIn(true);
+      supabase
+        .from("profiles")
+        .select("subscription_tier")
+        .eq("id", user.id)
+        .single()
+        .then(({ data }) => {
+          if (data?.subscription_tier === "pro") {
+            setIsPro(true);
+          }
+        });
+    }).catch(() => {
+      // Auth unreachable — stay blurred (safe default)
+    });
 
     // Subscribe to realtime INSERTs
     const channel = supabase
@@ -217,12 +237,18 @@ export default function AlertsPage() {
                       <span className="text-[12px] font-bold leading-[16px] text-[var(--color-primary)]">AI Sentiment Analysis</span>
                     </div>
                     <div className="relative">
-                      <p className="text-[13px] md:text-[14px] font-normal leading-[20px] text-[var(--color-text)] blur-[4px] select-none">{a.ai}</p>
-                      <div className="absolute inset-0 bg-[var(--color-bg-alt)]/60 flex flex-col items-center justify-center">
-                        <svg className="w-[14px] h-[19px] mb-[8px]" viewBox="0 0 14 19" fill="#1c1b1b"><path d="M7 0a5 5 0 00-5 5v3H1a1 1 0 00-1 1v9a1 1 0 001 1h12a1 1 0 001-1V9a1 1 0 00-1-1h-1V5a5 5 0 00-5-5zm3 8V5a3 3 0 10-6 0v3h6z"/></svg>
-                        <p className="text-[13px] md:text-[14px] font-medium leading-[20px] text-[var(--color-text)] text-center">Upgrade to Pro for instant AI analysis</p>
-                        <Link href="/pricing" className="text-[12px] font-medium leading-[16px] text-[var(--color-primary)] mt-[4px]">Unlock this insight &rarr;</Link>
-                      </div>
+                      <p className={`text-[13px] md:text-[14px] font-normal leading-[20px] text-[var(--color-text)] ${!isPro ? "blur-[4px] select-none" : ""}`}>{a.ai}</p>
+                      {!isPro && (
+                        <div className="absolute inset-0 bg-[var(--color-bg-alt)]/60 flex flex-col items-center justify-center">
+                          <svg className="w-[14px] h-[19px] mb-[8px]" viewBox="0 0 14 19" fill="#1c1b1b"><path d="M7 0a5 5 0 00-5 5v3H1a1 1 0 00-1 1v9a1 1 0 001 1h12a1 1 0 001-1V9a1 1 0 00-1-1h-1V5a5 5 0 00-5-5zm3 8V5a3 3 0 10-6 0v3h6z"/></svg>
+                          <p className="text-[13px] md:text-[14px] font-medium leading-[20px] text-[var(--color-text)] text-center">
+                            {!isLoggedIn ? "Sign up for free to unlock AI analysis" : "Upgrade to Pro for instant AI analysis"}
+                          </p>
+                          <Link href={!isLoggedIn ? "/signup" : "/pricing"} className="text-[12px] font-medium leading-[16px] text-[var(--color-primary)] mt-[4px]">
+                            {!isLoggedIn ? "Sign up free" : "Unlock this insight"} &rarr;
+                          </Link>
+                        </div>
+                      )}
                     </div>
                   </div>
                 )}
