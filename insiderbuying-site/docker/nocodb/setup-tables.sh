@@ -102,6 +102,8 @@ ARTICLES_ID=$(create_table "Articles" '[
   {"title":"author_name","uidt":"SingleLineText"},
   {"title":"status","uidt":"SingleSelect","dtxp":"enriching,published,draft,error"},
   {"title":"quality_gate_pass","uidt":"Checkbox"},
+  {"title":"seo_score","uidt":"Number"},
+  {"title":"ai_detection_score","uidt":"Number"},
   {"title":"related_articles","uidt":"LongText"},
   {"title":"published_at","uidt":"DateTime"}
 ]')
@@ -123,14 +125,121 @@ IMAGES_ID=$(create_table "Published_Images" '[
   {"title":"prompt_used","uidt":"LongText"}
 ]')
 
+# --- Data_Studies Table (W3 data studies) ---
+STUDIES_ID=$(create_table "Data_Studies" '[
+  {"title":"title","uidt":"SingleLineText"},
+  {"title":"study_type","uidt":"SingleLineText"},
+  {"title":"data_period","uidt":"SingleLineText"},
+  {"title":"key_findings","uidt":"LongText"},
+  {"title":"methodology","uidt":"LongText"},
+  {"title":"charts_data","uidt":"LongText"},
+  {"title":"status","uidt":"SingleSelect","dtxp":"draft,published"},
+  {"title":"published_at","uidt":"DateTime"}
+]')
+
+# --- Insider_Alerts Table (W4 SEC monitor) ---
+ALERTS_ID=$(create_table "Insider_Alerts" '[
+  {"title":"ticker","uidt":"SingleLineText"},
+  {"title":"company_name","uidt":"SingleLineText"},
+  {"title":"insider_name","uidt":"SingleLineText"},
+  {"title":"insider_title","uidt":"SingleLineText"},
+  {"title":"transaction_type","uidt":"SingleSelect","dtxp":"buy,sell,cluster"},
+  {"title":"shares","uidt":"Number"},
+  {"title":"price_per_share","uidt":"Decimal"},
+  {"title":"total_value","uidt":"Number"},
+  {"title":"filing_date","uidt":"DateTime"},
+  {"title":"significance_score","uidt":"Number"},
+  {"title":"ai_analysis","uidt":"LongText"},
+  {"title":"cluster_id","uidt":"SingleLineText"},
+  {"title":"is_cluster","uidt":"Checkbox"},
+  {"title":"raw_data","uidt":"LongText"},
+  {"title":"status","uidt":"SingleSelect","dtxp":"new,processed,delivered"},
+  {"title":"delivered_at","uidt":"DateTime"}
+]')
+
+# --- Outreach_Prospects Table (W10 prospect finder) ---
+PROSPECTS_ID=$(create_table "Outreach_Prospects" '[
+  {"title":"name","uidt":"SingleLineText"},
+  {"title":"email","uidt":"Email"},
+  {"title":"website","uidt":"URL"},
+  {"title":"domain_authority","uidt":"Number"},
+  {"title":"type","uidt":"SingleSelect","dtxp":"blogger,newsletter,podcast"},
+  {"title":"relevance_score","uidt":"Number"},
+  {"title":"status","uidt":"SingleSelect","dtxp":"found,contacted,replied,linked"},
+  {"title":"notes","uidt":"LongText"}
+]')
+
+# --- Outreach_Log Table (W11 email sender) ---
+OUTREACH_LOG_ID=$(create_table "Outreach_Log" '[
+  {"title":"prospect_id","uidt":"Number"},
+  {"title":"email_type","uidt":"SingleSelect","dtxp":"initial,followup"},
+  {"title":"sent_at","uidt":"DateTime"},
+  {"title":"opened_at","uidt":"DateTime"},
+  {"title":"replied_at","uidt":"DateTime"},
+  {"title":"result","uidt":"SingleSelect","dtxp":"no_reply,positive,negative,linked"}
+]')
+
+# --- X_Engagement_Log Table (W7/W8 X posts) ---
+X_LOG_ID=$(create_table "X_Engagement_Log" '[
+  {"title":"tweet_id","uidt":"SingleLineText"},
+  {"title":"article_id","uidt":"Number"},
+  {"title":"tweet_text","uidt":"LongText"},
+  {"title":"type","uidt":"SingleSelect","dtxp":"post,reply"},
+  {"title":"likes","uidt":"Number"},
+  {"title":"retweets","uidt":"Number"},
+  {"title":"replies","uidt":"Number"},
+  {"title":"impressions","uidt":"Number"},
+  {"title":"posted_at","uidt":"DateTime"}
+]')
+
+# --- Reddit_Log Table (W9 Reddit monitor) ---
+REDDIT_LOG_ID=$(create_table "Reddit_Log" '[
+  {"title":"post_url","uidt":"URL"},
+  {"title":"subreddit","uidt":"SingleLineText"},
+  {"title":"comment_text","uidt":"LongText"},
+  {"title":"type","uidt":"SingleSelect","dtxp":"value,mention"},
+  {"title":"upvotes","uidt":"Number"},
+  {"title":"posted_at","uidt":"DateTime"},
+  {"title":"status","uidt":"SingleSelect","dtxp":"drafted,approved,posted"}
+]')
+
+# --- Lead_Magnet_Versions Table (W16 lead magnet PDF) ---
+LEAD_MAGNET_ID=$(create_table "Lead_Magnet_Versions" '[
+  {"title":"month","uidt":"SingleLineText"},
+  {"title":"title","uidt":"SingleLineText"},
+  {"title":"pdf_url","uidt":"URL"},
+  {"title":"backtest_period","uidt":"SingleLineText"},
+  {"title":"key_stats","uidt":"LongText"},
+  {"title":"beehiiv_updated","uidt":"Checkbox"},
+  {"title":"created_at","uidt":"DateTime"}
+]')
+
+# --- SEO_Rankings Table (W14 SEO monitoring) ---
+SEO_ID=$(create_table "SEO_Rankings" '[
+  {"title":"keyword_id","uidt":"Number"},
+  {"title":"date","uidt":"Date"},
+  {"title":"position","uidt":"Number"},
+  {"title":"clicks","uidt":"Number"},
+  {"title":"impressions","uidt":"Number"},
+  {"title":"ctr","uidt":"Decimal"}
+]')
+
 echo ""
-echo "=== 4 Content Engine tables created ==="
+echo "=== 12 tables created ==="
 echo ""
 echo "Table IDs:"
-echo "  Keywords:        $KEYWORDS_ID"
-echo "  Articles:        $ARTICLES_ID"
-echo "  Financial_Cache: $CACHE_ID"
-echo "  Published_Images: $IMAGES_ID"
+echo "  Keywords:           $KEYWORDS_ID"
+echo "  Articles:           $ARTICLES_ID"
+echo "  Financial_Cache:    $CACHE_ID"
+echo "  Published_Images:   $IMAGES_ID"
+echo "  Data_Studies:       $STUDIES_ID"
+echo "  Insider_Alerts:     $ALERTS_ID"
+echo "  Outreach_Prospects: $PROSPECTS_ID"
+echo "  Outreach_Log:       $OUTREACH_LOG_ID"
+echo "  X_Engagement_Log:   $X_LOG_ID"
+echo "  Reddit_Log:         $REDDIT_LOG_ID"
+echo "  Lead_Magnet_Vers:   $LEAD_MAGNET_ID"
+echo "  SEO_Rankings:       $SEO_ID"
 echo ""
 echo "=== Next Steps ==="
 echo "1. In NocoDB UI: Published_Images -> add LinkToAnotherRecord field to Articles"
