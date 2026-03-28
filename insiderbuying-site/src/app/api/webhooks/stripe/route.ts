@@ -1,8 +1,10 @@
-export const dynamic = "force-static";
+export const dynamic = "force-dynamic";
 import { NextResponse } from "next/server";
 import { getStripe } from "@/lib/stripe";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import type Stripe from "stripe";
+
+const PLAN_PRO = "pro";
 
 let _admin: SupabaseClient | null = null;
 function admin(): SupabaseClient {
@@ -13,6 +15,13 @@ function admin(): SupabaseClient {
     );
   }
   return _admin;
+}
+
+function resolveId(
+  field: string | { id: string } | null | undefined
+): string | undefined {
+  if (typeof field === "string") return field;
+  return field?.id;
 }
 
 export async function POST(request: Request) {
@@ -41,32 +50,38 @@ export async function POST(request: Request) {
     case "checkout.session.completed": {
       const session = event.data.object as Stripe.Checkout.Session;
       const userId = session.metadata?.userId;
-      const subscriptionId =
-        typeof session.subscription === "string"
-          ? session.subscription
-          : session.subscription?.id;
-      const customerId =
-        typeof session.customer === "string"
-          ? session.customer
-          : session.customer?.id;
+      const subscriptionId = resolveId(session.subscription as string | { id: string } | null);
+      const customerId = resolveId(session.customer as string | { id: string } | null);
 
       if (userId && subscriptionId) {
-        await admin().from("subscriptions").upsert({
-          user_id: userId,
-          stripe_subscription_id: subscriptionId,
-          plan: "pro",
-          status: "active",
-          current_period_start: new Date().toISOString(),
-        });
+        const { error: subErr } = await admin()
+          .from("subscriptions")
+          .upsert({
+            user_id: userId,
+            stripe_subscription_id: subscriptionId,
+            plan: PLAN_PRO,
+            status: "active",
+            current_period_start: new Date().toISOString(),
+          });
 
-        await admin()
+        if (subErr) {
+          console.error("checkout.session.completed: subscriptions upsert failed:", subErr);
+          return NextResponse.json({ error: "DB error" }, { status: 500 });
+        }
+
+        const { error: profErr } = await admin()
           .from("profiles")
           .update({
-            subscription_tier: "pro",
+            subscription_tier: PLAN_PRO,
             stripe_customer_id: customerId,
             stripe_subscription_id: subscriptionId,
           })
           .eq("id", userId);
+
+        if (profErr) {
+          console.error("checkout.session.completed: profiles update failed:", profErr);
+          return NextResponse.json({ error: "DB error" }, { status: 500 });
+        }
       }
       break;
     }
@@ -88,39 +103,111 @@ export async function POST(request: Request) {
           sub.current_period_end * 1000
         ).toISOString();
       }
-      await admin()
+      const { error } = await admin()
         .from("subscriptions")
         .update(updateData)
         .eq("stripe_subscription_id", sub.id);
+
+      if (error) {
+        console.error("customer.subscription.updated: update failed:", error);
+        return NextResponse.json({ error: "DB error" }, { status: 500 });
+      }
       break;
     }
 
     case "customer.subscription.deleted": {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const sub = event.data.object as any;
-      await admin()
+      const { error: subErr } = await admin()
         .from("subscriptions")
         .update({ status: "canceled" })
         .eq("stripe_subscription_id", sub.id);
-      await admin()
+
+      if (subErr) {
+        console.error("customer.subscription.deleted: subscriptions update failed:", subErr);
+        return NextResponse.json({ error: "DB error" }, { status: 500 });
+      }
+
+      const { error: profErr } = await admin()
         .from("profiles")
         .update({ subscription_tier: "free" })
         .eq("stripe_subscription_id", sub.id);
+
+      if (profErr) {
+        console.error("customer.subscription.deleted: profiles update failed:", profErr);
+        return NextResponse.json({ error: "DB error" }, { status: 500 });
+      }
+      break;
+    }
+
+    case "customer.subscription.created": {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const sub = event.data.object as any;
+      const userId = sub.metadata?.userId;
+      if (!userId) {
+        console.warn("customer.subscription.created: no userId in metadata, skipping", sub.id);
+        break;
+      }
+      const { error } = await admin().from("subscriptions").upsert({
+        user_id: userId,
+        stripe_subscription_id: sub.id,
+        plan: PLAN_PRO,
+        status: sub.status,
+        current_period_start: new Date(
+          sub.current_period_start * 1000
+        ).toISOString(),
+        current_period_end: new Date(
+          sub.current_period_end * 1000
+        ).toISOString(),
+      });
+
+      if (error) {
+        console.error("customer.subscription.created: upsert failed:", error);
+        return NextResponse.json({ error: "DB error" }, { status: 500 });
+      }
+      break;
+    }
+
+    case "invoice.paid": {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const invoice = event.data.object as any;
+      const subscriptionId = resolveId(invoice.subscription);
+      if (subscriptionId) {
+        const { error } = await admin()
+          .from("subscriptions")
+          .update({
+            status: "active",
+            current_period_start: new Date(
+              invoice.period_start * 1000
+            ).toISOString(),
+            current_period_end: new Date(
+              invoice.period_end * 1000
+            ).toISOString(),
+          })
+          .eq("stripe_subscription_id", subscriptionId);
+
+        if (error) {
+          console.error("invoice.paid: update failed:", error);
+          return NextResponse.json({ error: "DB error" }, { status: 500 });
+        }
+      }
       break;
     }
 
     case "invoice.payment_failed": {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const invoice = event.data.object as any;
-      const subscriptionId =
-        typeof invoice.subscription === "string"
-          ? invoice.subscription
-          : invoice.subscription?.id;
+      const subscriptionId = resolveId(invoice.subscription);
       if (subscriptionId) {
-        await admin()
+        const { error } = await admin()
           .from("subscriptions")
           .update({ status: "past_due" })
           .eq("stripe_subscription_id", subscriptionId);
+
+        if (error) {
+          console.error("invoice.payment_failed: update failed:", error);
+          return NextResponse.json({ error: "DB error" }, { status: 500 });
+        }
       }
       break;
     }
