@@ -23,7 +23,7 @@ export function WhyItMatters() {
   return (
     <section className="bg-[var(--color-bg-alt)] py-20">
       <div className="mx-auto max-w-[1100px] px-6">
-        <h2 className="text-3xl text-center text-[var(--color-text)] mb-12">
+        <h2 className="text-3xl text-center text-[color:var(--color-text)] mb-12">
           Why Insider Buying Matters
         </h2>
 
@@ -33,16 +33,16 @@ export function WhyItMatters() {
               key={metric.number}
               className="bg-white rounded-lg border border-[var(--color-border)] p-8 text-center"
             >
-              <div className="text-4xl font-bold font-[var(--font-mono)] text-[var(--color-accent-green)] mb-2">
+              <div className="text-4xl font-bold font-[var(--font-mono)] text-[color:var(--color-accent-green)] mb-2">
                 {metric.number}
               </div>
-              <h3 className="text-lg text-[var(--color-text)] mb-3">
+              <h3 className="text-lg text-[color:var(--color-text)] mb-3">
                 {metric.title}
               </h3>
-              <p className="text-sm text-[var(--color-muted)] leading-relaxed mb-4">
+              <p className="text-sm text-[color:var(--color-muted)] leading-relaxed mb-4">
                 {metric.description}
               </p>
-              <p className="text-xs text-[var(--color-muted)] italic">
+              <p className="text-xs text-[color:var(--color-muted)] italic">
                 {metric.source}
               </p>
             </div>

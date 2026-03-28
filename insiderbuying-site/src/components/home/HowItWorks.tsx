@@ -23,7 +23,7 @@ export function HowItWorks() {
   return (
     <section id="how-it-works" className="bg-white py-20">
       <div className="mx-auto max-w-[1100px] px-6">
-        <h2 className="text-3xl text-center text-[var(--color-text)] mb-12">
+        <h2 className="text-3xl text-center text-[color:var(--color-text)] mb-12">
           How It Works
         </h2>
 
@@ -33,13 +33,13 @@ export function HowItWorks() {
               <div className="w-16 h-16 mx-auto mb-4 flex items-center justify-center rounded-full bg-[var(--color-bg-alt)] text-2xl">
                 {step.icon}
               </div>
-              <div className="text-xs font-bold text-[var(--color-accent-green)] font-[var(--font-mono)] mb-2">
+              <div className="text-xs font-bold text-[color:var(--color-accent-green)] font-[var(--font-mono)] mb-2">
                 STEP {step.step}
               </div>
-              <h3 className="text-xl text-[var(--color-text)] mb-3">
+              <h3 className="text-xl text-[color:var(--color-text)] mb-3">
                 {step.title}
               </h3>
-              <p className="text-sm text-[var(--color-muted)] leading-relaxed">
+              <p className="text-sm text-[color:var(--color-muted)] leading-relaxed">
                 {step.description}
               </p>
             </div>

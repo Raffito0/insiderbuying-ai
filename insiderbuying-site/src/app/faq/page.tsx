@@ -46,10 +46,10 @@ export default function FaqPage() {
       {/* ═══ SECTION 1: HEADER ═══ */}
       <section className="bg-[var(--color-bg-alt)] pt-[var(--section-y-hero-mobile)] pb-[var(--section-y-hero-mobile)] md:pt-[var(--section-y-hero)] md:pb-[var(--section-y-hero)] px-[20px] md:px-[32px]">
         <div className="max-w-[896px] mx-auto text-center">
-          <h1 className="font-[var(--font-montaga)] text-[39px] md:text-[54px] font-normal leading-[1.1] md:leading-[70px] text-[var(--color-text)] mb-[var(--gap-tight)] md:mb-[24px]">
+          <h1 className="font-[var(--font-montaga)] text-[39px] md:text-[54px] font-normal leading-[1.1] md:leading-[70px] text-[color:var(--color-text)] mb-[var(--gap-tight)] md:mb-[24px]">
             Frequently Asked Questions
           </h1>
-          <p className="text-[16px] md:text-[18px] font-normal leading-[26px] md:leading-[29px] text-[var(--color-text-secondary)] max-w-[672px] mx-auto">
+          <p className="text-[16px] md:text-[18px] font-normal leading-[26px] md:leading-[29px] text-[color:var(--color-text-secondary)] max-w-[672px] mx-auto">
             Everything you need to know about our institutional-grade insider trading intelligence platform and SEC data processing.
           </p>
         </div>
@@ -64,8 +64,8 @@ export default function FaqPage() {
               onClick={() => setActiveTab(cat)}
               className={`text-[14px] leading-[20px] pb-[16px] border-b-[1px] transition-colors whitespace-nowrap ${
                 activeTab === cat
-                  ? "font-bold text-[var(--color-primary)] border-[var(--color-primary)]"
-                  : "font-normal text-[var(--color-text-secondary)] border-transparent hover:text-[var(--color-text)]"
+                  ? "font-bold text-[color:var(--color-primary)] border-[var(--color-primary)]"
+                  : "font-normal text-[color:var(--color-text-secondary)] border-transparent hover:text-[color:var(--color-text)]"
               }`}
             >
               {cat}
@@ -79,7 +79,7 @@ export default function FaqPage() {
         <div className="max-w-[780px] mx-auto flex flex-col gap-[48px] md:gap-[80px]">
           {FAQ_GROUPS.map((group) => (
             <div key={group.title}>
-              <h2 className="font-[var(--font-montaga)] text-[26px] md:text-[30px] font-normal leading-[32px] text-[var(--color-text)] pl-[16px] border-l-[1px] border-[var(--color-primary)] mb-[24px] md:mb-[32px]">
+              <h2 className="font-[var(--font-montaga)] text-[26px] md:text-[30px] font-normal leading-[32px] text-[color:var(--color-text)] pl-[16px] border-l-[1px] border-[var(--color-primary)] mb-[24px] md:mb-[32px]">
                 {group.title}
               </h2>
               <div className="flex flex-col gap-[12px] md:gap-[16px]">
@@ -92,11 +92,11 @@ export default function FaqPage() {
                         onClick={() => toggle(key)}
                         className="w-full flex items-center justify-between p-[20px] md:p-[24px]"
                       >
-                        <span className="text-[15px] md:text-[16px] font-medium leading-[24px] md:leading-[28px] text-[var(--color-text)] text-left pr-[16px] md:pr-[24px]">
+                        <span className="text-[15px] md:text-[16px] font-medium leading-[24px] md:leading-[28px] text-[color:var(--color-text)] text-left pr-[16px] md:pr-[24px]">
                           {item.q}
                         </span>
                         <svg
-                          className={`w-[12px] h-[12px] shrink-0 text-[var(--color-text)] transition-transform ${isOpen ? "rotate-45" : ""}`}
+                          className={`w-[12px] h-[12px] shrink-0 text-[color:var(--color-text)] transition-transform ${isOpen ? "rotate-45" : ""}`}
                           viewBox="0 0 12 12"
                         >
                           <path d="M6 0v12M0 6h12" stroke="currentColor" strokeWidth="2" />
@@ -104,7 +104,7 @@ export default function FaqPage() {
                       </button>
                       {isOpen && (
                         <div className="px-[20px] pb-[20px] md:px-[24px] md:pb-[24px]">
-                          <p className="text-[15px] md:text-[16px] font-normal leading-[24px] md:leading-[26px] text-[var(--color-text-secondary)]">
+                          <p className="text-[15px] md:text-[16px] font-normal leading-[24px] md:leading-[26px] text-[color:var(--color-text-secondary)]">
                             {item.a}
                           </p>
                         </div>
@@ -121,22 +121,22 @@ export default function FaqPage() {
       {/* ═══ SECTION 4: STILL HAVE QUESTIONS ═══ */}
       <section className="bg-[var(--color-bg-alt)] pt-[var(--section-y-mobile)] pb-[var(--section-y-mobile)] md:pt-[var(--section-y)] md:pb-[var(--section-y)] px-[20px] md:px-[32px]">
         <div className="max-w-[896px] mx-auto text-center">
-          <h2 className="font-[var(--font-montaga)] text-[32px] md:text-[var(--text-title)] font-normal leading-[1.2] md:leading-[40px] text-[var(--color-text)] mb-[16px]">
+          <h2 className="font-[var(--font-montaga)] text-[32px] md:text-[length:var(--text-title)] font-normal leading-[1.2] md:leading-[40px] text-[color:var(--color-text)] mb-[16px]">
             Still have questions?
           </h2>
-          <p className="text-[16px] md:text-[18px] font-normal leading-[26px] md:leading-[28px] text-[var(--color-text-secondary)] max-w-[576px] mx-auto mb-[24px]">
+          <p className="text-[16px] md:text-[18px] font-normal leading-[26px] md:leading-[28px] text-[color:var(--color-text-secondary)] max-w-[576px] mx-auto mb-[24px]">
             Our dedicated support team and institutional analysts are available 24/7 to assist with your technical or data inquiries.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-[12px] sm:gap-[15px] pt-[24px]">
             <Link
               href="mailto:support@earlyinsider.com"
-              className="flex items-center justify-center h-[54px] md:h-[58px] px-[32px] border border-[var(--color-primary)] text-[15px] md:text-[16px] font-medium leading-[24px] text-[var(--color-primary)] hover:bg-[var(--color-primary)] hover:text-white transition-colors w-full sm:w-auto"
+              className="flex items-center justify-center h-[54px] md:h-[58px] px-[32px] border border-[var(--color-primary)] text-[15px] md:text-[16px] font-medium leading-[24px] text-[color:var(--color-primary)] hover:bg-[var(--color-primary)] hover:text-white transition-colors w-full sm:w-auto"
             >
               Contact Support
             </Link>
             <Link
               href="/methodology"
-              className="flex items-center justify-center h-[54px] md:h-[58px] px-[32px] border border-[var(--color-primary)] text-[15px] md:text-[16px] font-medium leading-[24px] text-[var(--color-primary)] hover:bg-[var(--color-primary)] hover:text-white transition-colors w-full sm:w-auto"
+              className="flex items-center justify-center h-[54px] md:h-[58px] px-[32px] border border-[var(--color-primary)] text-[15px] md:text-[16px] font-medium leading-[24px] text-[color:var(--color-primary)] hover:bg-[var(--color-primary)] hover:text-white transition-colors w-full sm:w-auto"
             >
               View Documentation
             </Link>
@@ -151,7 +151,7 @@ export default function FaqPage() {
           <div className="bg-[var(--color-primary)] p-[32px] md:p-[48px] flex flex-col justify-between min-h-[300px] lg:h-[400px]">
             <div>
               <p className="text-[14px] font-normal leading-[16px] text-white/80 mb-[16px]">Intelligence Briefing</p>
-              <h3 className="font-[var(--font-montaga)] text-[28px] md:text-[var(--text-title)] font-normal leading-[1.15] md:leading-[36px] text-white">
+              <h3 className="font-[var(--font-montaga)] text-[28px] md:text-[length:var(--text-title)] font-normal leading-[1.15] md:leading-[36px] text-white">
                 Master the markets with institutional precision.
               </h3>
             </div>
@@ -170,13 +170,13 @@ export default function FaqPage() {
               <rect x="35" y="0" width="30" height="30" rx="2" opacity="0.6" />
               <rect x="70" y="8" width="30" height="14" rx="2" opacity="0.3" />
             </svg>
-            <h4 className="font-[var(--font-montaga)] text-[26px] md:text-[var(--text-heading)] font-normal leading-[1.2] md:leading-[40px] text-[var(--color-text)] mb-[16px] md:mb-[22px]">
+            <h4 className="font-[var(--font-montaga)] text-[26px] md:text-[length:var(--text-heading)] font-normal leading-[1.2] md:leading-[40px] text-[color:var(--color-text)] mb-[16px] md:mb-[22px]">
               Institutional Security
             </h4>
-            <p className="text-[14px] font-normal leading-[23px] text-[var(--color-text-secondary)] mb-[24px]">
+            <p className="text-[14px] font-normal leading-[23px] text-[color:var(--color-text-secondary)] mb-[24px]">
               Enterprise-grade encryption and SEC-compliant data handling for hedge funds and family offices.
             </p>
-            <Link href="/about" className="flex items-center gap-[8px] text-[14px] font-semibold leading-[20px] text-[var(--color-primary)] hover:underline">
+            <Link href="/about" className="flex items-center gap-[8px] text-[14px] font-semibold leading-[20px] text-[color:var(--color-primary)] hover:underline">
               Learn More
               <svg className="w-[8px] h-[8px]" viewBox="0 0 8 8" fill="none"><path d="M0 4h6M4 2l2 2-2 2" stroke="var(--color-primary)" strokeWidth="1.5"/></svg>
             </Link>

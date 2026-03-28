@@ -35,7 +35,7 @@ export function FAQ() {
   return (
     <section id="faq" className="bg-[var(--color-bg-alt)] py-20">
       <div className="mx-auto max-w-[700px] px-6">
-        <h2 className="text-3xl text-center text-[var(--color-text)] mb-12">
+        <h2 className="text-3xl text-center text-[color:var(--color-text)] mb-12">
           Frequently Asked Questions
         </h2>
 
@@ -49,15 +49,15 @@ export function FAQ() {
                 className="w-full flex items-center justify-between p-5 text-left"
                 onClick={() => setOpenIndex(openIndex === i ? null : i)}
               >
-                <span className="text-sm font-medium text-[var(--color-text)] pr-4">
+                <span className="text-sm font-medium text-[color:var(--color-text)] pr-4">
                   {faq.q}
                 </span>
-                <span className="text-[var(--color-muted)] shrink-0 text-lg">
+                <span className="text-[color:var(--color-muted)] shrink-0 text-lg">
                   {openIndex === i ? "−" : "+"}
                 </span>
               </button>
               {openIndex === i && (
-                <div className="px-5 pb-5 text-sm text-[var(--color-muted)] leading-relaxed">
+                <div className="px-5 pb-5 text-sm text-[color:var(--color-muted)] leading-relaxed">
                   {faq.a}
                 </div>
               )}

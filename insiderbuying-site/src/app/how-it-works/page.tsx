@@ -195,13 +195,13 @@ export default function HowItWorksPage() {
       {/* ═══ SECTION 1: HEADER ═══ */}
       <section className="bg-[var(--color-bg-alt)] pt-[var(--section-y-mobile)] pb-[var(--section-y-mobile)] px-[20px] md:px-[72px]">
         <div className="max-w-[1136px] mx-auto flex flex-col gap-[16px]">
-          <p className="text-[12px] font-semibold leading-[18px] tracking-[2px] text-[var(--color-text-secondary)] uppercase">
+          <p className="text-[12px] font-semibold leading-[18px] tracking-[2px] text-[color:var(--color-text-secondary)] uppercase">
             PROCESS &amp; TECHNOLOGY
           </p>
-          <h1 className="text-[32px] md:text-[var(--text-display)] font-normal leading-[1.26] text-[var(--color-text)]">
+          <h1 className="text-[32px] md:text-[length:var(--text-display)] font-normal leading-[1.26] text-[color:var(--color-text)]">
             How It Works
           </h1>
-          <p className="text-[16px] md:text-[18px] font-normal leading-[29px] text-[var(--color-text-secondary)] max-w-[672px]">
+          <p className="text-[16px] md:text-[18px] font-normal leading-[29px] text-[color:var(--color-text-secondary)] max-w-[672px]">
             Institutional-grade real-time monitoring of SEC insider filings. From raw data to actionable alerts in 60 seconds.
           </p>
         </div>
@@ -210,7 +210,7 @@ export default function HowItWorksPage() {
       {/* ═══ SECTION 2: THE DATA PIPELINE ═══ */}
       <section className="bg-white py-[var(--section-y-mobile)] md:py-[var(--section-y)] px-[20px] md:px-[40px]">
         <div className="max-w-[1200px] mx-auto px-[0px] md:px-[32px]">
-          <h2 className="text-[28px] md:text-[var(--text-title)] font-normal leading-[42px] text-[var(--color-text)] text-center mb-[40px] md:mb-[64px]">
+          <h2 className="text-[28px] md:text-[length:var(--text-title)] font-normal leading-[42px] text-[color:var(--color-text)] text-center mb-[40px] md:mb-[64px]">
             The Data Pipeline
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-[20px] md:gap-[32px]">
@@ -227,10 +227,10 @@ export default function HowItWorksPage() {
                   >
                     <Icon color={card.iconColor} />
                   </div>
-                  <h3 className="text-[20px] font-bold leading-[28px] text-[var(--color-text)]">
+                  <h3 className="text-[20px] font-bold leading-[28px] text-[color:var(--color-text)]">
                     {card.title}
                   </h3>
-                  <p className="text-[16px] font-normal leading-[26px] text-[var(--color-text-secondary)]">
+                  <p className="text-[16px] font-normal leading-[26px] text-[color:var(--color-text-secondary)]">
                     {card.desc}
                   </p>
                 </div>
@@ -245,17 +245,17 @@ export default function HowItWorksPage() {
         <div className="max-w-[1136px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-[40px] lg:gap-[80px] items-center">
           {/* Left: Text + Checklist */}
           <div className="flex flex-col gap-[32px]">
-            <h2 className="text-[28px] md:text-[var(--text-title)] font-normal leading-[42px] text-[var(--color-text)]">
+            <h2 className="text-[28px] md:text-[length:var(--text-title)] font-normal leading-[42px] text-[color:var(--color-text)]">
               Instant Delivery
             </h2>
-            <p className="text-[18px] font-normal leading-[29px] text-[var(--color-text-secondary)]">
+            <p className="text-[18px] font-normal leading-[29px] text-[color:var(--color-text-secondary)]">
               When a high-conviction trade is detected, our system generates a comprehensive alert and sends it via email and push notification within 60 seconds of the filing&apos;s publication. Most competitors have a 24-hour delay &mdash; we don&apos;t.
             </p>
             <ul className="flex flex-col gap-[16px]">
               {CHECKLIST.map((item) => (
                 <li key={item} className="flex items-center gap-[12px]">
                   <CheckCircleIcon />
-                  <span className="text-[16px] font-medium leading-[24px] text-[var(--color-text)]">{item}</span>
+                  <span className="text-[16px] font-medium leading-[24px] text-[color:var(--color-text)]">{item}</span>
                 </li>
               ))}
             </ul>
@@ -267,11 +267,11 @@ export default function HowItWorksPage() {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-[16px]">
                 <div className="w-[40px] h-[40px] rounded-[12px] bg-[#e0e0ff] flex items-center justify-center">
-                  <span className="font-[var(--font-mono)] text-[16px] font-bold text-[var(--color-primary)]">TSLA</span>
+                  <span className="font-[var(--font-mono)] text-[16px] font-bold text-[color:var(--color-primary)]">TSLA</span>
                 </div>
                 <div>
-                  <p className="text-[18px] font-bold leading-[28px] text-[var(--color-text)]">Tesla, Inc.</p>
-                  <p className="font-[var(--font-mono)] text-[12px] font-normal leading-[16px] tracking-[1.2px] text-[var(--color-text-secondary)]">NAS: TSLA</p>
+                  <p className="text-[18px] font-bold leading-[28px] text-[color:var(--color-text)]">Tesla, Inc.</p>
+                  <p className="font-[var(--font-mono)] text-[12px] font-normal leading-[16px] tracking-[1.2px] text-[color:var(--color-text-secondary)]">NAS: TSLA</p>
                 </div>
               </div>
               <span className="font-[var(--font-mono)] text-[10px] font-bold leading-[15px] text-[#005226] bg-[#54fd8f] px-[8px] py-[4px] rounded-[2px] shrink-0">
@@ -284,29 +284,29 @@ export default function HowItWorksPage() {
               {/* Insider / Transaction row */}
               <div className="flex justify-between items-end pb-[16px] border-b border-[var(--color-border-light)]">
                 <div className="flex flex-col gap-[4px]">
-                  <span className="font-[var(--font-mono)] text-[12px] font-normal leading-[16px] text-[var(--color-text-secondary)]">Insider</span>
-                  <span className="text-[16px] font-bold leading-[24px] text-[var(--color-text)]">Kimbal Musk</span>
+                  <span className="font-[var(--font-mono)] text-[12px] font-normal leading-[16px] text-[color:var(--color-text-secondary)]">Insider</span>
+                  <span className="text-[16px] font-bold leading-[24px] text-[color:var(--color-text)]">Kimbal Musk</span>
                 </div>
                 <div className="flex flex-col gap-[4px] items-end">
-                  <span className="font-[var(--font-mono)] text-[12px] font-normal leading-[16px] text-[var(--color-text-secondary)]">Transaction</span>
-                  <span className="text-[16px] font-bold leading-[24px] text-[var(--color-signal-green)]">Buy (Open Market)</span>
+                  <span className="font-[var(--font-mono)] text-[12px] font-normal leading-[16px] text-[color:var(--color-text-secondary)]">Transaction</span>
+                  <span className="text-[16px] font-bold leading-[24px] text-[color:var(--color-signal-green)]">Buy (Open Market)</span>
                 </div>
               </div>
 
               {/* Amount / Price row */}
               <div className="flex justify-between items-end pb-[16px] border-b border-[var(--color-border-light)]">
                 <div className="flex flex-col gap-[4px]">
-                  <span className="font-[var(--font-mono)] text-[10px] font-normal leading-[16px] text-[var(--color-text-secondary)]">Amount</span>
-                  <span className="font-[var(--font-mono)] text-[20px] font-normal leading-[24px] text-[var(--color-text)]">$2,450,000</span>
+                  <span className="font-[var(--font-mono)] text-[10px] font-normal leading-[16px] text-[color:var(--color-text-secondary)]">Amount</span>
+                  <span className="font-[var(--font-mono)] text-[20px] font-normal leading-[24px] text-[color:var(--color-text)]">$2,450,000</span>
                 </div>
                 <div className="flex flex-col gap-[4px] items-end">
-                  <span className="font-[var(--font-mono)] text-[10px] font-normal leading-[16px] text-[var(--color-text-secondary)]">Avg. Price</span>
-                  <span className="font-[var(--font-mono)] text-[20px] font-normal leading-[24px] text-[var(--color-text)]">$168.42</span>
+                  <span className="font-[var(--font-mono)] text-[10px] font-normal leading-[16px] text-[color:var(--color-text-secondary)]">Avg. Price</span>
+                  <span className="font-[var(--font-mono)] text-[20px] font-normal leading-[24px] text-[color:var(--color-text)]">$168.42</span>
                 </div>
               </div>
 
               {/* Alert timestamp */}
-              <p className="font-[var(--font-mono)] text-[12px] font-semibold leading-[16px] text-[var(--color-primary)] text-center">
+              <p className="font-[var(--font-mono)] text-[12px] font-semibold leading-[16px] text-[color:var(--color-primary)] text-center">
                 Alert sent: 0s after filing
               </p>
             </div>
@@ -317,7 +317,7 @@ export default function HowItWorksPage() {
       {/* ═══ SECTION 4: THE TECHNOLOGY STACK ═══ */}
       <section className="bg-[var(--color-bg-alt)] py-[var(--section-y-mobile)] md:py-[var(--section-y)] px-[20px] md:px-[40px]">
         <div className="max-w-[1200px] mx-auto px-[0px] md:px-[32px]">
-          <h2 className="font-[var(--font-montaga)] text-[28px] md:text-[var(--text-title)] font-normal leading-[48px] text-[var(--color-text)] text-center mb-[48px] md:mb-[80px]">
+          <h2 className="font-[var(--font-montaga)] text-[28px] md:text-[length:var(--text-title)] font-normal leading-[48px] text-[color:var(--color-text)] text-center mb-[48px] md:mb-[80px]">
             The Technology Stack
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-[16px] md:gap-[24px]">
@@ -329,12 +329,12 @@ export default function HowItWorksPage() {
                 {/* Tag row */}
                 <div className="flex items-center justify-between">
                   <TechIcon />
-                  <span className="font-[var(--font-mono)] text-[10px] font-normal text-[var(--color-primary)] bg-[#e0e0ff] px-[8px] py-[2px] rounded-[2px]">
+                  <span className="font-[var(--font-mono)] text-[10px] font-normal text-[color:var(--color-primary)] bg-[#e0e0ff] px-[8px] py-[2px] rounded-[2px]">
                     {block.tag}
                   </span>
                 </div>
                 {/* Title */}
-                <h4 className="text-[var(--text-subheading)] font-bold leading-[28px] text-[var(--color-text)]">
+                <h4 className="text-[length:var(--text-subheading)] font-bold leading-[28px] text-[color:var(--color-text)]">
                   {block.title}
                 </h4>
                 {/* Data rows */}
@@ -344,10 +344,10 @@ export default function HowItWorksPage() {
                       key={row.label}
                       className={`flex justify-between items-center ${ri < block.rows.length - 1 ? "pb-[4px] border-b border-[var(--color-border)]" : ""}`}
                     >
-                      <span className="font-[var(--font-mono)] text-[9px] font-normal text-[var(--color-text-secondary)]">
+                      <span className="font-[var(--font-mono)] text-[9px] font-normal text-[color:var(--color-text-secondary)]">
                         {row.label}
                       </span>
-                      <span className="font-[var(--font-mono)] text-[9px] font-bold text-[var(--color-text)]">
+                      <span className="font-[var(--font-mono)] text-[9px] font-bold text-[color:var(--color-text)]">
                         {row.value}
                       </span>
                     </div>
@@ -364,20 +364,20 @@ export default function HowItWorksPage() {
         <div className="max-w-[1136px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-[40px] lg:gap-[80px] items-start">
           {/* Left: Text + List */}
           <div className="flex flex-col gap-[24px]">
-            <p className="text-[11px] font-bold leading-[17px] tracking-[1px] text-[var(--color-text-muted)] uppercase">
+            <p className="text-[11px] font-bold leading-[17px] tracking-[1px] text-[color:var(--color-text-muted)] uppercase">
               VALIDATION
             </p>
-            <h2 className="font-[var(--font-montaga)] text-[28px] md:text-[var(--text-title)] font-normal leading-[1.25] text-[var(--color-text)]">
+            <h2 className="font-[var(--font-montaga)] text-[28px] md:text-[length:var(--text-title)] font-normal leading-[1.25] text-[color:var(--color-text)]">
               Institutional-Grade Backtesting
             </h2>
-            <p className="text-[18px] font-normal leading-[29px] text-[var(--color-text-secondary)]">
+            <p className="text-[18px] font-normal leading-[29px] text-[color:var(--color-text-secondary)]">
               We don&apos;t just deliver alerts; we validate them against a decade of historical performance.
             </p>
             <ul className="flex flex-col gap-[16px] pt-[8px]">
               {BACKTEST_LIST.map((item) => (
                 <li key={item} className="flex items-center gap-[12px]">
                   <CheckCircleIcon />
-                  <span className="text-[16px] font-medium leading-[24px] text-[var(--color-text-secondary)]">{item}</span>
+                  <span className="text-[16px] font-medium leading-[24px] text-[color:var(--color-text-secondary)]">{item}</span>
                 </li>
               ))}
             </ul>
@@ -387,12 +387,12 @@ export default function HowItWorksPage() {
           <div className="bg-[var(--color-bg-alt)] border border-[var(--color-border)] p-[28px] md:p-[40px] flex flex-col gap-[32px]">
             {/* Chart header */}
             <div className="flex items-center justify-between">
-              <span className="font-[var(--font-mono)] text-[10px] font-normal text-[var(--color-text-secondary)]">
+              <span className="font-[var(--font-mono)] text-[10px] font-normal text-[color:var(--color-text-secondary)]">
                 Performance Analysis: $NVDA
               </span>
               <div className="flex items-center gap-[16px]">
-                <span className="font-[var(--font-mono)] text-[10px] font-semibold text-[var(--color-text)]">Price</span>
-                <span className="font-[var(--font-mono)] text-[10px] font-semibold text-[var(--color-text)]">Buy Signal</span>
+                <span className="font-[var(--font-mono)] text-[10px] font-semibold text-[color:var(--color-text)]">Price</span>
+                <span className="font-[var(--font-mono)] text-[10px] font-semibold text-[color:var(--color-text)]">Buy Signal</span>
               </div>
             </div>
 
@@ -423,9 +423,9 @@ export default function HowItWorksPage() {
 
             {/* Time axis */}
             <div className="flex justify-between pt-[16px] border-t border-[var(--color-border)]">
-              <span className="font-[var(--font-mono)] text-[8px] font-normal text-[var(--color-text-secondary)]">T-12M</span>
-              <span className="font-[var(--font-mono)] text-[8px] font-normal text-[var(--color-text-secondary)]">T-6M</span>
-              <span className="font-[var(--font-mono)] text-[8px] font-normal text-[var(--color-text-secondary)]">TODAY</span>
+              <span className="font-[var(--font-mono)] text-[8px] font-normal text-[color:var(--color-text-secondary)]">T-12M</span>
+              <span className="font-[var(--font-mono)] text-[8px] font-normal text-[color:var(--color-text-secondary)]">T-6M</span>
+              <span className="font-[var(--font-mono)] text-[8px] font-normal text-[color:var(--color-text-secondary)]">TODAY</span>
             </div>
           </div>
         </div>
@@ -436,13 +436,13 @@ export default function HowItWorksPage() {
         <div className="max-w-[1200px] mx-auto">
           {/* Header */}
           <div className="flex flex-col items-center mb-[48px] md:mb-[64px]">
-            <p className="text-[11px] font-bold tracking-[1px] text-[var(--color-primary)] uppercase mb-[16px]">
+            <p className="text-[11px] font-bold tracking-[1px] text-[color:var(--color-primary)] uppercase mb-[16px]">
               NETWORK PERFORMANCE
             </p>
-            <h2 className="font-[var(--font-montaga)] text-[28px] md:text-[var(--text-title)] font-normal leading-[54px] text-[var(--color-text)] text-center">
+            <h2 className="font-[var(--font-montaga)] text-[28px] md:text-[length:var(--text-title)] font-normal leading-[54px] text-[color:var(--color-text)] text-center">
               The 60-Second Journey
             </h2>
-            <p className="text-[16px] font-normal leading-[24px] text-[var(--color-text-secondary)] max-w-[576px] text-center mt-[16px]">
+            <p className="text-[16px] font-normal leading-[24px] text-[color:var(--color-text-secondary)] max-w-[576px] text-center mt-[16px]">
               Our low-latency infrastructure processes institutional filings faster than retail terminals can refresh.
             </p>
           </div>
@@ -486,7 +486,7 @@ export default function HowItWorksPage() {
                               ? "bg-[var(--color-primary)] text-white"
                               : isFinal
                                 ? "bg-[#005226] text-white"
-                                : "bg-[var(--color-border)] text-[var(--color-text-secondary)]"
+                                : "bg-[var(--color-border)] text-[color:var(--color-text-secondary)]"
                           }`}
                         >
                           {step.time}
@@ -495,8 +495,8 @@ export default function HowItWorksPage() {
 
                       {/* Label */}
                       <div className="mt-[24px] text-center">
-                        <p className="text-[14px] font-bold leading-[20px] text-[var(--color-text)]">{step.title}</p>
-                        <p className={`font-[var(--font-mono)] text-[9px] font-normal mt-[4px] ${isFinal ? "text-[var(--color-signal-green)] font-bold" : "text-[var(--color-text-secondary)]"}`}>
+                        <p className="text-[14px] font-bold leading-[20px] text-[color:var(--color-text)]">{step.title}</p>
+                        <p className={`font-[var(--font-mono)] text-[9px] font-normal mt-[4px] ${isFinal ? "text-[color:var(--color-signal-green)] font-bold" : "text-[color:var(--color-text-secondary)]"}`}>
                           {step.sub}
                         </p>
                       </div>
@@ -535,11 +535,11 @@ export default function HowItWorksPage() {
                         </div>
                         {/* Text */}
                         <div>
-                          <span className={`font-[var(--font-mono)] text-[8px] font-bold ${isFirst ? "text-[var(--color-primary)]" : isFinal ? "text-[var(--color-signal-green)]" : "text-[var(--color-text-secondary)]"}`}>
+                          <span className={`font-[var(--font-mono)] text-[8px] font-bold ${isFirst ? "text-[color:var(--color-primary)]" : isFinal ? "text-[color:var(--color-signal-green)]" : "text-[color:var(--color-text-secondary)]"}`}>
                             {step.time}
                           </span>
-                          <p className="text-[14px] font-bold leading-[20px] text-[var(--color-text)]">{step.title}</p>
-                          <p className={`font-[var(--font-mono)] text-[9px] ${isFinal ? "text-[var(--color-signal-green)] font-bold" : "text-[var(--color-text-secondary)]"}`}>
+                          <p className="text-[14px] font-bold leading-[20px] text-[color:var(--color-text)]">{step.title}</p>
+                          <p className={`font-[var(--font-mono)] text-[9px] ${isFinal ? "text-[color:var(--color-signal-green)] font-bold" : "text-[color:var(--color-text-secondary)]"}`}>
                             {step.sub}
                           </p>
                         </div>
@@ -555,8 +555,8 @@ export default function HowItWorksPage() {
           <div className="max-w-[896px] mx-auto flex flex-col sm:flex-row justify-center gap-[32px] sm:gap-[64px] pt-[32px] border-t border-[var(--color-border)]">
             {DATA_LABELS.map((dl) => (
               <div key={dl.label} className="flex flex-col items-center sm:items-start gap-[4px]">
-                <span className="font-[var(--font-mono)] text-[10px] font-normal text-[var(--color-text-secondary)]">{dl.label}</span>
-                <span className="font-[var(--font-mono)] text-[18px] font-bold text-[var(--color-primary)]">{dl.value}</span>
+                <span className="font-[var(--font-mono)] text-[10px] font-normal text-[color:var(--color-text-secondary)]">{dl.label}</span>
+                <span className="font-[var(--font-mono)] text-[18px] font-bold text-[color:var(--color-primary)]">{dl.value}</span>
               </div>
             ))}
           </div>
@@ -569,7 +569,7 @@ export default function HowItWorksPage() {
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(57,68,239,0.4)_0%,transparent_70%)]" />
 
         <div className="relative max-w-[1200px] mx-auto px-[0px] md:px-[32px] flex flex-col md:flex-row items-center justify-between gap-[32px]">
-          <h2 className="text-[24px] md:text-[var(--text-title)] font-normal leading-[1.5] text-white text-center md:text-left">
+          <h2 className="text-[24px] md:text-[length:var(--text-title)] font-normal leading-[1.5] text-white text-center md:text-left">
             Get the edge you&apos;ve been looking for.
           </h2>
           <Link

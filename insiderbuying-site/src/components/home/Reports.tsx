@@ -30,13 +30,13 @@ export function Reports() {
   return (
     <section className="bg-white py-20">
       <div className="mx-auto max-w-[1100px] px-6">
-        <p className="text-xs font-semibold uppercase tracking-widest text-[var(--color-muted)] text-center mb-2">
+        <p className="text-xs font-semibold uppercase tracking-widest text-[color:var(--color-muted)] text-center mb-2">
           Research
         </p>
-        <h2 className="text-3xl text-center text-[var(--color-text)] mb-3">
+        <h2 className="text-3xl text-center text-[color:var(--color-text)] mb-3">
           Deep Dive Reports
         </h2>
-        <p className="text-center text-sm text-[var(--color-muted)] mb-12">
+        <p className="text-center text-sm text-[color:var(--color-muted)] mb-12">
           Comprehensive stock analysis powered by SEC data and AI. One-time purchase, no subscription required.
         </p>
 
@@ -56,26 +56,26 @@ export function Reports() {
                 </span>
               )}
 
-              <div className="text-xs font-bold font-[var(--font-mono)] text-[var(--color-muted)] mb-3">
+              <div className="text-xs font-bold font-[var(--font-mono)] text-[color:var(--color-muted)] mb-3">
                 {report.ticker}
               </div>
-              <h3 className="text-xl text-[var(--color-text)] mb-1">
+              <h3 className="text-xl text-[color:var(--color-text)] mb-1">
                 {report.title}
               </h3>
-              <p className="text-xs text-[var(--color-muted)] mb-4">
+              <p className="text-xs text-[color:var(--color-muted)] mb-4">
                 {report.pages}
               </p>
 
               <ul className="space-y-2 mb-6 flex-1">
                 {report.features.map((f) => (
-                  <li key={f} className="flex items-start gap-2 text-sm text-[var(--color-muted)]">
-                    <span className="text-[var(--color-accent-green)] mt-0.5">&#10003;</span>
+                  <li key={f} className="flex items-start gap-2 text-sm text-[color:var(--color-muted)]">
+                    <span className="text-[color:var(--color-accent-green)] mt-0.5">&#10003;</span>
                     {f}
                   </li>
                 ))}
               </ul>
 
-              <div className="text-2xl font-bold font-[var(--font-mono)] text-[var(--color-text)] mb-4">
+              <div className="text-2xl font-bold font-[var(--font-mono)] text-[color:var(--color-text)] mb-4">
                 {report.price}
               </div>
 
@@ -83,7 +83,7 @@ export function Reports() {
                 className={`w-full h-10 text-sm font-semibold uppercase tracking-wider rounded-lg transition-colors ${
                   report.primary
                     ? "bg-[var(--color-navy)] text-white hover:bg-[var(--color-navy-light)]"
-                    : "border border-[var(--color-navy)] text-[var(--color-navy)] hover:bg-[var(--color-bg-alt)]"
+                    : "border border-[var(--color-navy)] text-[color:var(--color-navy)] hover:bg-[var(--color-bg-alt)]"
                 }`}
               >
                 Download Report
@@ -95,7 +95,7 @@ export function Reports() {
         <div className="text-center mt-8">
           <Link
             href="/reports"
-            className="text-sm font-medium text-[var(--color-link)] hover:underline"
+            className="text-sm font-medium text-[color:var(--color-link)] hover:underline"
           >
             View all reports &rarr;
           </Link>

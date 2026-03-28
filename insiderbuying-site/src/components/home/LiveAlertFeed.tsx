@@ -11,11 +11,11 @@ export function LiveAlertFeed() {
     <section className="bg-[var(--color-bg-alt)] py-20">
       <div className="mx-auto max-w-[1200px] px-6">
         <div className="flex items-center gap-3 mb-8">
-          <span className="inline-flex items-center gap-2 text-sm font-semibold text-[var(--color-accent-green)] bg-white border border-[var(--color-border)] rounded-full px-4 py-1.5">
+          <span className="inline-flex items-center gap-2 text-sm font-semibold text-[color:var(--color-accent-green)] bg-white border border-[var(--color-border)] rounded-full px-4 py-1.5">
             <span className="w-2 h-2 rounded-full bg-[var(--color-accent-green)] animate-pulse" />
             LIVE
           </span>
-          <h2 className="text-3xl text-[var(--color-text)]">
+          <h2 className="text-3xl text-[color:var(--color-text)]">
             Latest Insider Activity
           </h2>
         </div>
@@ -28,7 +28,7 @@ export function LiveAlertFeed() {
             >
               {/* Photo placeholder */}
               <div className="w-12 h-12 rounded-full bg-[var(--color-bg-alt)] shrink-0 overflow-hidden">
-                <div className="w-full h-full flex items-center justify-center text-xs text-[var(--color-muted)]">
+                <div className="w-full h-full flex items-center justify-center text-xs text-[color:var(--color-muted)]">
                   {alert.name.split(" ").map(n => n[0]).join("")}
                 </div>
               </div>
@@ -36,14 +36,14 @@ export function LiveAlertFeed() {
               {/* Info */}
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
-                  <span className="font-semibold text-sm text-[var(--color-text)]">
+                  <span className="font-semibold text-sm text-[color:var(--color-text)]">
                     {alert.name}
                   </span>
-                  <span className="text-xs text-[var(--color-muted)]">
+                  <span className="text-xs text-[color:var(--color-muted)]">
                     {alert.role} &middot; {alert.company}
                   </span>
                 </div>
-                <span className="text-xs text-[var(--color-muted)] font-[var(--font-mono)]">
+                <span className="text-xs text-[color:var(--color-muted)] font-[var(--font-mono)]">
                   {alert.ticker}
                 </span>
               </div>
@@ -62,8 +62,8 @@ export function LiveAlertFeed() {
                 <div
                   className={`text-lg font-bold font-[var(--font-mono)] ${
                     alert.type === "BUY"
-                      ? "text-[var(--color-accent-green)]"
-                      : "text-[var(--color-accent-red)]"
+                      ? "text-[color:var(--color-accent-green)]"
+                      : "text-[color:var(--color-accent-red)]"
                   }`}
                 >
                   {alert.amount}
@@ -71,14 +71,14 @@ export function LiveAlertFeed() {
               </div>
 
               {/* Time */}
-              <span className="text-xs text-[var(--color-muted)] shrink-0 hidden sm:block">
+              <span className="text-xs text-[color:var(--color-muted)] shrink-0 hidden sm:block">
                 {alert.time}
               </span>
             </div>
           ))}
         </div>
 
-        <p className="mt-4 text-center text-xs text-[var(--color-muted)]">
+        <p className="mt-4 text-center text-xs text-[color:var(--color-muted)]">
           Source: SEC Form 4 Filings. Data updated every 15 seconds.
         </p>
       </div>

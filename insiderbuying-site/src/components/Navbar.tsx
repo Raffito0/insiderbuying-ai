@@ -18,10 +18,10 @@ export function Navbar() {
       <nav className="mx-auto max-w-[1280px] flex items-center justify-between h-20 px-6">
         {/* Logo */}
         <Link href="/" className="flex items-baseline gap-0 text-xl">
-          <span className="font-[var(--font-inter)] font-normal text-[var(--color-text)]">
+          <span className="font-[var(--font-inter)] font-normal text-[color:var(--color-text)]">
             Early
           </span>
-          <span className="font-[var(--font-inter)] font-bold text-[var(--color-text)]">
+          <span className="font-[var(--font-inter)] font-bold text-[color:var(--color-text)]">
             Insider
           </span>
         </Link>
@@ -32,7 +32,7 @@ export function Navbar() {
             <Link
               key={link.href}
               href={link.href}
-              className="text-sm font-medium text-[var(--color-muted)] hover:text-[var(--color-text)] transition-colors"
+              className="text-sm font-medium text-[color:var(--color-muted)] hover:text-[color:var(--color-text)] transition-colors"
             >
               {link.label}
             </Link>
@@ -43,7 +43,7 @@ export function Navbar() {
         <div className="hidden md:flex items-center gap-4">
           <Link
             href="/login"
-            className="text-sm font-medium text-[var(--color-muted)] hover:text-[var(--color-text)]"
+            className="text-sm font-medium text-[color:var(--color-muted)] hover:text-[color:var(--color-text)]"
           >
             Login
           </Link>
@@ -93,7 +93,7 @@ export function Navbar() {
             <Link
               key={link.href}
               href={link.href}
-              className="block text-sm font-medium text-[var(--color-muted)]"
+              className="block text-sm font-medium text-[color:var(--color-muted)]"
               onClick={() => setMobileOpen(false)}
             >
               {link.label}
@@ -101,7 +101,7 @@ export function Navbar() {
           ))}
           <Link
             href="/login"
-            className="block text-sm font-medium text-[var(--color-muted)]"
+            className="block text-sm font-medium text-[color:var(--color-muted)]"
             onClick={() => setMobileOpen(false)}
           >
             Login

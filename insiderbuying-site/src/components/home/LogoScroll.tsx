@@ -10,7 +10,7 @@ const LOGOS = [
 export function LogoScroll() {
   return (
     <section className="bg-white py-5 border-y border-[var(--color-border-light)] overflow-hidden">
-      <p className="text-center text-xs text-[var(--color-muted)] mb-4">
+      <p className="text-center text-xs text-[color:var(--color-muted)] mb-4">
         Tracking insider activity across 17,325+ publicly traded companies
       </p>
       <div className="relative">
@@ -19,7 +19,7 @@ export function LogoScroll() {
           {[...LOGOS, ...LOGOS].map((name, i) => (
             <span
               key={i}
-              className="text-sm font-medium text-[var(--color-muted)] opacity-50 hover:opacity-100 transition-opacity shrink-0"
+              className="text-sm font-medium text-[color:var(--color-muted)] opacity-50 hover:opacity-100 transition-opacity shrink-0"
             >
               {name}
             </span>

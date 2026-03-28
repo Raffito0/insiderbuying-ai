@@ -7,10 +7,10 @@ export function Footer() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-[var(--gap-cards)] mb-[40px] md:mb-[80px]">
           <div>
             <p className="font-[var(--font-montaga)] text-[22px] leading-[28px] text-white mb-[22px]">Early Insider</p>
-            <p className="text-[var(--text-small)] leading-[23px] text-[var(--color-text-muted)]">Precise signals. Real-time edge.</p>
+            <p className="text-[length:var(--text-small)] leading-[23px] text-[color:var(--color-text-muted)]">Precise signals. Real-time edge.</p>
           </div>
           <div>
-            <p className="text-[var(--text-body)] leading-[24px] text-white mb-[var(--gap-items)]">Product</p>
+            <p className="text-[length:var(--text-body)] leading-[24px] text-white mb-[var(--gap-items)]">Product</p>
             <ul className="space-y-[var(--gap-tight)]">
               {[
                 { label: "About", href: "/about" },
@@ -19,7 +19,7 @@ export function Footer() {
                 { label: "Blog", href: "/blog" },
               ].map((l) => (
                 <li key={l.label}>
-                  <Link href={l.href} className="text-[var(--text-small)] leading-[20px] text-[var(--color-text-muted)] hover:text-white transition-colors">
+                  <Link href={l.href} className="text-[length:var(--text-small)] leading-[20px] text-[color:var(--color-text-muted)] hover:text-white transition-colors">
                     {l.label}
                   </Link>
                 </li>
@@ -27,7 +27,7 @@ export function Footer() {
             </ul>
           </div>
           <div>
-            <p className="text-[var(--text-body)] leading-[24px] text-white mb-[var(--gap-items)]">Company</p>
+            <p className="text-[length:var(--text-body)] leading-[24px] text-white mb-[var(--gap-items)]">Company</p>
             <ul className="space-y-[var(--gap-tight)]">
               {[
                 { label: "Contact", href: "/contact" },
@@ -35,7 +35,7 @@ export function Footer() {
                 { label: "Terms", href: "/terms" },
               ].map((l) => (
                 <li key={l.label}>
-                  <Link href={l.href} className="text-[var(--text-small)] leading-[20px] text-[var(--color-text-muted)] hover:text-white transition-colors">
+                  <Link href={l.href} className="text-[length:var(--text-small)] leading-[20px] text-[color:var(--color-text-muted)] hover:text-white transition-colors">
                     {l.label}
                   </Link>
                 </li>
@@ -43,14 +43,14 @@ export function Footer() {
             </ul>
           </div>
           <div>
-            <p className="text-[var(--text-body)] leading-[24px] text-white mb-[var(--gap-items)]">Legal</p>
-            <p className="text-[10px] leading-[16px] tracking-[0.5px] text-[var(--color-text-muted)]">
+            <p className="text-[length:var(--text-body)] leading-[24px] text-white mb-[var(--gap-items)]">Legal</p>
+            <p className="text-[10px] leading-[16px] tracking-[0.5px] text-[color:var(--color-text-muted)]">
               Legal Disclaimer: Financial data is for informational purposes only. Trading involves significant risk. Consult a professional advisor before making any investment decisions.
             </p>
           </div>
         </div>
         <div className="border-t border-white/10 pt-[var(--gap-tight)]">
-          <p className="text-[var(--text-caption)] leading-[16px] text-[var(--color-text-muted)]">&copy; 2026 EarlyInsider. Institutional Grade Data. All Rights Reserved.</p>
+          <p className="text-[length:var(--text-caption)] leading-[16px] text-[color:var(--color-text-muted)]">&copy; 2026 EarlyInsider. Institutional Grade Data. All Rights Reserved.</p>
         </div>
       </div>
     </footer>

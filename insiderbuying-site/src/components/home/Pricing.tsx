@@ -22,35 +22,35 @@ export function Pricing() {
   return (
     <section id="pricing" className="bg-white py-20">
       <div className="mx-auto max-w-[900px] px-6">
-        <h2 className="text-3xl text-center text-[var(--color-text)] mb-3">
+        <h2 className="text-3xl text-center text-[color:var(--color-text)] mb-3">
           Simple Pricing
         </h2>
-        <p className="text-center text-sm text-[var(--color-muted)] mb-12">
+        <p className="text-center text-sm text-[color:var(--color-muted)] mb-12">
           Start free. Upgrade when you need real-time access.
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Free */}
           <div className="bg-white rounded-lg border border-[var(--color-border)] p-8">
-            <h3 className="text-lg text-[var(--color-text)] mb-2 font-[var(--font-inter)] font-semibold">
+            <h3 className="text-lg text-[color:var(--color-text)] mb-2 font-[var(--font-inter)] font-semibold">
               Free
             </h3>
             <div className="flex items-baseline gap-1 mb-6">
-              <span className="text-4xl font-bold font-[var(--font-mono)] text-[var(--color-text)]">
+              <span className="text-4xl font-bold font-[var(--font-mono)] text-[color:var(--color-text)]">
                 $0
               </span>
-              <span className="text-sm text-[var(--color-muted)]">/month</span>
+              <span className="text-sm text-[color:var(--color-muted)]">/month</span>
             </div>
 
             <ul className="space-y-3 mb-8">
               {FREE_FEATURES.map((f) => (
                 <li key={f.text} className="flex items-start gap-2 text-sm">
                   {f.included ? (
-                    <span className="text-[var(--color-accent-green)] mt-0.5">&#10003;</span>
+                    <span className="text-[color:var(--color-accent-green)] mt-0.5">&#10003;</span>
                   ) : (
-                    <span className="text-[var(--color-border)] mt-0.5">&#10005;</span>
+                    <span className="text-[color:var(--color-border)] mt-0.5">&#10005;</span>
                   )}
-                  <span className={f.included ? "text-[var(--color-text)]" : "text-[var(--color-border)]"}>
+                  <span className={f.included ? "text-[color:var(--color-text)]" : "text-[color:var(--color-border)]"}>
                     {f.text}
                   </span>
                 </li>
@@ -59,7 +59,7 @@ export function Pricing() {
 
             <Link
               href="/signup"
-              className="block w-full text-center h-10 leading-10 text-sm font-semibold uppercase tracking-wider border border-[var(--color-navy)] text-[var(--color-navy)] rounded-lg hover:bg-[var(--color-bg-alt)] transition-colors"
+              className="block w-full text-center h-10 leading-10 text-sm font-semibold uppercase tracking-wider border border-[var(--color-navy)] text-[color:var(--color-navy)] rounded-lg hover:bg-[var(--color-bg-alt)] transition-colors"
             >
               Get Started
             </Link>
@@ -71,20 +71,20 @@ export function Pricing() {
               Most Popular
             </span>
 
-            <h3 className="text-lg text-[var(--color-text)] mb-2 font-[var(--font-inter)] font-semibold">
+            <h3 className="text-lg text-[color:var(--color-text)] mb-2 font-[var(--font-inter)] font-semibold">
               Pro
             </h3>
             <div className="flex items-baseline gap-1 mb-6">
-              <span className="text-4xl font-bold font-[var(--font-mono)] text-[var(--color-text)]">
+              <span className="text-4xl font-bold font-[var(--font-mono)] text-[color:var(--color-text)]">
                 $29
               </span>
-              <span className="text-sm text-[var(--color-muted)]">/month</span>
+              <span className="text-sm text-[color:var(--color-muted)]">/month</span>
             </div>
 
             <ul className="space-y-3 mb-8">
               {PRO_FEATURES.map((f) => (
-                <li key={f.text} className="flex items-start gap-2 text-sm text-[var(--color-text)]">
-                  <span className="text-[var(--color-accent-green)] mt-0.5">&#10003;</span>
+                <li key={f.text} className="flex items-start gap-2 text-sm text-[color:var(--color-text)]">
+                  <span className="text-[color:var(--color-accent-green)] mt-0.5">&#10003;</span>
                   {f.text}
                 </li>
               ))}

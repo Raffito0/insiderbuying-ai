@@ -12,10 +12,10 @@ export function TrustMetrics() {
           {METRICS.map((metric, i) => (
             <div key={metric.value} className="flex items-center gap-12 md:gap-20">
               <div className="text-center">
-                <div className="text-3xl md:text-4xl font-bold font-[var(--font-mono)] text-[var(--color-text)]">
+                <div className="text-3xl md:text-4xl font-bold font-[var(--font-mono)] text-[color:var(--color-text)]">
                   {metric.value}
                 </div>
-                <div className="mt-1 text-xs text-[var(--color-muted)] uppercase tracking-wider">
+                <div className="mt-1 text-xs text-[color:var(--color-muted)] uppercase tracking-wider">
                   {metric.label}
                 </div>
               </div>
