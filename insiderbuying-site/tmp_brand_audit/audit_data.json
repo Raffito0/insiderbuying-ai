@@ -1,0 +1,3465 @@
+[
+  {
+    "page": "home",
+    "fonts": {
+      "Inter, \"Inter Fallback\"": 405,
+      "Montaga, \"Montaga Fallback\"": 19
+    },
+    "colors": {
+      "text": {
+        "rgb(28, 27, 27)": 293,
+        "rgb(255, 255, 255)": 16,
+        "oklab(0.999994 0.0000455678 0.0000200868 / 0.9)": 1,
+        "oklab(0.223243 0.00149059 0.000464827 / 0.6)": 40,
+        "rgb(0, 109, 52)": 9,
+        "rgb(148, 163, 184)": 40,
+        "rgb(69, 69, 86)": 22,
+        "rgb(0, 5, 146)": 3
+      },
+      "bg": {
+        "rgb(255, 255, 255)": 18,
+        "rgb(0, 5, 146)": 15,
+        "oklab(0 0 0 / 0.4)": 1,
+        "lab(77.528 -71.0659 70.6781 / 0.2)": 1,
+        "rgb(0, 109, 52)": 14,
+        "rgb(246, 243, 242)": 16,
+        "rgb(217, 217, 217)": 6,
+        "rgb(229, 226, 225)": 5,
+        "rgb(28, 27, 27)": 2,
+        "rgb(0, 2, 80)": 1,
+        "rgb(21, 20, 20)": 2
+      },
+      "border": {
+        "rgb(240, 237, 237)": 11,
+        "oklab(0.999994 0.0000455677 0.0000200868 / 0.8)": 1,
+        "rgb(229, 226, 225)": 8,
+        "oklab(0 0 0 / 0.1)": 5,
+        "rgb(0, 109, 52)": 11,
+        "rgb(0, 5, 146)": 1,
+        "oklab(0.999994 0.0000455678 0.0000200868 / 0.1)": 1
+      }
+    },
+    "fontSizes": {
+      "16px": 214,
+      "20px": 14,
+      "14px": 75,
+      "54px": 1,
+      "18px": 15,
+      "13px": 50,
+      "12px": 3,
+      "39px": 8,
+      "24px": 6,
+      "22px": 4,
+      "48px": 12,
+      "10px": 16,
+      "26px": 3,
+      "32px": 3
+    },
+    "fontWeights": {
+      "300": 3,
+      "400": 334,
+      "500": 69,
+      "600": 16,
+      "700": 2
+    },
+    "lineHeights": {
+      "24px": 198,
+      "28px": 28,
+      "20px": 68,
+      "62.1px": 1,
+      "32px": 10,
+      "27px": 2,
+      "19.5px": 47,
+      "18px": 3,
+      "42.9px": 6,
+      "21px": 12,
+      "30px": 5,
+      "26px": 3,
+      "84px": 3,
+      "23px": 7,
+      "15px": 15,
+      "40px": 3,
+      "16px": 5,
+      "46.8px": 2,
+      "36px": 3,
+      "48px": 3
+    },
+    "letterSpacings": {
+      "0.7px": 1,
+      "0.5px": 40,
+      "1px": 29
+    },
+    "paddings": {},
+    "margins": {},
+    "gaps": {},
+    "borderRadii": {
+      "3.35544e+07px": 36,
+      "2px": 1,
+      "4px": 3
+    },
+    "headings": [
+      {
+        "tag": "h1",
+        "text": "Know What CEOs Are Buying,Before Everyone Else.",
+        "fontSize": "54px",
+        "fontWeight": "400",
+        "fontFamily": "Montaga",
+        "color": "rgb(255, 255, 255)",
+        "lineHeight": "62.1px",
+        "letterSpacing": "0.5px",
+        "marginBottom": "16px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h2",
+        "text": "Recent Insider Buys",
+        "fontSize": "39px",
+        "fontWeight": "400",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "42.9px",
+        "letterSpacing": "0.5px",
+        "marginBottom": "0px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h2",
+        "text": "How It Works",
+        "fontSize": "39px",
+        "fontWeight": "400",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "42.9px",
+        "letterSpacing": "0.5px",
+        "marginBottom": "80px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h3",
+        "text": "We Scan",
+        "fontSize": "22px",
+        "fontWeight": "400",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "28px",
+        "letterSpacing": "normal",
+        "marginBottom": "8px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h3",
+        "text": "AI Filters",
+        "fontSize": "22px",
+        "fontWeight": "400",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "28px",
+        "letterSpacing": "normal",
+        "marginBottom": "8px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h3",
+        "text": "You Get Alerted",
+        "fontSize": "22px",
+        "fontWeight": "400",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "28px",
+        "letterSpacing": "normal",
+        "marginBottom": "8px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h2",
+        "text": "Why Insider Buying Matters",
+        "fontSize": "39px",
+        "fontWeight": "400",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "42.9px",
+        "letterSpacing": "0.5px",
+        "marginBottom": "32px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h3",
+        "text": "NVDA / NVIDIA Corp",
+        "fontSize": "20px",
+        "fontWeight": "500",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "28px",
+        "letterSpacing": "normal",
+        "marginBottom": "0px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h2",
+        "text": "See the Pattern",
+        "fontSize": "39px",
+        "fontWeight": "400",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "42.9px",
+        "letterSpacing": "0.5px",
+        "marginBottom": "64px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h2",
+        "text": "Deep Dive Reports",
+        "fontSize": "39px",
+        "fontWeight": "400",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "46.8px",
+        "letterSpacing": "0.5px",
+        "marginBottom": "12px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h3",
+        "text": "NVIDIA Deep Dive",
+        "fontSize": "26px",
+        "fontWeight": "400",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "28px",
+        "letterSpacing": "1px",
+        "marginBottom": "4px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h3",
+        "text": "Magnificent 7 Report",
+        "fontSize": "26px",
+        "fontWeight": "400",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "28px",
+        "letterSpacing": "1px",
+        "marginBottom": "4px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h3",
+        "text": "Dividend Kings 2026",
+        "fontSize": "26px",
+        "fontWeight": "400",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "28px",
+        "letterSpacing": "1px",
+        "marginBottom": "4px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h2",
+        "text": "Simple Pricing",
+        "fontSize": "39px",
+        "fontWeight": "400",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "42.9px",
+        "letterSpacing": "0.5px",
+        "marginBottom": "80px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h3",
+        "text": "Free",
+        "fontSize": "32px",
+        "fontWeight": "400",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "32px",
+        "letterSpacing": "1px",
+        "marginBottom": "8px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h3",
+        "text": "Pro",
+        "fontSize": "32px",
+        "fontWeight": "400",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "32px",
+        "letterSpacing": "1px",
+        "marginBottom": "8px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h3",
+        "text": "Investor",
+        "fontSize": "32px",
+        "fontWeight": "400",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "32px",
+        "letterSpacing": "1px",
+        "marginBottom": "8px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h2",
+        "text": "Frequently Asked Questions",
+        "fontSize": "39px",
+        "fontWeight": "400",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "42.9px",
+        "letterSpacing": "0.5px",
+        "marginBottom": "64px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h2",
+        "text": "You'll know in 60 seconds.",
+        "fontSize": "39px",
+        "fontWeight": "400",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "46.8px",
+        "letterSpacing": "0.5px",
+        "marginBottom": "16px",
+        "marginTop": "0px"
+      }
+    ],
+    "buttons": [],
+    "sections": [
+      {
+        "tag": "section",
+        "width": 1440,
+        "bgColor": "rgb(255, 255, 255)",
+        "padding": "96px 91px"
+      },
+      {
+        "tag": "section",
+        "width": 1440,
+        "bgColor": "rgb(255, 255, 255)",
+        "padding": "40px 100px 96px"
+      },
+      {
+        "tag": "section",
+        "width": 1440,
+        "bgColor": "rgb(246, 243, 242)",
+        "padding": "96px 98px"
+      },
+      {
+        "tag": "section",
+        "width": 1440,
+        "bgColor": "rgb(255, 255, 255)",
+        "padding": "96px 98px 54px"
+      },
+      {
+        "tag": "section",
+        "width": 1440,
+        "bgColor": "rgb(246, 243, 242)",
+        "padding": "96px 68px 102px"
+      },
+      {
+        "tag": "section",
+        "width": 1440,
+        "bgColor": "rgb(0, 2, 80)",
+        "padding": "96px 0px"
+      },
+      {
+        "tag": "section",
+        "width": 1440,
+        "bgColor": "rgb(246, 243, 242)",
+        "padding": "96px 0px"
+      },
+      {
+        "tag": "section",
+        "width": 1440,
+        "bgColor": "rgb(255, 255, 255)",
+        "padding": "96px 0px"
+      },
+      {
+        "tag": "section",
+        "width": 1440,
+        "bgColor": "rgb(21, 20, 20)",
+        "padding": "128px 0px"
+      }
+    ],
+    "containers": [
+      {
+        "tag": "div",
+        "width": 1440,
+        "bgColor": "rgb(255, 255, 255)",
+        "padding": "0px"
+      },
+      {
+        "tag": "div",
+        "width": 1440,
+        "bgColor": "oklab(0 0 0 / 0.4)",
+        "padding": "0px"
+      },
+      {
+        "tag": "div",
+        "width": 868,
+        "bgColor": "rgba(0, 0, 0, 0)",
+        "padding": "0px 32px"
+      },
+      {
+        "tag": "div",
+        "width": 1154,
+        "bgColor": "rgb(246, 243, 242)",
+        "padding": "0px 32px"
+      },
+      {
+        "tag": "div",
+        "width": 1154,
+        "bgColor": "rgb(246, 243, 242)",
+        "padding": "0px 32px",
+        "border": "1px 0px 0px solid rgb(229, 226, 225)"
+      },
+      {
+        "tag": "div",
+        "width": 1154,
+        "bgColor": "rgb(246, 243, 242)",
+        "padding": "0px 32px",
+        "border": "1px 0px 0px solid rgb(229, 226, 225)"
+      },
+      {
+        "tag": "div",
+        "width": 1154,
+        "bgColor": "rgb(246, 243, 242)",
+        "padding": "0px 32px",
+        "border": "1px 0px 0px solid rgb(229, 226, 225)"
+      },
+      {
+        "tag": "div",
+        "width": 1154,
+        "bgColor": "rgb(246, 243, 242)",
+        "padding": "0px 32px",
+        "border": "1px 0px 0px solid rgb(229, 226, 225)"
+      },
+      {
+        "tag": "div",
+        "width": 1080,
+        "bgColor": "rgba(0, 0, 0, 0)",
+        "padding": "0px 32px"
+      },
+      {
+        "tag": "div",
+        "width": 345,
+        "bgColor": "rgb(255, 255, 255)",
+        "padding": "15px 29px 30px"
+      },
+      {
+        "tag": "div",
+        "width": 345,
+        "bgColor": "rgb(255, 255, 255)",
+        "padding": "15px 29px 30px"
+      },
+      {
+        "tag": "div",
+        "width": 345,
+        "bgColor": "rgb(255, 255, 255)",
+        "padding": "15px 29px 30px"
+      },
+      {
+        "tag": "div",
+        "width": 1082,
+        "bgColor": "rgb(246, 243, 242)",
+        "padding": "32px",
+        "border": "0px 0px 1px solid oklab(0 0 0 / 0.1)"
+      },
+      {
+        "tag": "div",
+        "width": 1082,
+        "bgColor": "rgba(0, 0, 0, 0)",
+        "padding": "40px",
+        "gap": "40px"
+      },
+      {
+        "tag": "div",
+        "width": 481,
+        "bgColor": "rgb(246, 243, 242)",
+        "padding": "24px"
+      },
+      {
+        "tag": "div",
+        "width": 1244,
+        "bgColor": "rgba(0, 0, 0, 0)",
+        "padding": "50px 0px 0px",
+        "gap": "60px"
+      },
+      {
+        "tag": "div",
+        "width": 1144,
+        "bgColor": "rgba(0, 0, 0, 0)",
+        "padding": "0px 32px"
+      },
+      {
+        "tag": "div",
+        "width": 524,
+        "bgColor": "rgb(255, 255, 255)",
+        "padding": "40px"
+      },
+      {
+        "tag": "div",
+        "width": 524,
+        "bgColor": "rgb(255, 255, 255)",
+        "padding": "40px"
+      },
+      {
+        "tag": "div",
+        "width": 444,
+        "bgColor": "rgba(0, 0, 0, 0)",
+        "padding": "0px 16px",
+        "gap": "12px"
+      },
+      {
+        "tag": "div",
+        "width": 1136,
+        "bgColor": "rgba(0, 0, 0, 0)",
+        "padding": "0px 32px"
+      },
+      {
+        "tag": "div",
+        "width": 1072,
+        "bgColor": "rgba(0, 0, 0, 0)",
+        "padding": "0px 50px",
+        "gap": "24px"
+      },
+      {
+        "tag": "div",
+        "width": 308,
+        "bgColor": "rgb(255, 255, 255)",
+        "padding": "32px",
+        "border": "1px solid oklab(0 0 0 / 0.1)"
+      },
+      {
+        "tag": "div",
+        "width": 308,
+        "bgColor": "rgb(255, 255, 255)",
+        "padding": "32px",
+        "border": "1px solid oklab(0 0 0 / 0.1)"
+      },
+      {
+        "tag": "div",
+        "width": 308,
+        "bgColor": "rgb(255, 255, 255)",
+        "padding": "32px",
+        "border": "1px solid oklab(0 0 0 / 0.1)"
+      },
+      {
+        "tag": "div",
+        "width": 1216,
+        "bgColor": "rgba(0, 0, 0, 0)",
+        "padding": "0px 32px"
+      },
+      {
+        "tag": "div",
+        "width": 325,
+        "bgColor": "rgb(255, 255, 255)",
+        "padding": "48px"
+      },
+      {
+        "tag": "div",
+        "width": 325,
+        "bgColor": "rgb(255, 255, 255)",
+        "padding": "48px",
+        "border": "1px solid rgb(0, 5, 146)"
+      },
+      {
+        "tag": "div",
+        "width": 325,
+        "bgColor": "rgb(255, 255, 255)",
+        "padding": "48px"
+      },
+      {
+        "tag": "div",
+        "width": 800,
+        "bgColor": "rgba(0, 0, 0, 0)",
+        "padding": "0px 32px"
+      },
+      {
+        "tag": "div",
+        "width": 1216,
+        "bgColor": "rgba(0, 0, 0, 0)",
+        "padding": "0px 32px"
+      },
+      {
+        "tag": "div",
+        "width": 1200,
+        "bgColor": "rgba(0, 0, 0, 0)",
+        "padding": "0px 40px"
+      }
+    ]
+  },
+  {
+    "page": "about",
+    "fonts": {
+      "Inter, \"Inter Fallback\"": 107,
+      "Montaga, \"Montaga Fallback\"": 10
+    },
+    "colors": {
+      "text": {
+        "rgb(28, 27, 27)": 104,
+        "rgb(255, 255, 255)": 8,
+        "rgb(69, 69, 86)": 4,
+        "rgb(148, 163, 184)": 1
+      },
+      "bg": {
+        "rgb(255, 255, 255)": 9,
+        "rgb(0, 5, 146)": 3,
+        "rgb(246, 243, 242)": 6,
+        "rgb(28, 27, 27)": 2,
+        "rgb(21, 20, 20)": 1
+      },
+      "border": {
+        "rgb(240, 237, 237)": 1,
+        "oklab(0.999994 0.0000455678 0.0000200868 / 0.1)": 1
+      }
+    },
+    "fontSizes": {
+      "16px": 74,
+      "20px": 3,
+      "14px": 17,
+      "54px": 1,
+      "18px": 5,
+      "32px": 3,
+      "17px": 3,
+      "24px": 4,
+      "48px": 3,
+      "28px": 1,
+      "36px": 1,
+      "22px": 1,
+      "10px": 1
+    },
+    "fontWeights": {
+      "400": 105,
+      "500": 5,
+      "600": 2,
+      "700": 5
+    },
+    "lineHeights": {
+      "24px": 61,
+      "28px": 9,
+      "20px": 16,
+      "52px": 1,
+      "29px": 1,
+      "42px": 3,
+      "30px": 3,
+      "36px": 4,
+      "23px": 6,
+      "40px": 4,
+      "16px": 5,
+      "27px": 3,
+      "33px": 1
+    },
+    "letterSpacings": {
+      "0.7px": 1,
+      "0.5px": 1
+    },
+    "paddings": {},
+    "margins": {},
+    "gaps": {},
+    "borderRadii": {},
+    "headings": [
+      {
+        "tag": "h1",
+        "text": "About EarlyInsider",
+        "fontSize": "54px",
+        "fontWeight": "400",
+        "fontFamily": "Montaga",
+        "color": "rgb(255, 255, 255)",
+        "lineHeight": "52px",
+        "letterSpacing": "normal",
+        "marginBottom": "24px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h2",
+        "text": "Transparency in Every Trade",
+        "fontSize": "32px",
+        "fontWeight": "400",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "42px",
+        "letterSpacing": "normal",
+        "marginBottom": "30px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h2",
+        "text": "From SEC Filing to Your Dashboard",
+        "fontSize": "32px",
+        "fontWeight": "400",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "42px",
+        "letterSpacing": "normal",
+        "marginBottom": "64px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h3",
+        "text": "SEC Filing",
+        "fontSize": "16px",
+        "fontWeight": "700",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "28px",
+        "letterSpacing": "normal",
+        "marginBottom": "12px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h3",
+        "text": "AI Analysis",
+        "fontSize": "16px",
+        "fontWeight": "700",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "28px",
+        "letterSpacing": "normal",
+        "marginBottom": "12px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h3",
+        "text": "Alert Delivery",
+        "fontSize": "16px",
+        "fontWeight": "700",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "28px",
+        "letterSpacing": "normal",
+        "marginBottom": "12px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h3",
+        "text": "Your Decision",
+        "fontSize": "16px",
+        "fontWeight": "700",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "28px",
+        "letterSpacing": "normal",
+        "marginBottom": "12px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h2",
+        "text": "Institutional Grade Intelligence",
+        "fontSize": "32px",
+        "fontWeight": "400",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "42px",
+        "letterSpacing": "normal",
+        "marginBottom": "50px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h2",
+        "text": "Regulatory & Financial Disclosure",
+        "fontSize": "28px",
+        "fontWeight": "400",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "33px",
+        "letterSpacing": "normal",
+        "marginBottom": "24px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h2",
+        "text": "Ready to follow the smart money?",
+        "fontSize": "36px",
+        "fontWeight": "400",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "40px",
+        "letterSpacing": "normal",
+        "marginBottom": "32px",
+        "marginTop": "0px"
+      }
+    ],
+    "buttons": [],
+    "sections": [
+      {
+        "tag": "section",
+        "width": 1440,
+        "bgColor": "rgb(0, 5, 146)",
+        "padding": "128px 24px"
+      },
+      {
+        "tag": "section",
+        "width": 1440,
+        "bgColor": "rgb(255, 255, 255)",
+        "padding": "96px 32px"
+      },
+      {
+        "tag": "section",
+        "width": 1440,
+        "bgColor": "rgb(246, 243, 242)",
+        "padding": "96px 40px"
+      },
+      {
+        "tag": "section",
+        "width": 1440,
+        "bgColor": "rgb(255, 255, 255)",
+        "padding": "96px 40px"
+      },
+      {
+        "tag": "section",
+        "width": 1440,
+        "bgColor": "rgb(246, 243, 242)",
+        "padding": "96px 32px"
+      },
+      {
+        "tag": "section",
+        "width": 1440,
+        "bgColor": "rgb(255, 255, 255)",
+        "padding": "96px 32px"
+      }
+    ],
+    "containers": [
+      {
+        "tag": "div",
+        "width": 1440,
+        "bgColor": "rgb(246, 243, 242)",
+        "padding": "0px"
+      },
+      {
+        "tag": "div",
+        "width": 1200,
+        "bgColor": "rgba(0, 0, 0, 0)",
+        "padding": "0px 95px",
+        "gap": "24px"
+      },
+      {
+        "tag": "div",
+        "width": 1200,
+        "bgColor": "rgba(0, 0, 0, 0)",
+        "padding": "0px 95px",
+        "gap": "32px"
+      },
+      {
+        "tag": "div",
+        "width": 315,
+        "bgColor": "rgb(246, 243, 242)",
+        "padding": "40px"
+      },
+      {
+        "tag": "div",
+        "width": 315,
+        "bgColor": "rgb(246, 243, 242)",
+        "padding": "40px"
+      },
+      {
+        "tag": "div",
+        "width": 315,
+        "bgColor": "rgb(246, 243, 242)",
+        "padding": "40px"
+      },
+      {
+        "tag": "div",
+        "width": 800,
+        "bgColor": "rgb(255, 255, 255)",
+        "padding": "32px"
+      },
+      {
+        "tag": "div",
+        "width": 1200,
+        "bgColor": "rgba(0, 0, 0, 0)",
+        "padding": "0px 40px"
+      }
+    ]
+  },
+  {
+    "page": "alerts",
+    "fonts": {
+      "Inter, \"Inter Fallback\"": 168,
+      "Montaga, \"Montaga Fallback\"": 1
+    },
+    "colors": {
+      "text": {
+        "rgb(28, 27, 27)": 120,
+        "rgb(255, 255, 255)": 9,
+        "rgb(148, 163, 184)": 19,
+        "rgb(69, 69, 86)": 2,
+        "rgb(0, 109, 52)": 8,
+        "rgb(0, 114, 55)": 2,
+        "rgb(0, 5, 146)": 7,
+        "rgb(147, 0, 10)": 1,
+        "rgb(186, 26, 26)": 1
+      },
+      "bg": {
+        "rgb(255, 255, 255)": 13,
+        "rgb(0, 5, 146)": 3,
+        "rgb(246, 243, 242)": 6,
+        "rgb(0, 109, 52)": 2,
+        "rgb(240, 237, 246)": 1,
+        "rgb(229, 226, 225)": 3,
+        "rgb(196, 230, 208)": 2,
+        "oklab(0.966174 0.00274095 0.00224131 / 0.6)": 2,
+        "rgb(255, 218, 214)": 1,
+        "rgb(0, 2, 50)": 1,
+        "rgb(21, 20, 20)": 1
+      },
+      "border": {
+        "rgb(240, 237, 237)": 1,
+        "rgb(229, 226, 225)": 14,
+        "oklab(0.999994 0.0000455678 0.0000200868 / 0.1)": 1
+      }
+    },
+    "fontSizes": {
+      "16px": 99,
+      "20px": 3,
+      "14px": 24,
+      "12px": 25,
+      "32px": 1,
+      "13px": 4,
+      "18px": 3,
+      "24px": 3,
+      "11px": 5,
+      "22px": 1,
+      "10px": 1
+    },
+    "fontWeights": {
+      "400": 121,
+      "500": 19,
+      "600": 16,
+      "700": 13
+    },
+    "lineHeights": {
+      "24px": 89,
+      "28px": 7,
+      "20px": 32,
+      "18px": 1,
+      "52px": 1,
+      "27px": 1,
+      "16px": 26,
+      "19.5px": 3,
+      "32px": 3,
+      "15px": 5,
+      "23px": 1
+    },
+    "letterSpacings": {
+      "0.7px": 1,
+      "0.6px": 1,
+      "0.5px": 1
+    },
+    "paddings": {},
+    "margins": {},
+    "gaps": {},
+    "borderRadii": {
+      "3.35544e+07px": 5,
+      "2px": 3
+    },
+    "headings": [
+      {
+        "tag": "h1",
+        "text": "Live Insider Activity",
+        "fontSize": "32px",
+        "fontWeight": "400",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "52px",
+        "letterSpacing": "normal",
+        "marginBottom": "4px",
+        "marginTop": "0px"
+      }
+    ],
+    "buttons": [],
+    "sections": [
+      {
+        "tag": "section",
+        "width": 1440,
+        "bgColor": "rgb(246, 243, 242)",
+        "padding": "60px 0px 40px"
+      },
+      {
+        "tag": "section",
+        "width": 1280,
+        "bgColor": "rgba(0, 0, 0, 0)",
+        "padding": "48px 32px"
+      }
+    ],
+    "containers": [
+      {
+        "tag": "div",
+        "width": 1440,
+        "bgColor": "rgb(246, 243, 242)",
+        "padding": "0px 0px 64px"
+      },
+      {
+        "tag": "div",
+        "width": 1280,
+        "bgColor": "rgba(0, 0, 0, 0)",
+        "padding": "0px 32px",
+        "gap": "16px"
+      },
+      {
+        "tag": "div",
+        "width": 888,
+        "bgColor": "rgb(255, 255, 255)",
+        "padding": "24px",
+        "gap": "24px",
+        "border": "1px solid rgb(229, 226, 225)"
+      },
+      {
+        "tag": "div",
+        "width": 838,
+        "bgColor": "rgb(246, 243, 242)",
+        "padding": "24px"
+      },
+      {
+        "tag": "div",
+        "width": 888,
+        "bgColor": "rgb(255, 255, 255)",
+        "padding": "24px",
+        "gap": "24px",
+        "border": "1px solid rgb(229, 226, 225)"
+      },
+      {
+        "tag": "div",
+        "width": 838,
+        "bgColor": "rgb(246, 243, 242)",
+        "padding": "24px"
+      },
+      {
+        "tag": "div",
+        "width": 888,
+        "bgColor": "rgb(255, 255, 255)",
+        "padding": "24px",
+        "gap": "24px",
+        "border": "1px solid rgb(229, 226, 225)"
+      },
+      {
+        "tag": "div",
+        "width": 1200,
+        "bgColor": "rgba(0, 0, 0, 0)",
+        "padding": "0px 40px"
+      }
+    ]
+  },
+  {
+    "page": "blog",
+    "fonts": {
+      "Inter, \"Inter Fallback\"": 61,
+      "Montaga, \"Montaga Fallback\"": 2
+    },
+    "colors": {
+      "text": {
+        "rgb(28, 27, 27)": 53,
+        "rgb(255, 255, 255)": 6,
+        "rgb(69, 69, 86)": 3,
+        "rgb(148, 163, 184)": 1
+      },
+      "bg": {
+        "rgb(255, 255, 255)": 4,
+        "rgb(0, 5, 146)": 1,
+        "rgb(246, 243, 242)": 3,
+        "rgb(0, 42, 94)": 1,
+        "rgb(21, 20, 20)": 1
+      },
+      "border": {
+        "rgb(240, 237, 237)": 1,
+        "rgb(232, 234, 237)": 1,
+        "oklab(0.999994 0.0000455678 0.0000200868 / 0.1)": 1
+      }
+    },
+    "fontSizes": {
+      "16px": 47,
+      "20px": 3,
+      "14px": 7,
+      "12px": 1,
+      "54px": 1,
+      "18px": 1,
+      "28px": 1,
+      "22px": 1,
+      "10px": 1
+    },
+    "fontWeights": {
+      "400": 54,
+      "500": 7,
+      "600": 1,
+      "700": 1
+    },
+    "lineHeights": {
+      "24px": 38,
+      "28px": 4,
+      "20px": 13,
+      "18px": 1,
+      "70px": 1,
+      "29px": 1,
+      "21px": 1,
+      "36px": 1,
+      "23px": 1,
+      "16px": 2
+    },
+    "letterSpacings": {
+      "0.7px": 1,
+      "0.5px": 1
+    },
+    "paddings": {},
+    "margins": {},
+    "gaps": {},
+    "borderRadii": {
+      "4px": 1
+    },
+    "headings": [
+      {
+        "tag": "h1",
+        "text": "Blog",
+        "fontSize": "54px",
+        "fontWeight": "400",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "70px",
+        "letterSpacing": "normal",
+        "marginBottom": "0px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h2",
+        "text": "Subscribe to the Briefing",
+        "fontSize": "28px",
+        "fontWeight": "400",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "36px",
+        "letterSpacing": "normal",
+        "marginBottom": "0px",
+        "marginTop": "0px"
+      }
+    ],
+    "buttons": [],
+    "sections": [
+      {
+        "tag": "section",
+        "width": 1440,
+        "bgColor": "rgb(246, 243, 242)",
+        "padding": "96px 40px"
+      },
+      {
+        "tag": "section",
+        "width": 1200,
+        "bgColor": "rgba(0, 0, 0, 0)",
+        "padding": "48px 32px"
+      },
+      {
+        "tag": "section",
+        "width": 1440,
+        "bgColor": "rgb(0, 42, 94)",
+        "padding": "64px 40px"
+      }
+    ],
+    "containers": [
+      {
+        "tag": "div",
+        "width": 1440,
+        "bgColor": "rgb(246, 243, 242)",
+        "padding": "0px"
+      },
+      {
+        "tag": "div",
+        "width": 1136,
+        "bgColor": "rgba(0, 0, 0, 0)",
+        "padding": "48px 0px"
+      },
+      {
+        "tag": "div",
+        "width": 1200,
+        "bgColor": "rgba(0, 0, 0, 0)",
+        "padding": "0px 40px"
+      }
+    ]
+  },
+  {
+    "page": "contact",
+    "fonts": {
+      "Inter, \"Inter Fallback\"": 59,
+      "Montaga, \"Montaga Fallback\"": 4
+    },
+    "colors": {
+      "text": {
+        "rgb(28, 27, 27)": 50,
+        "rgb(255, 255, 255)": 5,
+        "rgb(69, 69, 86)": 4,
+        "rgb(0, 5, 146)": 3,
+        "rgb(148, 163, 184)": 1
+      },
+      "bg": {
+        "rgb(255, 255, 255)": 2,
+        "rgb(0, 5, 146)": 1,
+        "rgb(246, 243, 242)": 2,
+        "rgb(21, 20, 20)": 1
+      },
+      "border": {
+        "rgb(240, 237, 237)": 1,
+        "oklab(0.999994 0.0000455678 0.0000200868 / 0.1)": 1
+      }
+    },
+    "fontSizes": {
+      "16px": 47,
+      "20px": 6,
+      "14px": 6,
+      "54px": 1,
+      "18px": 1,
+      "22px": 1,
+      "10px": 1
+    },
+    "fontWeights": {
+      "400": 50,
+      "500": 8,
+      "600": 1,
+      "700": 4
+    },
+    "lineHeights": {
+      "24px": 35,
+      "28px": 8,
+      "20px": 13,
+      "59.4px": 1,
+      "26px": 3,
+      "23px": 1,
+      "16px": 2
+    },
+    "letterSpacings": {
+      "0.7px": 1,
+      "0.5px": 1
+    },
+    "paddings": {},
+    "margins": {},
+    "gaps": {},
+    "borderRadii": {},
+    "headings": [
+      {
+        "tag": "h1",
+        "text": "Contact Us",
+        "fontSize": "54px",
+        "fontWeight": "400",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "59.4px",
+        "letterSpacing": "normal",
+        "marginBottom": "24px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h2",
+        "text": "General Support",
+        "fontSize": "20px",
+        "fontWeight": "700",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "28px",
+        "letterSpacing": "normal",
+        "marginBottom": "8px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h2",
+        "text": "Enterprise & Partnerships",
+        "fontSize": "20px",
+        "fontWeight": "700",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "28px",
+        "letterSpacing": "normal",
+        "marginBottom": "8px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h2",
+        "text": "Press & Media",
+        "fontSize": "20px",
+        "fontWeight": "700",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "28px",
+        "letterSpacing": "normal",
+        "marginBottom": "8px",
+        "marginTop": "0px"
+      }
+    ],
+    "buttons": [],
+    "sections": [
+      {
+        "tag": "section",
+        "width": 1440,
+        "bgColor": "rgb(246, 243, 242)",
+        "padding": "128px 32px"
+      },
+      {
+        "tag": "section",
+        "width": 1440,
+        "bgColor": "rgb(255, 255, 255)",
+        "padding": "96px 32px"
+      }
+    ],
+    "containers": [
+      {
+        "tag": "div",
+        "width": 1440,
+        "bgColor": "rgb(246, 243, 242)",
+        "padding": "0px"
+      },
+      {
+        "tag": "div",
+        "width": 1200,
+        "bgColor": "rgba(0, 0, 0, 0)",
+        "padding": "0px 40px"
+      }
+    ]
+  },
+  {
+    "page": "faq",
+    "fonts": {
+      "Inter, \"Inter Fallback\"": 109,
+      "Montaga, \"Montaga Fallback\"": 7
+    },
+    "colors": {
+      "text": {
+        "rgb(28, 27, 27)": 95,
+        "rgb(255, 255, 255)": 6,
+        "rgb(69, 69, 86)": 9,
+        "rgb(0, 5, 146)": 4,
+        "oklab(0.999994 0.0000455677 0.0000200868 / 0.8)": 1,
+        "rgb(148, 163, 184)": 1
+      },
+      "bg": {
+        "rgb(255, 255, 255)": 5,
+        "rgb(0, 5, 146)": 2,
+        "rgb(246, 243, 242)": 12,
+        "oklab(0.999994 0.0000455678 0.0000200868 / 0.1)": 1,
+        "rgb(21, 20, 20)": 1
+      },
+      "border": {
+        "rgb(240, 237, 237)": 2,
+        "rgb(229, 226, 225)": 1,
+        "rgb(0, 5, 146)": 6,
+        "rgba(0, 0, 0, 0)": 5,
+        "oklab(0.999994 0.0000455678 0.0000200868 / 0.1)": 1
+      }
+    },
+    "fontSizes": {
+      "16px": 86,
+      "20px": 3,
+      "14px": 16,
+      "54px": 1,
+      "18px": 2,
+      "30px": 3,
+      "32px": 1,
+      "28px": 1,
+      "26px": 1,
+      "22px": 1,
+      "10px": 1
+    },
+    "fontWeights": {
+      "400": 96,
+      "500": 16,
+      "600": 2,
+      "700": 2
+    },
+    "lineHeights": {
+      "24px": 67,
+      "28px": 14,
+      "20px": 21,
+      "70px": 1,
+      "29px": 1,
+      "32px": 3,
+      "26px": 1,
+      "40px": 2,
+      "16px": 3,
+      "36px": 1,
+      "23px": 2
+    },
+    "letterSpacings": {
+      "0.7px": 1,
+      "0.5px": 1
+    },
+    "paddings": {},
+    "margins": {},
+    "gaps": {},
+    "borderRadii": {
+      "4px": 1
+    },
+    "headings": [
+      {
+        "tag": "h1",
+        "text": "Frequently Asked Questions",
+        "fontSize": "54px",
+        "fontWeight": "400",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "70px",
+        "letterSpacing": "normal",
+        "marginBottom": "24px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h2",
+        "text": "Platform Essentials",
+        "fontSize": "30px",
+        "fontWeight": "400",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "32px",
+        "letterSpacing": "normal",
+        "marginBottom": "32px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h2",
+        "text": "Alerts & Notifications",
+        "fontSize": "30px",
+        "fontWeight": "400",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "32px",
+        "letterSpacing": "normal",
+        "marginBottom": "32px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h2",
+        "text": "Data & Compliance",
+        "fontSize": "30px",
+        "fontWeight": "400",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "32px",
+        "letterSpacing": "normal",
+        "marginBottom": "32px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h2",
+        "text": "Still have questions?",
+        "fontSize": "32px",
+        "fontWeight": "400",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "40px",
+        "letterSpacing": "normal",
+        "marginBottom": "16px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h3",
+        "text": "Master the markets with institutional precision.",
+        "fontSize": "28px",
+        "fontWeight": "400",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "36px",
+        "letterSpacing": "normal",
+        "marginBottom": "0px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h4",
+        "text": "Institutional Security",
+        "fontSize": "26px",
+        "fontWeight": "400",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "40px",
+        "letterSpacing": "normal",
+        "marginBottom": "22px",
+        "marginTop": "0px"
+      }
+    ],
+    "buttons": [],
+    "sections": [
+      {
+        "tag": "section",
+        "width": 1440,
+        "bgColor": "rgb(246, 243, 242)",
+        "padding": "128px 32px"
+      },
+      {
+        "tag": "section",
+        "width": 1440,
+        "bgColor": "rgb(255, 255, 255)",
+        "padding": "96px 32px"
+      },
+      {
+        "tag": "section",
+        "width": 1440,
+        "bgColor": "rgb(246, 243, 242)",
+        "padding": "96px 32px"
+      },
+      {
+        "tag": "section",
+        "width": 1440,
+        "bgColor": "rgb(255, 255, 255)",
+        "padding": "96px 32px"
+      }
+    ],
+    "containers": [
+      {
+        "tag": "div",
+        "width": 1440,
+        "bgColor": "rgb(246, 243, 242)",
+        "padding": "0px"
+      },
+      {
+        "tag": "div",
+        "width": 780,
+        "bgColor": "rgb(246, 243, 242)",
+        "padding": "0px"
+      },
+      {
+        "tag": "div",
+        "width": 780,
+        "bgColor": "rgba(0, 0, 0, 0)",
+        "padding": "0px 24px 24px"
+      },
+      {
+        "tag": "div",
+        "width": 725,
+        "bgColor": "rgb(0, 5, 146)",
+        "padding": "48px"
+      },
+      {
+        "tag": "div",
+        "width": 346,
+        "bgColor": "rgb(255, 255, 255)",
+        "padding": "85px 32px",
+        "border": "1px solid rgb(240, 237, 237)"
+      },
+      {
+        "tag": "div",
+        "width": 1200,
+        "bgColor": "rgba(0, 0, 0, 0)",
+        "padding": "0px 40px"
+      }
+    ]
+  },
+  {
+    "page": "free-report",
+    "fonts": {
+      "Inter, \"Inter Fallback\"": 114,
+      "Montaga, \"Montaga Fallback\"": 8
+    },
+    "colors": {
+      "text": {
+        "rgb(28, 27, 27)": 96,
+        "rgb(255, 255, 255)": 8,
+        "rgb(0, 109, 52)": 2,
+        "rgb(0, 5, 146)": 2,
+        "rgb(69, 69, 86)": 7,
+        "rgb(148, 163, 184)": 6,
+        "oklab(0.999994 0.0000455677 0.0000200868 / 0.6)": 1
+      },
+      "bg": {
+        "rgb(255, 255, 255)": 10,
+        "rgb(0, 5, 146)": 14,
+        "rgb(246, 243, 242)": 3,
+        "rgb(0, 109, 52)": 3,
+        "rgb(0, 42, 94)": 1,
+        "rgb(21, 20, 20)": 1
+      },
+      "border": {
+        "rgb(240, 237, 237)": 3,
+        "rgb(0, 5, 146)": 1,
+        "oklab(0.999994 0.0000455678 0.0000200868 / 0.1)": 1
+      }
+    },
+    "fontSizes": {
+      "16px": 88,
+      "20px": 7,
+      "14px": 9,
+      "54px": 1,
+      "18px": 4,
+      "10px": 5,
+      "28px": 1,
+      "13px": 1,
+      "12px": 3,
+      "32px": 1,
+      "30px": 1,
+      "22px": 1
+    },
+    "fontWeights": {
+      "300": 1,
+      "400": 101,
+      "500": 9,
+      "600": 1,
+      "700": 10
+    },
+    "lineHeights": {
+      "24px": 75,
+      "28px": 9,
+      "20px": 16,
+      "60px": 1,
+      "29px": 1,
+      "15px": 4,
+      "32px": 1,
+      "14px": 2,
+      "16px": 4,
+      "36px": 1,
+      "19px": 2,
+      "40px": 1,
+      "26px": 3,
+      "48px": 1,
+      "23px": 1
+    },
+    "letterSpacings": {
+      "0.7px": 1,
+      "0.5px": 2
+    },
+    "paddings": {},
+    "margins": {},
+    "gaps": {},
+    "borderRadii": {
+      "2px": 4,
+      "3.35544e+07px": 1,
+      "2px 2px 0px 0px": 10
+    },
+    "headings": [
+      {
+        "tag": "h1",
+        "text": "EarlyInsiderBacktest Report",
+        "fontSize": "54px",
+        "fontWeight": "400",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "60px",
+        "letterSpacing": "normal",
+        "marginBottom": "0px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h2",
+        "text": "The Insider AlphaStrategy",
+        "fontSize": "28px",
+        "fontWeight": "400",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "32px",
+        "letterSpacing": "normal",
+        "marginBottom": "0px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h2",
+        "text": "Get the Report",
+        "fontSize": "16px",
+        "fontWeight": "400",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "36px",
+        "letterSpacing": "normal",
+        "marginBottom": "12px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h2",
+        "text": "What You'll Learn",
+        "fontSize": "32px",
+        "fontWeight": "400",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "40px",
+        "letterSpacing": "normal",
+        "marginBottom": "80px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h3",
+        "text": "Backtest Results",
+        "fontSize": "20px",
+        "fontWeight": "700",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "28px",
+        "letterSpacing": "normal",
+        "marginBottom": "24px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h3",
+        "text": "Current Patterns",
+        "fontSize": "20px",
+        "fontWeight": "700",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "28px",
+        "letterSpacing": "normal",
+        "marginBottom": "24px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h3",
+        "text": "Conviction Scoring",
+        "fontSize": "20px",
+        "fontWeight": "700",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "28px",
+        "letterSpacing": "normal",
+        "marginBottom": "24px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h2",
+        "text": "Don't invest blind.",
+        "fontSize": "30px",
+        "fontWeight": "400",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "48px",
+        "letterSpacing": "normal",
+        "marginBottom": "16px",
+        "marginTop": "0px"
+      }
+    ],
+    "buttons": [],
+    "sections": [
+      {
+        "tag": "section",
+        "width": 1440,
+        "bgColor": "rgb(255, 255, 255)",
+        "padding": "96px 32px"
+      },
+      {
+        "tag": "section",
+        "width": 1440,
+        "bgColor": "rgb(246, 243, 242)",
+        "padding": "96px 32px"
+      },
+      {
+        "tag": "section",
+        "width": 1440,
+        "bgColor": "rgb(246, 243, 242)",
+        "padding": "128px 32px"
+      },
+      {
+        "tag": "section",
+        "width": 1440,
+        "bgColor": "rgb(255, 255, 255)",
+        "padding": "48px 32px",
+        "border": "1px 0px solid rgb(240, 237, 237)"
+      },
+      {
+        "tag": "section",
+        "width": 1440,
+        "bgColor": "rgb(0, 42, 94)",
+        "padding": "96px 32px"
+      }
+    ],
+    "containers": [
+      {
+        "tag": "div",
+        "width": 1440,
+        "bgColor": "rgb(246, 243, 242)",
+        "padding": "0px"
+      },
+      {
+        "tag": "div",
+        "width": 478,
+        "bgColor": "rgb(255, 255, 255)",
+        "padding": "16px",
+        "borderRadius": "2px",
+        "border": "1px solid rgb(0, 5, 146)"
+      },
+      {
+        "tag": "div",
+        "width": 444,
+        "bgColor": "rgba(0, 0, 0, 0)",
+        "padding": "16px",
+        "gap": "24px"
+      },
+      {
+        "tag": "div",
+        "width": 444,
+        "bgColor": "rgb(255, 255, 255)",
+        "padding": "8px"
+      },
+      {
+        "tag": "div",
+        "width": 305,
+        "bgColor": "rgb(255, 255, 255)",
+        "padding": "40px"
+      },
+      {
+        "tag": "div",
+        "width": 305,
+        "bgColor": "rgb(255, 255, 255)",
+        "padding": "40px"
+      },
+      {
+        "tag": "div",
+        "width": 305,
+        "bgColor": "rgb(255, 255, 255)",
+        "padding": "40px"
+      },
+      {
+        "tag": "div",
+        "width": 1200,
+        "bgColor": "rgba(0, 0, 0, 0)",
+        "padding": "0px 40px"
+      }
+    ]
+  },
+  {
+    "page": "how-it-works",
+    "fonts": {
+      "Inter, \"Inter Fallback\"": 228,
+      "Montaga, \"Montaga Fallback\"": 14
+    },
+    "colors": {
+      "text": {
+        "rgb(28, 27, 27)": 177,
+        "rgb(255, 255, 255)": 7,
+        "rgb(69, 69, 86)": 42,
+        "rgb(0, 5, 146)": 10,
+        "rgb(0, 82, 38)": 1,
+        "rgb(0, 109, 52)": 2,
+        "rgb(148, 163, 184)": 2,
+        "rgb(0, 0, 0)": 1
+      },
+      "bg": {
+        "rgb(255, 255, 255)": 14,
+        "rgb(0, 5, 146)": 3,
+        "rgb(246, 243, 242)": 8,
+        "rgb(224, 224, 255)": 6,
+        "rgb(98, 255, 149)": 1,
+        "rgb(255, 218, 214)": 1,
+        "rgb(84, 253, 143)": 1,
+        "rgb(229, 226, 225)": 3,
+        "rgb(0, 109, 52)": 1,
+        "rgb(0, 82, 38)": 1,
+        "rgb(21, 20, 20)": 1
+      },
+      "border": {
+        "rgb(240, 237, 237)": 3,
+        "lab(1.91922 0 0 / 0.1)": 1,
+        "rgb(229, 226, 225)": 19,
+        "rgb(0, 5, 146)": 1,
+        "oklab(0.999994 0.0000455678 0.0000200868 / 0.1)": 1
+      }
+    },
+    "fontSizes": {
+      "16px": 149,
+      "20px": 8,
+      "14px": 11,
+      "12px": 5,
+      "32px": 1,
+      "18px": 8,
+      "28px": 5,
+      "10px": 14,
+      "9px": 29,
+      "11px": 2,
+      "8px": 8,
+      "24px": 1,
+      "22px": 1
+    },
+    "fontWeights": {
+      "400": 184,
+      "500": 13,
+      "600": 5,
+      "700": 40
+    },
+    "lineHeights": {
+      "24px": 135,
+      "28px": 13,
+      "20px": 18,
+      "18px": 1,
+      "40.32px": 1,
+      "29px": 3,
+      "42px": 2,
+      "26px": 3,
+      "16px": 8,
+      "15px": 11,
+      "48px": 1,
+      "13.5px": 29,
+      "17px": 1,
+      "35px": 1,
+      "12px": 8,
+      "16.5px": 1,
+      "54px": 1,
+      "27px": 3,
+      "36px": 1,
+      "23px": 1
+    },
+    "letterSpacings": {
+      "0.7px": 1,
+      "2px": 1,
+      "1.2px": 1,
+      "1px": 2,
+      "0.5px": 1
+    },
+    "paddings": {},
+    "margins": {},
+    "gaps": {},
+    "borderRadii": {
+      "12px": 1,
+      "2px": 10
+    },
+    "headings": [
+      {
+        "tag": "h1",
+        "text": "How It Works",
+        "fontSize": "32px",
+        "fontWeight": "400",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "40.32px",
+        "letterSpacing": "normal",
+        "marginBottom": "0px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h2",
+        "text": "The Data Pipeline",
+        "fontSize": "28px",
+        "fontWeight": "400",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "42px",
+        "letterSpacing": "normal",
+        "marginBottom": "64px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h3",
+        "text": "Data Acquisition",
+        "fontSize": "20px",
+        "fontWeight": "700",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "28px",
+        "letterSpacing": "normal",
+        "marginBottom": "0px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h3",
+        "text": "AI-Powered Filtering",
+        "fontSize": "20px",
+        "fontWeight": "700",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "28px",
+        "letterSpacing": "normal",
+        "marginBottom": "0px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h3",
+        "text": "Institutional Analysis",
+        "fontSize": "20px",
+        "fontWeight": "700",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "28px",
+        "letterSpacing": "normal",
+        "marginBottom": "0px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h2",
+        "text": "Instant Delivery",
+        "fontSize": "28px",
+        "fontWeight": "400",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "42px",
+        "letterSpacing": "normal",
+        "marginBottom": "0px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h2",
+        "text": "The Technology Stack",
+        "fontSize": "28px",
+        "fontWeight": "400",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "48px",
+        "letterSpacing": "normal",
+        "marginBottom": "80px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h4",
+        "text": "SEC EDGAR Feed",
+        "fontSize": "16px",
+        "fontWeight": "700",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "28px",
+        "letterSpacing": "normal",
+        "marginBottom": "0px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h4",
+        "text": "Neural Sentiment",
+        "fontSize": "16px",
+        "fontWeight": "700",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "28px",
+        "letterSpacing": "normal",
+        "marginBottom": "0px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h4",
+        "text": "Backtesting Engine",
+        "fontSize": "16px",
+        "fontWeight": "700",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "28px",
+        "letterSpacing": "normal",
+        "marginBottom": "0px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h4",
+        "text": "Infrastructure",
+        "fontSize": "16px",
+        "fontWeight": "700",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "28px",
+        "letterSpacing": "normal",
+        "marginBottom": "0px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h2",
+        "text": "Institutional-Grade Backtesting",
+        "fontSize": "28px",
+        "fontWeight": "400",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "35px",
+        "letterSpacing": "normal",
+        "marginBottom": "0px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h2",
+        "text": "The 60-Second Journey",
+        "fontSize": "28px",
+        "fontWeight": "400",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "54px",
+        "letterSpacing": "normal",
+        "marginBottom": "0px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h2",
+        "text": "Get the edge you've been looking for.",
+        "fontSize": "24px",
+        "fontWeight": "400",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "36px",
+        "letterSpacing": "normal",
+        "marginBottom": "0px",
+        "marginTop": "0px"
+      }
+    ],
+    "buttons": [],
+    "sections": [
+      {
+        "tag": "section",
+        "width": 1440,
+        "bgColor": "rgb(246, 243, 242)",
+        "padding": "64px 72px"
+      },
+      {
+        "tag": "section",
+        "width": 1440,
+        "bgColor": "rgb(255, 255, 255)",
+        "padding": "96px 40px"
+      },
+      {
+        "tag": "section",
+        "width": 1440,
+        "bgColor": "rgb(255, 255, 255)",
+        "padding": "96px 72px"
+      },
+      {
+        "tag": "section",
+        "width": 1440,
+        "bgColor": "rgb(246, 243, 242)",
+        "padding": "96px 40px"
+      },
+      {
+        "tag": "section",
+        "width": 1440,
+        "bgColor": "rgb(255, 255, 255)",
+        "padding": "96px 72px"
+      },
+      {
+        "tag": "section",
+        "width": 1440,
+        "bgColor": "rgb(246, 243, 242)",
+        "padding": "128px 40px",
+        "border": "1px 0px 0px solid rgb(229, 226, 225)"
+      },
+      {
+        "tag": "section",
+        "width": 1440,
+        "bgColor": "rgb(0, 5, 146)",
+        "padding": "96px 40px"
+      }
+    ],
+    "containers": [
+      {
+        "tag": "div",
+        "width": 1440,
+        "bgColor": "rgb(246, 243, 242)",
+        "padding": "0px"
+      },
+      {
+        "tag": "div",
+        "width": 1200,
+        "bgColor": "rgba(0, 0, 0, 0)",
+        "padding": "0px 32px"
+      },
+      {
+        "tag": "div",
+        "width": 357,
+        "bgColor": "rgb(246, 243, 242)",
+        "padding": "44px 44px 70px",
+        "gap": "24px"
+      },
+      {
+        "tag": "div",
+        "width": 357,
+        "bgColor": "rgb(246, 243, 242)",
+        "padding": "44px 44px 70px",
+        "gap": "24px"
+      },
+      {
+        "tag": "div",
+        "width": 357,
+        "bgColor": "rgb(246, 243, 242)",
+        "padding": "44px 44px 70px",
+        "gap": "24px"
+      },
+      {
+        "tag": "div",
+        "width": 528,
+        "bgColor": "rgb(255, 255, 255)",
+        "padding": "32px",
+        "gap": "32px",
+        "border": "1px solid lab(1.91922 0 0 / 0.1)"
+      },
+      {
+        "tag": "div",
+        "width": 1200,
+        "bgColor": "rgba(0, 0, 0, 0)",
+        "padding": "0px 32px"
+      },
+      {
+        "tag": "div",
+        "width": 528,
+        "bgColor": "rgb(246, 243, 242)",
+        "padding": "40px",
+        "gap": "32px",
+        "border": "1px solid rgb(229, 226, 225)"
+      },
+      {
+        "tag": "div",
+        "width": 1200,
+        "bgColor": "rgba(0, 0, 0, 0)",
+        "padding": "0px 40px"
+      }
+    ]
+  },
+  {
+    "page": "methodology",
+    "fonts": {
+      "Inter, \"Inter Fallback\"": 122,
+      "Montaga, \"Montaga Fallback\"": 15
+    },
+    "colors": {
+      "text": {
+        "rgb(28, 27, 27)": 109,
+        "rgb(255, 255, 255)": 5,
+        "rgb(148, 163, 184)": 2,
+        "rgb(69, 69, 86)": 14,
+        "rgb(0, 5, 146)": 7
+      },
+      "bg": {
+        "rgb(255, 255, 255)": 5,
+        "rgb(0, 5, 146)": 5,
+        "rgb(246, 243, 242)": 9,
+        "rgb(229, 226, 225)": 1,
+        "rgb(21, 20, 20)": 1
+      },
+      "border": {
+        "rgb(240, 237, 237)": 1,
+        "oklab(0 0 0 / 0.1)": 3,
+        "rgb(229, 226, 225)": 3,
+        "rgb(246, 243, 242)": 4,
+        "rgb(0, 5, 146)": 1,
+        "oklab(0.999994 0.0000455678 0.0000200868 / 0.1)": 1
+      }
+    },
+    "fontSizes": {
+      "16px": 94,
+      "20px": 10,
+      "14px": 11,
+      "12px": 8,
+      "39px": 1,
+      "32px": 1,
+      "24px": 6,
+      "26px": 1,
+      "18px": 3,
+      "22px": 1,
+      "10px": 1
+    },
+    "fontWeights": {
+      "400": 113,
+      "500": 5,
+      "600": 1,
+      "700": 18
+    },
+    "lineHeights": {
+      "24px": 78,
+      "28px": 10,
+      "20px": 19,
+      "18px": 1,
+      "60px": 1,
+      "32px": 5,
+      "36px": 8,
+      "23px": 4,
+      "16px": 5,
+      "26px": 4,
+      "29px": 2
+    },
+    "letterSpacings": {
+      "0.7px": 1,
+      "0.5px": 2,
+      "2px": 4
+    },
+    "paddings": {},
+    "margins": {},
+    "gaps": {},
+    "borderRadii": {
+      "3.35544e+07px": 4
+    },
+    "headings": [
+      {
+        "tag": "h1",
+        "text": "How We Analyze",
+        "fontSize": "39px",
+        "fontWeight": "400",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "60px",
+        "letterSpacing": "normal",
+        "marginBottom": "16px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h2",
+        "text": "Our Data Sources",
+        "fontSize": "32px",
+        "fontWeight": "400",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "36px",
+        "letterSpacing": "normal",
+        "marginBottom": "64px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h3",
+        "text": "SEC Edgar Filings",
+        "fontSize": "16px",
+        "fontWeight": "700",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "28px",
+        "letterSpacing": "normal",
+        "marginBottom": "16px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h3",
+        "text": "Financial Datasets API",
+        "fontSize": "16px",
+        "fontWeight": "700",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "28px",
+        "letterSpacing": "normal",
+        "marginBottom": "16px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h3",
+        "text": "Market Intelligence",
+        "fontSize": "16px",
+        "fontWeight": "700",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "28px",
+        "letterSpacing": "normal",
+        "marginBottom": "16px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h2",
+        "text": "Our Analysis Process",
+        "fontSize": "26px",
+        "fontWeight": "700",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "36px",
+        "letterSpacing": "normal",
+        "marginBottom": "80px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h3",
+        "text": "Data Collection",
+        "fontSize": "20px",
+        "fontWeight": "700",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "32px",
+        "letterSpacing": "normal",
+        "marginBottom": "8px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h3",
+        "text": "AI Research Agent",
+        "fontSize": "20px",
+        "fontWeight": "700",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "32px",
+        "letterSpacing": "normal",
+        "marginBottom": "8px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h3",
+        "text": "Article Generation",
+        "fontSize": "20px",
+        "fontWeight": "700",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "32px",
+        "letterSpacing": "normal",
+        "marginBottom": "8px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h3",
+        "text": "Quality Gate",
+        "fontSize": "20px",
+        "fontWeight": "700",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "32px",
+        "letterSpacing": "normal",
+        "marginBottom": "8px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h2",
+        "text": "We Use AI — And We're Transparent About It",
+        "fontSize": "24px",
+        "fontWeight": "700",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "36px",
+        "letterSpacing": "normal",
+        "marginBottom": "32px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h2",
+        "text": "Limitations",
+        "fontSize": "24px",
+        "fontWeight": "700",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "36px",
+        "letterSpacing": "normal",
+        "marginBottom": "40px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h2",
+        "text": "Verify Our Data",
+        "fontSize": "24px",
+        "fontWeight": "700",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "36px",
+        "letterSpacing": "normal",
+        "marginBottom": "16px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h3",
+        "text": "SEC EDGAR Database",
+        "fontSize": "20px",
+        "fontWeight": "700",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "28px",
+        "letterSpacing": "normal",
+        "marginBottom": "0px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h3",
+        "text": "Financial Datasets API",
+        "fontSize": "20px",
+        "fontWeight": "700",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "28px",
+        "letterSpacing": "normal",
+        "marginBottom": "0px",
+        "marginTop": "0px"
+      }
+    ],
+    "buttons": [],
+    "sections": [
+      {
+        "tag": "section",
+        "width": 1440,
+        "bgColor": "rgb(246, 243, 242)",
+        "padding": "128px 32px"
+      },
+      {
+        "tag": "section",
+        "width": 1440,
+        "bgColor": "rgb(255, 255, 255)",
+        "padding": "96px 32px"
+      },
+      {
+        "tag": "section",
+        "width": 1440,
+        "bgColor": "rgb(246, 243, 242)",
+        "padding": "96px 32px"
+      },
+      {
+        "tag": "section",
+        "width": 1440,
+        "bgColor": "rgb(255, 255, 255)",
+        "padding": "96px 32px"
+      },
+      {
+        "tag": "section",
+        "width": 1440,
+        "bgColor": "rgb(246, 243, 242)",
+        "padding": "96px 32px"
+      },
+      {
+        "tag": "section",
+        "width": 1440,
+        "bgColor": "rgb(255, 255, 255)",
+        "padding": "96px 32px"
+      }
+    ],
+    "containers": [
+      {
+        "tag": "div",
+        "width": 1440,
+        "bgColor": "rgb(246, 243, 242)",
+        "padding": "0px"
+      },
+      {
+        "tag": "div",
+        "width": 345,
+        "bgColor": "rgb(246, 243, 242)",
+        "padding": "40px",
+        "border": "1px solid oklab(0 0 0 / 0.1)"
+      },
+      {
+        "tag": "div",
+        "width": 345,
+        "bgColor": "rgb(246, 243, 242)",
+        "padding": "40px",
+        "border": "1px solid oklab(0 0 0 / 0.1)"
+      },
+      {
+        "tag": "div",
+        "width": 345,
+        "bgColor": "rgb(246, 243, 242)",
+        "padding": "40px",
+        "border": "1px solid oklab(0 0 0 / 0.1)"
+      },
+      {
+        "tag": "div",
+        "width": 836,
+        "bgColor": "rgba(0, 0, 0, 0)",
+        "padding": "0px 0px 0px 64px",
+        "border": "0px 0px 0px 1px solid rgb(0, 5, 146)"
+      },
+      {
+        "tag": "div",
+        "width": 900,
+        "bgColor": "rgb(255, 255, 255)",
+        "padding": "48px"
+      },
+      {
+        "tag": "div",
+        "width": 1200,
+        "bgColor": "rgba(0, 0, 0, 0)",
+        "padding": "0px 40px"
+      }
+    ]
+  },
+  {
+    "page": "pricing",
+    "fonts": {
+      "Inter, \"Inter Fallback\"": 209,
+      "Montaga, \"Montaga Fallback\"": 4
+    },
+    "colors": {
+      "text": {
+        "rgb(28, 27, 27)": 169,
+        "rgb(255, 255, 255)": 10,
+        "rgb(69, 69, 86)": 15,
+        "rgb(0, 5, 146)": 3,
+        "rgb(148, 163, 184)": 7,
+        "rgb(198, 197, 217)": 8,
+        "rgb(0, 42, 94)": 1
+      },
+      "bg": {
+        "rgb(255, 255, 255)": 13,
+        "rgb(0, 5, 146)": 7,
+        "rgb(246, 243, 242)": 4,
+        "rgb(0, 109, 52)": 2,
+        "rgb(245, 245, 245)": 4,
+        "rgb(21, 20, 20)": 1
+      },
+      "border": {
+        "rgb(240, 237, 237)": 9,
+        "rgb(229, 226, 225)": 2,
+        "rgb(0, 5, 146)": 1,
+        "rgb(246, 243, 242)": 8,
+        "oklab(0.999994 0.0000455678 0.0000200868 / 0.1)": 1
+      }
+    },
+    "fontSizes": {
+      "16px": 141,
+      "20px": 4,
+      "14px": 50,
+      "54px": 1,
+      "10px": 3,
+      "36px": 3,
+      "12px": 6,
+      "39px": 2,
+      "32px": 1,
+      "18px": 1,
+      "22px": 1
+    },
+    "fontWeights": {
+      "400": 189,
+      "500": 7,
+      "600": 3,
+      "700": 13,
+      "800": 1
+    },
+    "lineHeights": {
+      "24px": 132,
+      "28px": 6,
+      "20px": 50,
+      "52px": 1,
+      "40px": 4,
+      "15px": 1,
+      "16px": 8,
+      "36px": 2,
+      "21px": 8,
+      "23px": 1
+    },
+    "letterSpacings": {
+      "0.7px": 1,
+      "0.5px": 5
+    },
+    "paddings": {},
+    "margins": {},
+    "gaps": {},
+    "borderRadii": {
+      "2px": 3,
+      "3.35544e+07px": 4
+    },
+    "headings": [
+      {
+        "tag": "h1",
+        "text": "Simple Pricing",
+        "fontSize": "54px",
+        "fontWeight": "400",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "52px",
+        "letterSpacing": "normal",
+        "marginBottom": "24px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h2",
+        "text": "Compare features",
+        "fontSize": "39px",
+        "fontWeight": "400",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "36px",
+        "letterSpacing": "normal",
+        "marginBottom": "64px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h2",
+        "text": "Frequently Asked Questions",
+        "fontSize": "39px",
+        "fontWeight": "400",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "36px",
+        "letterSpacing": "normal",
+        "marginBottom": "64px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h2",
+        "text": "Ready to gain an information edge?",
+        "fontSize": "32px",
+        "fontWeight": "400",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "40px",
+        "letterSpacing": "normal",
+        "marginBottom": "24px",
+        "marginTop": "0px"
+      }
+    ],
+    "buttons": [
+      {
+        "text": "Start Pro Trial",
+        "fontSize": "14px",
+        "fontWeight": "700",
+        "bgColor": "rgb(0, 5, 146)",
+        "textColor": "rgb(255, 255, 255)",
+        "borderRadius": "0px",
+        "padding": "0px",
+        "fontFamily": "Inter"
+      }
+    ],
+    "sections": [
+      {
+        "tag": "section",
+        "width": 1440,
+        "bgColor": "rgb(246, 243, 242)",
+        "padding": "96px 32px",
+        "border": "0px 0px 1px solid rgb(240, 237, 237)"
+      },
+      {
+        "tag": "section",
+        "width": 1440,
+        "bgColor": "rgb(255, 255, 255)",
+        "padding": "48px 0px"
+      },
+      {
+        "tag": "section",
+        "width": 1440,
+        "bgColor": "rgb(255, 255, 255)",
+        "padding": "0px 32px 96px"
+      },
+      {
+        "tag": "section",
+        "width": 1440,
+        "bgColor": "rgb(246, 243, 242)",
+        "padding": "96px 32px"
+      },
+      {
+        "tag": "section",
+        "width": 1440,
+        "bgColor": "rgb(255, 255, 255)",
+        "padding": "96px 32px"
+      },
+      {
+        "tag": "section",
+        "width": 1440,
+        "bgColor": "rgb(0, 5, 146)",
+        "padding": "96px 32px"
+      }
+    ],
+    "containers": [
+      {
+        "tag": "div",
+        "width": 1440,
+        "bgColor": "rgb(246, 243, 242)",
+        "padding": "0px"
+      },
+      {
+        "tag": "div",
+        "width": 389,
+        "bgColor": "rgb(255, 255, 255)",
+        "padding": "40px",
+        "border": "1px solid rgb(240, 237, 237)"
+      },
+      {
+        "tag": "div",
+        "width": 389,
+        "bgColor": "rgb(255, 255, 255)",
+        "padding": "40px",
+        "border": "1px solid rgb(0, 5, 146)"
+      },
+      {
+        "tag": "div",
+        "width": 389,
+        "bgColor": "rgb(255, 255, 255)",
+        "padding": "40px",
+        "border": "1px solid rgb(240, 237, 237)"
+      },
+      {
+        "tag": "div",
+        "width": 1024,
+        "bgColor": "rgb(255, 255, 255)",
+        "padding": "0px"
+      },
+      {
+        "tag": "div",
+        "width": 1200,
+        "bgColor": "rgba(0, 0, 0, 0)",
+        "padding": "0px 40px"
+      }
+    ]
+  },
+  {
+    "page": "privacy",
+    "fonts": {
+      "Inter, \"Inter Fallback\"": 62,
+      "Montaga, \"Montaga Fallback\"": 7
+    },
+    "colors": {
+      "text": {
+        "rgb(28, 27, 27)": 55,
+        "rgb(255, 255, 255)": 5,
+        "rgb(148, 163, 184)": 2,
+        "rgb(69, 69, 86)": 6,
+        "rgb(0, 5, 146)": 1
+      },
+      "bg": {
+        "rgb(255, 255, 255)": 2,
+        "rgb(0, 5, 146)": 1,
+        "rgb(246, 243, 242)": 2,
+        "rgb(21, 20, 20)": 1
+      },
+      "border": {
+        "rgb(240, 237, 237)": 1,
+        "oklab(0.999994 0.0000455678 0.0000200868 / 0.1)": 1
+      }
+    },
+    "fontSizes": {
+      "16px": 56,
+      "20px": 3,
+      "14px": 7,
+      "54px": 1,
+      "22px": 1,
+      "10px": 1
+    },
+    "fontWeights": {
+      "400": 56,
+      "500": 5,
+      "600": 1,
+      "700": 7
+    },
+    "lineHeights": {
+      "24px": 34,
+      "28px": 4,
+      "20px": 13,
+      "59.4px": 1,
+      "21px": 1,
+      "32px": 6,
+      "26px": 7,
+      "23px": 1,
+      "16px": 2
+    },
+    "letterSpacings": {
+      "0.7px": 1,
+      "0.5px": 1
+    },
+    "paddings": {},
+    "margins": {},
+    "gaps": {},
+    "borderRadii": {},
+    "headings": [
+      {
+        "tag": "h1",
+        "text": "Privacy Policy",
+        "fontSize": "54px",
+        "fontWeight": "400",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "59.4px",
+        "letterSpacing": "normal",
+        "marginBottom": "16px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h2",
+        "text": "1. Information We Collect",
+        "fontSize": "16px",
+        "fontWeight": "700",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "32px",
+        "letterSpacing": "normal",
+        "marginBottom": "12px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h2",
+        "text": "2. How We Use Your Information",
+        "fontSize": "16px",
+        "fontWeight": "700",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "32px",
+        "letterSpacing": "normal",
+        "marginBottom": "12px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h2",
+        "text": "3. Data Security",
+        "fontSize": "16px",
+        "fontWeight": "700",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "32px",
+        "letterSpacing": "normal",
+        "marginBottom": "12px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h2",
+        "text": "4. Cookies & Tracking",
+        "fontSize": "16px",
+        "fontWeight": "700",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "32px",
+        "letterSpacing": "normal",
+        "marginBottom": "12px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h2",
+        "text": "5. Your Rights",
+        "fontSize": "16px",
+        "fontWeight": "700",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "32px",
+        "letterSpacing": "normal",
+        "marginBottom": "12px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h2",
+        "text": "6. Contact",
+        "fontSize": "16px",
+        "fontWeight": "700",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "32px",
+        "letterSpacing": "normal",
+        "marginBottom": "12px",
+        "marginTop": "0px"
+      }
+    ],
+    "buttons": [],
+    "sections": [
+      {
+        "tag": "section",
+        "width": 1440,
+        "bgColor": "rgb(246, 243, 242)",
+        "padding": "128px 32px"
+      },
+      {
+        "tag": "section",
+        "width": 1440,
+        "bgColor": "rgb(255, 255, 255)",
+        "padding": "96px 32px"
+      }
+    ],
+    "containers": [
+      {
+        "tag": "div",
+        "width": 1440,
+        "bgColor": "rgb(246, 243, 242)",
+        "padding": "0px"
+      },
+      {
+        "tag": "div",
+        "width": 1200,
+        "bgColor": "rgba(0, 0, 0, 0)",
+        "padding": "0px 40px"
+      }
+    ]
+  },
+  {
+    "page": "reports",
+    "fonts": {
+      "Inter, \"Inter Fallback\"": 238,
+      "Montaga, \"Montaga Fallback\"": 12
+    },
+    "colors": {
+      "text": {
+        "rgb(28, 27, 27)": 158,
+        "rgb(255, 255, 255)": 9,
+        "rgb(69, 69, 86)": 72,
+        "rgb(148, 163, 184)": 2,
+        "rgb(0, 5, 146)": 9
+      },
+      "bg": {
+        "rgb(255, 255, 255)": 13,
+        "rgb(0, 5, 146)": 4,
+        "rgb(246, 243, 242)": 2,
+        "rgb(0, 210, 106)": 1,
+        "rgb(240, 237, 237)": 9,
+        "rgb(21, 20, 20)": 1
+      },
+      "border": {
+        "rgb(240, 237, 237)": 11,
+        "rgb(229, 226, 225)": 1,
+        "rgb(0, 5, 146)": 11,
+        "rgba(0, 0, 0, 0)": 4,
+        "oklab(0.999994 0.0000455678 0.0000200868 / 0.1)": 1
+      }
+    },
+    "fontSizes": {
+      "16px": 128,
+      "20px": 3,
+      "14px": 18,
+      "12px": 64,
+      "54px": 1,
+      "18px": 2,
+      "10px": 2,
+      "11px": 10,
+      "32px": 1,
+      "36px": 1,
+      "22px": 10,
+      "24px": 9,
+      "30px": 1
+    },
+    "fontWeights": {
+      "400": 201,
+      "500": 17,
+      "600": 2,
+      "700": 29,
+      "900": 1
+    },
+    "lineHeights": {
+      "24px": 118,
+      "28px": 14,
+      "20px": 25,
+      "18px": 10,
+      "52px": 1,
+      "29px": 1,
+      "15px": 2,
+      "36px": 1,
+      "40px": 1,
+      "16px": 65,
+      "32px": 9,
+      "42px": 1,
+      "26px": 1,
+      "23px": 1
+    },
+    "letterSpacings": {
+      "0.7px": 1,
+      "0.6px": 1,
+      "0.55px": 1,
+      "0.5px": 1
+    },
+    "paddings": {},
+    "margins": {},
+    "gaps": {},
+    "borderRadii": {
+      "2px": 10
+    },
+    "headings": [
+      {
+        "tag": "h1",
+        "text": "Deep Dive Reports",
+        "fontSize": "54px",
+        "fontWeight": "400",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "52px",
+        "letterSpacing": "normal",
+        "marginBottom": "0px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h2",
+        "text": "Magnificent 7 Report",
+        "fontSize": "32px",
+        "fontWeight": "400",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "36px",
+        "letterSpacing": "normal",
+        "marginBottom": "12px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h3",
+        "text": "NVIDIA Deep Dive",
+        "fontSize": "22px",
+        "fontWeight": "400",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "28px",
+        "letterSpacing": "normal",
+        "marginBottom": "4px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h3",
+        "text": "Apple Ecosystem Value",
+        "fontSize": "22px",
+        "fontWeight": "400",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "28px",
+        "letterSpacing": "normal",
+        "marginBottom": "4px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h3",
+        "text": "Tesla Full Self-Driving",
+        "fontSize": "22px",
+        "fontWeight": "400",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "28px",
+        "letterSpacing": "normal",
+        "marginBottom": "4px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h3",
+        "text": "Microsoft Cloud Edge",
+        "fontSize": "22px",
+        "fontWeight": "400",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "28px",
+        "letterSpacing": "normal",
+        "marginBottom": "4px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h3",
+        "text": "Amazon Logistics Alpha",
+        "fontSize": "22px",
+        "fontWeight": "400",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "28px",
+        "letterSpacing": "normal",
+        "marginBottom": "4px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h3",
+        "text": "S&P 500 Sector Weights",
+        "fontSize": "22px",
+        "fontWeight": "400",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "28px",
+        "letterSpacing": "normal",
+        "marginBottom": "4px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h3",
+        "text": "AI & Semi Sector Outlook",
+        "fontSize": "22px",
+        "fontWeight": "400",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "28px",
+        "letterSpacing": "normal",
+        "marginBottom": "4px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h3",
+        "text": "Dividend Kings 2026",
+        "fontSize": "22px",
+        "fontWeight": "400",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "28px",
+        "letterSpacing": "normal",
+        "marginBottom": "4px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h3",
+        "text": "Healthcare Trends",
+        "fontSize": "22px",
+        "fontWeight": "400",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "28px",
+        "letterSpacing": "normal",
+        "marginBottom": "4px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h2",
+        "text": "Need a Custom Report?",
+        "fontSize": "30px",
+        "fontWeight": "400",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "42px",
+        "letterSpacing": "normal",
+        "marginBottom": "16px",
+        "marginTop": "0px"
+      }
+    ],
+    "buttons": [],
+    "sections": [
+      {
+        "tag": "section",
+        "width": 1440,
+        "bgColor": "rgb(246, 243, 242)",
+        "padding": "0px 48px"
+      },
+      {
+        "tag": "section",
+        "width": 1440,
+        "bgColor": "rgba(0, 0, 0, 0)",
+        "padding": "96px 48px"
+      },
+      {
+        "tag": "section",
+        "width": 1440,
+        "bgColor": "rgba(0, 0, 0, 0)",
+        "padding": "0px 48px 96px"
+      },
+      {
+        "tag": "section",
+        "width": 1440,
+        "bgColor": "rgb(255, 255, 255)",
+        "padding": "60px 32px"
+      }
+    ],
+    "containers": [
+      {
+        "tag": "div",
+        "width": 1440,
+        "bgColor": "rgb(246, 243, 242)",
+        "padding": "0px"
+      },
+      {
+        "tag": "div",
+        "width": 672,
+        "bgColor": "rgba(0, 0, 0, 0)",
+        "padding": "80px 0px",
+        "gap": "15px"
+      },
+      {
+        "tag": "div",
+        "width": 1184,
+        "bgColor": "rgb(255, 255, 255)",
+        "padding": "40px",
+        "gap": "48px",
+        "border": "1px solid rgb(240, 237, 237)"
+      },
+      {
+        "tag": "div",
+        "width": 302,
+        "bgColor": "rgb(240, 237, 237)",
+        "padding": "0px"
+      },
+      {
+        "tag": "div",
+        "width": 379,
+        "bgColor": "rgb(255, 255, 255)",
+        "padding": "32px"
+      },
+      {
+        "tag": "div",
+        "width": 379,
+        "bgColor": "rgb(255, 255, 255)",
+        "padding": "32px"
+      },
+      {
+        "tag": "div",
+        "width": 379,
+        "bgColor": "rgb(255, 255, 255)",
+        "padding": "32px"
+      },
+      {
+        "tag": "div",
+        "width": 379,
+        "bgColor": "rgb(255, 255, 255)",
+        "padding": "32px"
+      },
+      {
+        "tag": "div",
+        "width": 379,
+        "bgColor": "rgb(255, 255, 255)",
+        "padding": "32px"
+      },
+      {
+        "tag": "div",
+        "width": 379,
+        "bgColor": "rgb(255, 255, 255)",
+        "padding": "32px"
+      },
+      {
+        "tag": "div",
+        "width": 379,
+        "bgColor": "rgb(255, 255, 255)",
+        "padding": "32px"
+      },
+      {
+        "tag": "div",
+        "width": 379,
+        "bgColor": "rgb(255, 255, 255)",
+        "padding": "32px"
+      },
+      {
+        "tag": "div",
+        "width": 379,
+        "bgColor": "rgb(255, 255, 255)",
+        "padding": "32px"
+      },
+      {
+        "tag": "div",
+        "width": 672,
+        "bgColor": "rgba(0, 0, 0, 0)",
+        "padding": "16px 0px 0px",
+        "gap": "16px"
+      },
+      {
+        "tag": "div",
+        "width": 1200,
+        "bgColor": "rgba(0, 0, 0, 0)",
+        "padding": "0px 40px"
+      }
+    ]
+  },
+  {
+    "page": "terms",
+    "fonts": {
+      "Inter, \"Inter Fallback\"": 66,
+      "Montaga, \"Montaga Fallback\"": 9
+    },
+    "colors": {
+      "text": {
+        "rgb(28, 27, 27)": 59,
+        "rgb(255, 255, 255)": 5,
+        "rgb(148, 163, 184)": 2,
+        "rgb(69, 69, 86)": 8,
+        "rgb(0, 5, 146)": 1
+      },
+      "bg": {
+        "rgb(255, 255, 255)": 2,
+        "rgb(0, 5, 146)": 1,
+        "rgb(246, 243, 242)": 2,
+        "rgb(21, 20, 20)": 1
+      },
+      "border": {
+        "rgb(240, 237, 237)": 1,
+        "oklab(0.999994 0.0000455678 0.0000200868 / 0.1)": 1
+      }
+    },
+    "fontSizes": {
+      "16px": 62,
+      "20px": 3,
+      "14px": 7,
+      "54px": 1,
+      "22px": 1,
+      "10px": 1
+    },
+    "fontWeights": {
+      "400": 60,
+      "500": 5,
+      "600": 1,
+      "700": 9
+    },
+    "lineHeights": {
+      "24px": 36,
+      "28px": 4,
+      "20px": 13,
+      "59.4px": 1,
+      "21px": 1,
+      "32px": 8,
+      "26px": 9,
+      "23px": 1,
+      "16px": 2
+    },
+    "letterSpacings": {
+      "0.7px": 1,
+      "0.5px": 1
+    },
+    "paddings": {},
+    "margins": {},
+    "gaps": {},
+    "borderRadii": {},
+    "headings": [
+      {
+        "tag": "h1",
+        "text": "Terms of Service",
+        "fontSize": "54px",
+        "fontWeight": "400",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "59.4px",
+        "letterSpacing": "normal",
+        "marginBottom": "16px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h2",
+        "text": "1. Acceptance of Terms",
+        "fontSize": "16px",
+        "fontWeight": "700",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "32px",
+        "letterSpacing": "normal",
+        "marginBottom": "12px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h2",
+        "text": "2. Service Description",
+        "fontSize": "16px",
+        "fontWeight": "700",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "32px",
+        "letterSpacing": "normal",
+        "marginBottom": "12px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h2",
+        "text": "3. Not Financial Advice",
+        "fontSize": "16px",
+        "fontWeight": "700",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "32px",
+        "letterSpacing": "normal",
+        "marginBottom": "12px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h2",
+        "text": "4. Account Terms",
+        "fontSize": "16px",
+        "fontWeight": "700",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "32px",
+        "letterSpacing": "normal",
+        "marginBottom": "12px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h2",
+        "text": "5. Subscription & Billing",
+        "fontSize": "16px",
+        "fontWeight": "700",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "32px",
+        "letterSpacing": "normal",
+        "marginBottom": "12px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h2",
+        "text": "6. Intellectual Property",
+        "fontSize": "16px",
+        "fontWeight": "700",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "32px",
+        "letterSpacing": "normal",
+        "marginBottom": "12px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h2",
+        "text": "7. Limitation of Liability",
+        "fontSize": "16px",
+        "fontWeight": "700",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "32px",
+        "letterSpacing": "normal",
+        "marginBottom": "12px",
+        "marginTop": "0px"
+      },
+      {
+        "tag": "h2",
+        "text": "8. Contact",
+        "fontSize": "16px",
+        "fontWeight": "700",
+        "fontFamily": "Montaga",
+        "color": "rgb(28, 27, 27)",
+        "lineHeight": "32px",
+        "letterSpacing": "normal",
+        "marginBottom": "12px",
+        "marginTop": "0px"
+      }
+    ],
+    "buttons": [],
+    "sections": [
+      {
+        "tag": "section",
+        "width": 1440,
+        "bgColor": "rgb(246, 243, 242)",
+        "padding": "128px 32px"
+      },
+      {
+        "tag": "section",
+        "width": 1440,
+        "bgColor": "rgb(255, 255, 255)",
+        "padding": "96px 32px"
+      }
+    ],
+    "containers": [
+      {
+        "tag": "div",
+        "width": 1440,
+        "bgColor": "rgb(246, 243, 242)",
+        "padding": "0px"
+      },
+      {
+        "tag": "div",
+        "width": 1200,
+        "bgColor": "rgba(0, 0, 0, 0)",
+        "padding": "0px 40px"
+      }
+    ]
+  }
+]

@@ -1,0 +1,26 @@
+{
+  "plugin_root": "C:/Users/rafca/.claude/plugins/cache/piercelamb-deep-plan",
+  "planning_dir": "c:/Users/rafca/OneDrive/Desktop/Toxic or Nah/ryan_cole/insiderbuying-planning/04-sec-alerts-system",
+  "initial_file": "c:/Users/rafca/OneDrive/Desktop/Toxic or Nah/ryan_cole/insiderbuying-planning/04-sec-alerts-system/spec.md",
+  "review_mode": "external_llm",
+  "context": {
+    "check_enabled": true
+  },
+  "vertex_ai": {
+    "project": null,
+    "location": null
+  },
+  "external_review": {
+    "alert_if_missing": true,
+    "feedback_iterations": 1
+  },
+  "models": {
+    "gemini": "gemini-3-pro-preview",
+    "chatgpt": "o3"
+  },
+  "llm_client": {
+    "timeout_seconds": 120,
+    "max_retries": 3,
+    "retry_codes": [429, 500, 503]
+  }
+}

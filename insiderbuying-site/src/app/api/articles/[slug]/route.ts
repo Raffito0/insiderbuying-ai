@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const NOCODB_API_URL = process.env.NOCODB_API_URL!;
-const NOCODB_READONLY_TOKEN = process.env.NOCODB_READONLY_TOKEN!;
+const NOCODB_API_URL = process.env.NOCODB_API_URL || "";
+const NOCODB_READONLY_TOKEN = process.env.NOCODB_READONLY_TOKEN || "";
 
 export async function GET(
   request: NextRequest,

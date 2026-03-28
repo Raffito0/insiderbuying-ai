@@ -1,0 +1,72 @@
+{
+  "plugin_root": "C:\\Users\\rafca\\.claude\\plugins\\cache\\piercelamb-deep-implement",
+  "sections_dir": "C:\\Users\\rafca\\OneDrive\\Desktop\\Toxic or Nah\\ryan_cole\\insiderbuying-planning\\04-sec-alerts-system\\sections",
+  "target_dir": "C:\\Users\\rafca\\OneDrive\\Desktop\\Toxic or Nah\\ryan_cole\\insiderbuying-site",
+  "state_dir": "C:\\Users\\rafca\\OneDrive\\Desktop\\Toxic or Nah\\ryan_cole\\insiderbuying-planning\\04-sec-alerts-system\\implementation",
+  "git_root": "C:\\Users\\rafca\\OneDrive\\Desktop\\Toxic or Nah\\ryan_cole",
+  "commit_style": "simple",
+  "test_command": "uv run pytest",
+  "sections": [
+    "section-00-schema-migration",
+    "section-01-airtable-setup",
+    "section-02-sec-monitor",
+    "section-03-score-alert",
+    "section-04-analyze-alert",
+    "section-05-write-persistence",
+    "section-06-deliver-alert",
+    "section-07-n8n-workflow-config",
+    "section-08-frontend-blur",
+    "section-09-frontend-onesignal"
+  ],
+  "sections_state": {
+    "section-00-schema-migration": {
+      "status": "complete",
+      "commit_hash": "a701876c36af228f20d6caa973d110de2e782b60"
+    },
+    "section-01-airtable-setup": {
+      "status": "complete",
+      "commit_hash": "105fe298c0b9abd94c76231a42f9417d07b39bb5"
+    },
+    "section-02-sec-monitor": {
+      "status": "complete",
+      "commit_hash": "c454f8e"
+    },
+    "section-03-score-alert": {
+      "status": "complete",
+      "commit_hash": "29fc18f"
+    },
+    "section-04-analyze-alert": {
+      "status": "complete",
+      "commit_hash": "7426f36"
+    },
+    "section-05-write-persistence": {
+      "status": "complete",
+      "commit_hash": "2e39860"
+    },
+    "section-06-deliver-alert": {
+      "status": "complete",
+      "commit_hash": "2d82635"
+    },
+    "section-07-n8n-workflow-config": {
+      "status": "complete",
+      "commit_hash": "e6201d1"
+    },
+    "section-08-frontend-blur": {
+      "status": "complete",
+      "commit_hash": "8608ff4"
+    },
+    "section-09-frontend-onesignal": {
+      "status": "complete",
+      "commit_hash": "c1ee205"
+    }
+  },
+  "pre_commit": {
+    "present": false,
+    "type": "none",
+    "config_file": null,
+    "native_hook": null,
+    "may_modify_files": false,
+    "detected_formatters": []
+  },
+  "created_at": "2026-03-27T22:35:47.181376+00:00"
+}
