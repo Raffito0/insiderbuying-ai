@@ -32,6 +32,8 @@
   },
   "devDependencies": {
     "@netlify/plugin-nextjs": "^5.15.9",
+    "@stackbit/cms-git": "^1.0.37",
+    "@stackbit/types": "^2.1.15",
     "@tailwindcss/postcss": "^4.2.2",
     "@types/node": "^25.5.0",
     "@types/react": "^19.2.14",
