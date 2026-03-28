@@ -112,6 +112,17 @@ describe('SEO Score (step 8.7)', () => {
     expect(result.score).toBeLessThan(30);
     expect(result.pass).toBe(false);
   });
+
+  test('pass=false blocks publishing (score < 70 is a hard gate)', () => {
+    // Verify the contract: pass is strictly boolean based on >= 70
+    const low = seoScore(makeArticle({ body_html: '<p>short</p>', title: 'x', meta_description: 'x', slug: '' }), 'test');
+    expect(low.pass).toBe(false);
+    expect(low.score).toBeLessThan(70);
+
+    const high = seoScore(makeArticle(), 'NVDA insider buying');
+    expect(high.pass).toBe(true);
+    expect(high.score).toBeGreaterThanOrEqual(70);
+  });
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -181,6 +192,21 @@ describe('AI Detection Score (step 8.8)', () => {
     const result = aiDetectionScore(article);
     expect(result.score).toBe(0);
     expect(result.pass).toBe(true);
+  });
+
+  test('pass=false blocks publishing (score > 40 is a hard gate)', () => {
+    // Heavily AI-saturated text with uniform sentences and repeated openers
+    const aiBody = `
+      <p>Additionally, this comprehensive analysis delves into the intricate interplay of market forces. The pivotal shift underscores the crucial role of fostering innovation. Furthermore, the robust landscape showcases noteworthy developments.</p>
+      <p>The nuanced tapestry of financial metrics highlights the multifaceted nature of this groundbreaking paradigm. The meticulous approach garnered attention while emphasizing the vibrant ecosystem and enhancing overall outcomes.</p>
+      <p>The comprehensive framework fosters alignment and showcases the intricate dynamics. The pivotal developments underscore the crucial importance of delving into nuanced territories.</p>
+      <p>The robust analysis additionally reveals comprehensive patterns. The noteworthy findings furthermore demonstrate pivotal insights. The crucial data moreover highlights enhanced understanding.</p>
+      <p>The landscape of opportunities showcases vibrant potential. The testament to innovation underscores multifaceted growth. The paradigm of excellence fosters comprehensive development.</p>
+      <p>The intricate interplay of factors furthermore garners attention. The comprehensive tapestry of results additionally demonstrates pivotal achievements. The crucial framework moreover highlights robust outcomes.</p>
+    `;
+    const result = aiDetectionScore(makeArticle({ body_html: aiBody }));
+    expect(result.pass).toBe(false);
+    expect(result.score).toBeGreaterThan(40);
   });
 });
 

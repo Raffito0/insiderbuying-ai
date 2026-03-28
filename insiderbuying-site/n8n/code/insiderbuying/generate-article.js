@@ -1039,14 +1039,37 @@ async function generateArticle(input, helpers) {
     const textOnly = (article.body_html || '').replace(/<[^>]+>/g, '');
     article.word_count = textOnly.split(/\s+/).filter(Boolean).length;
 
-    // Step 8: Quality gate
+    // Step 8: Quality gate (14 checks)
     const gate = qualityGate(article, keyword.keyword, params.targetLength, keyword.article_type);
-    if (gate.pass) break;
+
+    // Step 8.7: SEO Score (must be >= 70)
+    const seo = seoScore(article, keyword.keyword);
+    article._seoScore = seo.score;
+    article._seoBreakdown = seo.breakdown;
+
+    // Step 8.8: AI Detection Score (must be <= 40)
+    const aiCheck = aiDetectionScore(article);
+    article._aiDetectionScore = aiCheck.score;
+
+    // Collect ALL failures across all 3 gates
+    const allFailures = [...gate.failures];
+    if (!seo.pass) {
+      const weakAreas = Object.entries(seo.breakdown)
+        .filter(([, v]) => v < 10)
+        .map(([k]) => k);
+      allFailures.push(`SEO score ${seo.score}/100 (weak: ${weakAreas.join(', ') || 'overall'}). Improve keyword density to 1-2.5%, add 3+ internal links, use 3+ H2s with keyword, target Flesch-Kincaid grade 8-10`);
+    }
+    if (!aiCheck.pass) {
+      allFailures.push(`AI detection risk ${aiCheck.score}/100: ${aiCheck.signals.join('; ')}. Vary sentence lengths, avoid starting paragraphs with the same word, reduce AI vocabulary (additionally/furthermore/crucial/comprehensive/robust/noteworthy), remove em dashes, avoid "not only...but" constructions`);
+    }
+
+    // All 3 gates passed → article is top-tier, break out
+    if (allFailures.length === 0) break;
 
     if (attempt === MAX_RETRIES) {
       // Save as error after exhausting retries
       article.status = 'error';
-      article.confidence_notes = `Quality gate failures: ${gate.failures.join('; ')}`;
+      article.confidence_notes = `Gate failures: ${allFailures.join('; ')}`;
       await nocodbPost('/Articles', {
         slug: article.slug || `error-${Date.now()}`,
         title_text: article.title || 'Quality gate failure',
@@ -1054,6 +1077,8 @@ async function generateArticle(input, helpers) {
         status: 'error',
         quality_gate_pass: false,
         confidence_notes: article.confidence_notes,
+        seo_score: seo.score,
+        ai_detection_score: aiCheck.score,
         blog,
       }, nocodbOpts.token, nocodbOpts);
 
@@ -1063,28 +1088,10 @@ async function generateArticle(input, helpers) {
         keyword,
         { fetchFn, botToken: env.TELEGRAM_BOT_TOKEN, chatId: env.TELEGRAM_CHAT_ID },
       );
-      return { status: 'error', failures: gate.failures };
+      return { status: 'error', failures: allFailures, seoScore: seo.score, aiScore: aiCheck.score };
     }
 
-    retryFeedback = gate.failures.join('; ');
-  }
-
-  // Step 8.7: SEO Score
-  const seo = seoScore(article, keyword.keyword);
-  article._seoScore = seo.score;
-  article._seoBreakdown = seo.breakdown;
-  if (!seo.pass) {
-    // Log warning but don't block — SEO score is advisory
-    article.confidence_notes = (article.confidence_notes || '') +
-      ` [SEO score ${seo.score}/100 below 70 threshold]`;
-  }
-
-  // Step 8.8: AI Detection Score
-  const aiCheck = aiDetectionScore(article);
-  article._aiDetectionScore = aiCheck.score;
-  if (!aiCheck.pass) {
-    article.confidence_notes = (article.confidence_notes || '') +
-      ` [AI detection risk ${aiCheck.score}/100: ${aiCheck.signals.join(', ')}]`;
+    retryFeedback = allFailures.join('; ');
   }
 
   // Step 8.6: Ensure unique slug
