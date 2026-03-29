@@ -71,8 +71,9 @@ export default function HomePage() {
 
       {/* ═══ 1. HERO ═══ */}
       <section className="relative w-full min-h-[500px] lg:h-[614px] overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-[#0a0a2e] to-[#1a1a4e]" />
-        <div className="absolute inset-0 bg-black/40" />
+        <img src="/images/hero-mobile.jpg" alt="" className="absolute inset-0 w-full h-full object-cover md:hidden" />
+        <img src="/images/hero-desktop.jpg" alt="" className="absolute inset-0 w-full h-full object-cover hidden md:block" />
+        <div className="absolute inset-0 bg-black/50" />
         <div className="relative z-10 flex flex-col justify-center max-w-[868px] mx-auto h-full px-[20px] md:px-[32px] pt-[100px] pb-[60px] lg:pt-[0px] lg:pb-[0px]">
           <h1 className="font-[var(--font-montaga)] text-[39px] md:text-[42px] lg:text-[54px] font-normal leading-[1.15] tracking-[0.5px] text-white mb-[16px]">
             SEC Insider Trades. Seconds, Not Days.
