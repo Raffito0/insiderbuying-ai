@@ -99,7 +99,7 @@ export default function HomePage() {
       <section className="w-full py-[24px] bg-white overflow-hidden" aria-hidden="true">
         <div className="logo-ticker flex items-center gap-[56px] whitespace-nowrap">
           {[...LOGOS, ...LOGOS].map((logo, i) => (
-            <img key={i} src={`https://cdn.brandfetch.io/domain/${logo.domain}/w/800/h/253/logo?c=1idSo4YEEODo2rW6Anw`} alt={logo.name} className="h-[32px] w-auto shrink-0 object-contain" loading="lazy" />
+            <img key={i} src={`https://cdn.brandfetch.io/domain/${logo.domain}/w/800/h/253/logo?c=1idSo4YEEODo2rW6Anw`} alt={logo.name} className="max-h-[28px] max-w-[120px] w-auto h-auto shrink-0 object-contain" loading="lazy" />
           ))}
         </div>
         <style>{`@keyframes scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}.logo-ticker{animation:scroll 40s linear infinite}@media(max-width:768px){.logo-ticker{animation-duration:20s}}`}</style>
