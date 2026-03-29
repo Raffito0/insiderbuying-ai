@@ -39,7 +39,7 @@ const FAQS = [
   { q: "Can I cancel anytime?", a: "Yes. Cancel in one click from your dashboard. No contracts, no cancellation fees. Annual plans refunded pro-rata for unused months." },
 ];
 
-const LOGOS: { name: string; domain: string }[] = [
+const LOGOS = [
   { name: "NVIDIA", domain: "nvidia.com" },
   { name: "Apple", domain: "apple.com" },
   { name: "Microsoft", domain: "microsoft.com" },
@@ -49,7 +49,7 @@ const LOGOS: { name: string; domain: string }[] = [
   { name: "Google", domain: "google.com" },
   { name: "JPMorgan", domain: "jpmorgan.com" },
   { name: "Goldman Sachs", domain: "goldmansachs.com" },
-  { name: "Berkshire", domain: "berkshirehathaway.com" },
+  { name: "Berkshire Hathaway", domain: "berkshirehathaway.com" },
   { name: "J&J", domain: "jnj.com" },
   { name: "UnitedHealth", domain: "unitedhealthgroup.com" },
   { name: "Visa", domain: "visa.com" },
@@ -98,10 +98,10 @@ export default function HomePage() {
       <section className="w-full py-[24px] bg-white overflow-hidden" aria-hidden="true">
         <div className="logo-ticker flex items-center gap-[56px] whitespace-nowrap">
           {[...LOGOS, ...LOGOS].map((logo, i) => (
-            <span key={i} className="text-[18px] font-semibold tracking-[0.5px] text-[color:var(--color-text)] opacity-50 shrink-0">{logo.name}</span>
+            <img key={i} src={`https://cdn.brandfetch.io/${logo.domain}/w/512/h/80/theme/light/logo?c=1idSo4YEEODo2rW6Anw`} alt={logo.name} className="h-[32px] w-auto shrink-0 object-contain" loading="lazy" />
           ))}
         </div>
-        <style>{`@keyframes scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}.logo-ticker{animation:scroll 20s linear infinite}`}</style>
+        <style>{`@keyframes scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}.logo-ticker{animation:scroll 40s linear infinite}@media(max-width:768px){.logo-ticker{animation-duration:20s}}`}</style>
       </section>
 
       {/* ═══ 2. LIVE ALERT FEED ═══ */}
