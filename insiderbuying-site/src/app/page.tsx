@@ -41,7 +41,7 @@ const FAQS = [
 
 // h = visual height in px. Tall/square logos (VISA, AMD) get smaller h, wide/thin logos (Berkshire, J&J) get larger h
 const LOGOS: { name: string; domain: string; h: number }[] = [
-  { name: "NVIDIA", domain: "nvidia.com", h: 26 },
+  { name: "NVIDIA", domain: "nvidia.com", h: 24 },
   { name: "Apple", domain: "apple.com", h: 28 },
   { name: "Microsoft", domain: "microsoft.com", h: 24 },
   { name: "Amazon", domain: "amazon.com", h: 28 },
