@@ -98,7 +98,7 @@ export default function HomePage() {
 
       {/* ═══ 1.5 LOGO TICKER ═══ */}
       <section className="w-full py-[24px] bg-white overflow-hidden" aria-hidden="true">
-        <div className="logo-ticker flex items-center gap-[56px] whitespace-nowrap">
+        <div className="logo-ticker flex items-center gap-[56px]" style={{ width: "max-content" }}>
           {[...LOGOS, ...LOGOS].map((logo, i) => (
             <img key={i} src={`https://cdn.brandfetch.io/domain/${logo.domain}/w/400/h/120/logo?c=1idSo4YEEODo2rW6Anw`} alt={logo.name} className="w-auto shrink-0 object-contain" style={{ height: `${logo.h}px` }} loading="lazy" />
           ))}
