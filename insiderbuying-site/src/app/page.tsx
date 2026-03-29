@@ -39,27 +39,27 @@ const FAQS = [
   { q: "Can I cancel anytime?", a: "Yes. Cancel in one click from your dashboard. No contracts, no cancellation fees. Annual plans refunded pro-rata for unused months." },
 ];
 
-const LOGOS: { name: string; domain: string; h: number }[] = [
-  { name: "NVIDIA", domain: "nvidia.com", h: 28 },
-  { name: "Apple", domain: "apple.com", h: 28 },
-  { name: "Microsoft", domain: "microsoft.com", h: 28 },
-  { name: "Amazon", domain: "amazon.com", h: 28 },
-  { name: "Meta", domain: "meta.com", h: 28 },
-  { name: "Tesla", domain: "tesla.com", h: 28 },
-  { name: "Google", domain: "google.com", h: 28 },
-  { name: "JPMorgan", domain: "jpmorgan.com", h: 28 },
-  { name: "Goldman Sachs", domain: "goldmansachs.com", h: 28 },
-  { name: "Berkshire Hathaway", domain: "berkshirehathaway.com", h: 38 },
-  { name: "J&J", domain: "jnj.com", h: 36 },
-  { name: "UnitedHealth", domain: "unitedhealthgroup.com", h: 36 },
-  { name: "Visa", domain: "visa.com", h: 20 },
-  { name: "Mastercard", domain: "mastercard.com", h: 28 },
-  { name: "Pfizer", domain: "pfizer.com", h: 34 },
-  { name: "Eli Lilly", domain: "lilly.com", h: 36 },
-  { name: "Broadcom", domain: "broadcom.com", h: 34 },
-  { name: "AMD", domain: "amd.com", h: 20 },
-  { name: "Netflix", domain: "netflix.com", h: 20 },
-  { name: "Costco", domain: "costco.com", h: 28 },
+const LOGOS = [
+  { name: "NVIDIA", domain: "nvidia.com" },
+  { name: "Apple", domain: "apple.com" },
+  { name: "Microsoft", domain: "microsoft.com" },
+  { name: "Amazon", domain: "amazon.com" },
+  { name: "Meta", domain: "meta.com" },
+  { name: "Tesla", domain: "tesla.com" },
+  { name: "Google", domain: "google.com" },
+  { name: "JPMorgan", domain: "jpmorgan.com" },
+  { name: "Goldman Sachs", domain: "goldmansachs.com" },
+  { name: "Berkshire Hathaway", domain: "berkshirehathaway.com" },
+  { name: "J&J", domain: "jnj.com" },
+  { name: "UnitedHealth", domain: "unitedhealthgroup.com" },
+  { name: "Visa", domain: "visa.com" },
+  { name: "Mastercard", domain: "mastercard.com" },
+  { name: "Pfizer", domain: "pfizer.com" },
+  { name: "Eli Lilly", domain: "lilly.com" },
+  { name: "Broadcom", domain: "broadcom.com" },
+  { name: "AMD", domain: "amd.com" },
+  { name: "Netflix", domain: "netflix.com" },
+  { name: "Costco", domain: "costco.com" },
 ];
 
 export default function HomePage() {
@@ -99,7 +99,7 @@ export default function HomePage() {
       <section className="w-full py-[24px] bg-white overflow-hidden" aria-hidden="true">
         <div className="logo-ticker flex items-center gap-[56px] whitespace-nowrap">
           {[...LOGOS, ...LOGOS].map((logo, i) => (
-            <img key={i} src={`https://cdn.brandfetch.io/domain/${logo.domain}/w/800/h/253/logo?c=1idSo4YEEODo2rW6Anw`} alt={logo.name} style={{ height: `${logo.h}px` }} className="w-auto shrink-0 object-contain" loading="lazy" />
+            <img key={i} src={`https://cdn.brandfetch.io/domain/${logo.domain}/w/800/h/253/logo?c=1idSo4YEEODo2rW6Anw`} alt={logo.name} className="max-h-[28px] max-w-[120px] w-auto h-auto shrink-0 object-contain" loading="lazy" />
           ))}
         </div>
         <style>{`@keyframes scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}.logo-ticker{animation:scroll 40s linear infinite}@media(max-width:768px){.logo-ticker{animation-duration:20s}}`}</style>
