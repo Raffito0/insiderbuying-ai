@@ -100,7 +100,7 @@ export default function ReportsPage() {
                 <span className="font-[var(--font-montaga)] text-[32px] md:text-[36px] font-normal leading-[40px] text-[color:var(--color-text)]">{FEATURED.price}</span>
                 <span className="text-[16px] font-normal leading-[24px] text-[color:var(--color-text-muted)] line-through">{FEATURED.oldPrice}</span>
               </div>
-              <Link href="/signup" className="inline-flex items-center justify-center w-full sm:w-[233px] h-[52px] bg-[var(--color-primary)] text-white text-[14px] font-medium leading-[20px] hover:bg-[var(--color-primary-dark)] transition-colors">
+              <Link href="/signup" className="inline-flex items-center justify-center w-full sm:w-[233px] h-[52px] bg-[var(--color-primary)] text-white text-[16px] font-medium tracking-[1px] leading-[20px] hover:bg-[var(--color-primary-dark)] transition-colors">
                 Download Report
               </Link>
             </div>
@@ -135,7 +135,7 @@ export default function ReportsPage() {
                 <span className="font-[var(--font-montaga)] text-[28px] md:text-[32px] font-normal leading-[36px] text-[color:var(--color-text)]">{card.price}</span>
                 <Link
                   href="/signup"
-                  className={`h-[34px] px-[16px] flex items-center justify-center text-[12px] font-bold leading-[16px] transition-colors ${
+                  className={`h-[40px] px-[20px] flex items-center justify-center text-[14px] font-medium tracking-[1px] leading-[16px] transition-colors ${
                     card.highlight
                       ? "bg-[var(--color-primary)] text-white border border-[var(--color-primary)]"
                       : "border border-[var(--color-primary)] text-[color:var(--color-primary)] hover:bg-[var(--color-primary)] hover:text-white"
@@ -161,7 +161,7 @@ export default function ReportsPage() {
           <div className="flex flex-col items-center gap-[16px] pt-[16px]">
             <Link
               href="mailto:research@earlyinsider.com"
-              className="inline-flex items-center justify-center h-[54px] px-[32px] md:px-[40px] border border-[var(--color-primary)] text-[14px] font-medium leading-[20px] text-[color:var(--color-primary)] hover:bg-[var(--color-primary)] hover:text-white transition-colors w-full sm:w-auto"
+              className="inline-flex items-center justify-center h-[54px] px-[32px] md:px-[40px] border border-[var(--color-primary)] text-[16px] font-medium tracking-[1px] leading-[20px] text-[color:var(--color-primary)] hover:bg-[var(--color-primary)] hover:text-white transition-colors w-full sm:w-auto"
             >
               Request Custom Report
             </Link>
