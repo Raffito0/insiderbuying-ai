@@ -39,27 +39,27 @@ const FAQS = [
   { q: "Can I cancel anytime?", a: "Yes. Cancel in one click from your dashboard. No contracts, no cancellation fees. Annual plans refunded pro-rata for unused months." },
 ];
 
-const LOGOS = [
-  { name: "NVIDIA", domain: "nvidia.com" },
-  { name: "Apple", domain: "apple.com" },
-  { name: "Microsoft", domain: "microsoft.com" },
-  { name: "Amazon", domain: "amazon.com" },
-  { name: "Meta", domain: "meta.com" },
-  { name: "Tesla", domain: "tesla.com" },
-  { name: "Google", domain: "google.com" },
-  { name: "JPMorgan", domain: "jpmorgan.com" },
-  { name: "Goldman Sachs", domain: "goldmansachs.com" },
-  { name: "Berkshire Hathaway", domain: "berkshirehathaway.com" },
-  { name: "J&J", domain: "jnj.com" },
-  { name: "UnitedHealth", domain: "unitedhealthgroup.com" },
-  { name: "Visa", domain: "visa.com" },
-  { name: "Mastercard", domain: "mastercard.com" },
-  { name: "Pfizer", domain: "pfizer.com" },
-  { name: "Eli Lilly", domain: "lilly.com" },
-  { name: "Broadcom", domain: "broadcom.com" },
-  { name: "AMD", domain: "amd.com" },
-  { name: "Netflix", domain: "netflix.com" },
-  { name: "Costco", domain: "costco.com" },
+const LOGOS: { name: string; domain: string; w: number; h: number }[] = [
+  { name: "NVIDIA", domain: "nvidia.com", w: 140, h: 32 },
+  { name: "Apple", domain: "apple.com", w: 140, h: 30 },
+  { name: "Microsoft", domain: "microsoft.com", w: 140, h: 30 },
+  { name: "Amazon", domain: "amazon.com", w: 140, h: 30 },
+  { name: "Meta", domain: "meta.com", w: 140, h: 30 },
+  { name: "Tesla", domain: "tesla.com", w: 140, h: 30 },
+  { name: "Google", domain: "google.com", w: 140, h: 30 },
+  { name: "JPMorgan", domain: "jpmorgan.com", w: 140, h: 30 },
+  { name: "Goldman Sachs", domain: "goldmansachs.com", w: 140, h: 30 },
+  { name: "Berkshire Hathaway", domain: "berkshirehathaway.com", w: 141, h: 30 },
+  { name: "J&J", domain: "jnj.com", w: 145, h: 30 },
+  { name: "UnitedHealth", domain: "unitedhealthgroup.com", w: 145, h: 30 },
+  { name: "Visa", domain: "visa.com", w: 140, h: 30 },
+  { name: "Mastercard", domain: "mastercard.com", w: 140, h: 30 },
+  { name: "Pfizer", domain: "pfizer.com", w: 140, h: 30 },
+  { name: "Eli Lilly", domain: "lilly.com", w: 140, h: 30 },
+  { name: "Broadcom", domain: "broadcom.com", w: 140, h: 30 },
+  { name: "AMD", domain: "amd.com", w: 130, h: 30 },
+  { name: "Netflix", domain: "netflix.com", w: 140, h: 30 },
+  { name: "Costco", domain: "costco.com", w: 140, h: 30 },
 ];
 
 export default function HomePage() {
@@ -99,7 +99,9 @@ export default function HomePage() {
       <section className="w-full py-[24px] bg-white overflow-hidden" aria-hidden="true">
         <div className="logo-ticker flex items-center gap-[56px] whitespace-nowrap">
           {[...LOGOS, ...LOGOS].map((logo, i) => (
-            <img key={i} src={`https://cdn.brandfetch.io/domain/${logo.domain}/w/800/h/253/logo?c=1idSo4YEEODo2rW6Anw`} alt={logo.name} className="max-h-[28px] max-w-[120px] w-auto h-auto shrink-0 object-contain" loading="lazy" />
+            <div key={i} className="shrink-0 flex items-center justify-center" style={{ width: `${logo.w}px`, height: `${logo.h}px` }}>
+              <img src={`https://cdn.brandfetch.io/domain/${logo.domain}/w/400/h/120/logo?c=1idSo4YEEODo2rW6Anw`} alt={logo.name} className="max-w-full max-h-full object-contain" />
+            </div>
           ))}
         </div>
         <style>{`@keyframes scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}.logo-ticker{animation:scroll 40s linear infinite}@media(max-width:768px){.logo-ticker{animation-duration:20s}}`}</style>
@@ -107,14 +109,14 @@ export default function HomePage() {
 
       {/* ═══ LOGO TEST — REMOVE LATER ═══ */}
       <section className="w-full py-[48px] px-[48px] bg-[#F8F8F8]">
-        <p className="text-[14px] font-bold text-red-500 mb-[24px]">LOGO TEST — DELETE THIS SECTION. Ogni box e 140x40. Modifica w/h del box in DevTools per calibrare.</p>
+        <p className="text-[14px] font-bold text-red-500 mb-[24px]">LOGO TEST — Calibrated per-logo sizes applied</p>
         <div className="flex flex-wrap items-center gap-[24px]">
           {LOGOS.map((logo) => (
             <div key={logo.domain} className="flex flex-col items-center gap-[8px]">
-              <div className="w-[140px] h-[40px] flex items-center justify-center p-[4px] bg-white border border-[#e5e5e5]">
+              <div className="flex items-center justify-center p-[4px] bg-white border border-[#e5e5e5]" style={{ width: `${logo.w}px`, height: `${logo.h}px` }}>
                 <img src={`https://cdn.brandfetch.io/domain/${logo.domain}/w/400/h/120/logo?c=1idSo4YEEODo2rW6Anw`} alt={logo.name} className="max-w-full max-h-full object-contain" />
               </div>
-              <span className="text-[11px] text-[#999]">{logo.name}</span>
+              <span className="text-[11px] text-[#999]">{logo.name} ({logo.w}x{logo.h})</span>
             </div>
           ))}
         </div>
