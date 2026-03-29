@@ -13,6 +13,14 @@ const {
   generateEmail,
   BANNED_PHRASES,
   FROM_NAME,
+  getFollowUpStage,
+  checkFollowUpsDue,
+  buildFu3Body,
+  buildFuThreadedPayload,
+  buildFu2Payload,
+  sendInitialOutreach,
+  sendFollowUp,
+  cancelFollowUps,
 } = require('../../n8n/code/insiderbuying/send-outreach');
 
 // ─── selectProspects ──────────────────────────────────────────────────────
@@ -626,5 +634,388 @@ describe('section-04: scrapeRecentArticle XML/RSS mode', () => {
     const result = await scrapeRecentArticle('https://blog.com', { _fetchFn: fetchFn });
     expect(result).not.toBeNull();
     expect(result.title).toBe('CEO Buys Big');
+  });
+});
+
+// ═══════════════════════════════════════════════════════════════════════════
+// section-05: Follow-Up Sequence
+// ═══════════════════════════════════════════════════════════════════════════
+
+// ── section-05: getFollowUpStage ─────────────────────────────────────────
+
+describe('section-05: getFollowUpStage', () => {
+  test('returns 1 for day 5 with followup_count=0', () => {
+    expect(getFollowUpStage(5, 0)).toBe(1);
+  });
+  test('returns 1 for day 7 with followup_count=0 (resilient to missed cron)', () => {
+    expect(getFollowUpStage(7, 0)).toBe(1);
+  });
+  test('returns 2 for day 10 with followup_count=1', () => {
+    expect(getFollowUpStage(10, 1)).toBe(2);
+  });
+  test('returns 2 for day 12 with followup_count=1', () => {
+    expect(getFollowUpStage(12, 1)).toBe(2);
+  });
+  test('returns 3 for day 16 with followup_count=2', () => {
+    expect(getFollowUpStage(16, 2)).toBe(3);
+  });
+  test('returns null for day 4 with followup_count=0 (not yet due)', () => {
+    expect(getFollowUpStage(4, 0)).toBeNull();
+  });
+  test('returns null for day 5 with followup_count=1 (wrong stage)', () => {
+    expect(getFollowUpStage(5, 1)).toBeNull();
+  });
+  test('returns null for followup_count=99 (cancelled)', () => {
+    expect(getFollowUpStage(20, 99)).toBeNull();
+  });
+});
+
+// ── section-05: checkFollowUpsDue ────────────────────────────────────────
+
+describe('section-05: checkFollowUpsDue', () => {
+  function makeNocodbApi(records) {
+    return {
+      queryRecords: jest.fn().mockResolvedValue(records || []),
+      updateRecord: jest.fn().mockResolvedValue({}),
+    };
+  }
+
+  function makeProspect(daysAgo, followupCount, overrides) {
+    return Object.assign({
+      id: 'p1',
+      contact_email: 'ed@site.com',
+      contact_name: 'Ed Smith',
+      site_name: 'FinSite',
+      domain: 'finsite.com',
+      sent_at: new Date(Date.now() - daysAgo * 86400000).toISOString(),
+      followup_count: followupCount,
+      replied: false,
+      last_resend_id: 'resend-abc-123',
+      original_subject: 'Want to partner?',
+    }, overrides || {});
+  }
+
+  test('selects prospect at day 5 with followup_count=0 as FU1', async () => {
+    const api = makeNocodbApi([makeProspect(5, 0)]);
+    const result = await checkFollowUpsDue(api);
+    expect(result).toHaveLength(1);
+    expect(result[0].stage).toBe(1);
+  });
+
+  test('selects prospect at day 10 with followup_count=1 as FU2', async () => {
+    const api = makeNocodbApi([makeProspect(10, 1)]);
+    const result = await checkFollowUpsDue(api);
+    expect(result[0].stage).toBe(2);
+  });
+
+  test('selects prospect at day 16 with followup_count=2 as FU3', async () => {
+    const api = makeNocodbApi([makeProspect(16, 2)]);
+    const result = await checkFollowUpsDue(api);
+    expect(result[0].stage).toBe(3);
+  });
+
+  test('selects FU1 for prospect at day 7 with followup_count=0 (days >= 5)', async () => {
+    const api = makeNocodbApi([makeProspect(7, 0)]);
+    const result = await checkFollowUpsDue(api);
+    expect(result[0].stage).toBe(1);
+  });
+
+  test('selects FU2 for prospect at day 12 with followup_count=1 (days >= 10)', async () => {
+    const api = makeNocodbApi([makeProspect(12, 1)]);
+    const result = await checkFollowUpsDue(api);
+    expect(result[0].stage).toBe(2);
+  });
+
+  test('does NOT select prospect with followup_count=99 (cancelled)', async () => {
+    const api = makeNocodbApi([makeProspect(10, 99)]);
+    const result = await checkFollowUpsDue(api);
+    expect(result).toHaveLength(0);
+  });
+
+  test('does NOT select prospect with replied=true', async () => {
+    const api = makeNocodbApi([makeProspect(10, 0, { replied: true })]);
+    const result = await checkFollowUpsDue(api);
+    expect(result).toHaveLength(0);
+  });
+
+  test('does NOT select prospect where sent_at is NULL', async () => {
+    const api = makeNocodbApi([makeProspect(5, 0, { sent_at: null })]);
+    const result = await checkFollowUpsDue(api);
+    expect(result).toHaveLength(0);
+  });
+});
+
+// ── section-05: buildFuThreadedPayload (FU1/FU3 headers) ─────────────────
+
+describe('section-05: buildFuThreadedPayload', () => {
+  test('includes In-Reply-To header with wrapped resendId', () => {
+    const payload = buildFuThreadedPayload(
+      'ed@site.com', 'Re: Partner?', 'Hello', FROM_NAME, 'resend-abc-123'
+    );
+    expect(payload.headers['In-Reply-To']).toBe('<resend-abc-123>');
+  });
+
+  test('includes References header with wrapped resendId', () => {
+    const payload = buildFuThreadedPayload(
+      'ed@site.com', 'Re: Partner?', 'Hello', FROM_NAME, 'resend-abc-123'
+    );
+    expect(payload.headers['References']).toBe('<resend-abc-123>');
+  });
+
+  test('omits threading headers when resendId is null', () => {
+    const payload = buildFuThreadedPayload(
+      'ed@site.com', 'Re: Partner?', 'Hello', FROM_NAME, null
+    );
+    expect(payload.headers['In-Reply-To']).toBeUndefined();
+    expect(payload.headers['References']).toBeUndefined();
+  });
+});
+
+// ── section-05: buildFu2Payload (new thread) ─────────────────────────────
+
+describe('section-05: buildFu2Payload', () => {
+  test('does NOT include In-Reply-To header', () => {
+    const payload = buildFu2Payload('ed@site.com', 'Fresh angle?', 'Body text', FROM_NAME);
+    expect(payload.headers).toBeUndefined();
+    expect(payload['In-Reply-To']).toBeUndefined();
+  });
+
+  test('subject does NOT start with "Re:"', () => {
+    const payload = buildFu2Payload('ed@site.com', 'Fresh angle?', 'Body text', FROM_NAME);
+    expect(payload.subject).not.toMatch(/^Re:/i);
+  });
+});
+
+// ── section-05: buildFu3Body ──────────────────────────────────────────────
+
+describe('section-05: buildFu3Body', () => {
+  test('uses first name from contact_name', () => {
+    const body = buildFu3Body({ contact_name: 'John Smith' });
+    expect(body).toMatch(/^Hi John,/);
+  });
+
+  test('falls back to "there" when contact_name is missing', () => {
+    const body = buildFu3Body({ contact_name: '' });
+    expect(body).toMatch(/^Hi there,/);
+  });
+
+  test('body is approximately 25 words', () => {
+    const body = buildFu3Body({ contact_name: 'Jane' });
+    const words = body.trim().split(/\s+/).length;
+    expect(words).toBeGreaterThanOrEqual(20);
+    expect(words).toBeLessThanOrEqual(35);
+  });
+});
+
+// ── section-05: sendInitialOutreach — state tracking ─────────────────────
+
+describe('section-05: sendInitialOutreach', () => {
+  test('stores Resend response id in Outreach_Prospects.last_resend_id', async () => {
+    const mockPost = jest.fn().mockResolvedValue({
+      status: 200,
+      json: () => Promise.resolve({ id: 'resend-xyz-789' }),
+    });
+    const nocodbApi = { updateRecord: jest.fn().mockResolvedValue({}) };
+    const prospect = { id: 'p1', contact_email: 'ed@site.com' };
+    const emailPayload = { from: FROM_NAME, to: 'ed@site.com', subject: 'Test?', html: '<p>Hi</p>', text: 'Hi' };
+
+    await sendInitialOutreach(prospect, emailPayload, nocodbApi, { _postFn: mockPost });
+
+    expect(nocodbApi.updateRecord).toHaveBeenCalledWith(
+      'Outreach_Prospects', 'p1',
+      expect.objectContaining({ last_resend_id: 'resend-xyz-789' })
+    );
+  });
+});
+
+// ── section-05: sendFollowUp — followup_count increment ──────────────────
+
+describe('section-05: sendFollowUp', () => {
+  function makeProspect(stage) {
+    return {
+      id: 'p1',
+      contact_email: 'ed@site.com',
+      contact_name: 'Ed',
+      site_name: 'FinSite',
+      domain: 'finsite.com',
+      last_resend_id: 'resend-abc-123',
+      original_subject: 'Want to partner?',
+      followup_count: stage - 1,
+    };
+  }
+
+  function makeFu1AiResponse() {
+    return Array(60).fill('interesting').join(' ');
+  }
+
+  function makeFu2AiResponse() {
+    return 'Subject: Different angle for FinSite?\n\n' + Array(40).fill('specific').join(' ');
+  }
+
+  function makePostFn() {
+    return jest.fn().mockResolvedValue({
+      status: 200,
+      json: () => Promise.resolve({ id: 'resend-fu-001' }),
+    });
+  }
+
+  test('FU1: increments followup_count to 1 after send', async () => {
+    const nocodbApi = { updateRecord: jest.fn().mockResolvedValue({}) };
+    const aiClient = { call: jest.fn().mockResolvedValue(makeFu1AiResponse()) };
+    await sendFollowUp(makeProspect(1), 1, nocodbApi, { _aiClient: aiClient, _postFn: makePostFn() });
+    expect(nocodbApi.updateRecord).toHaveBeenCalledWith(
+      'Outreach_Prospects', 'p1', expect.objectContaining({ followup_count: 1 })
+    );
+  });
+
+  test('FU2: increments followup_count to 2 after send', async () => {
+    const nocodbApi = { updateRecord: jest.fn().mockResolvedValue({}) };
+    const aiClient = { call: jest.fn().mockResolvedValue(makeFu2AiResponse()) };
+    await sendFollowUp(makeProspect(2), 2, nocodbApi, { _aiClient: aiClient, _postFn: makePostFn() });
+    expect(nocodbApi.updateRecord).toHaveBeenCalledWith(
+      'Outreach_Prospects', 'p1', expect.objectContaining({ followup_count: 2 })
+    );
+  });
+
+  test('FU3: increments followup_count to 3 after send (no AI needed)', async () => {
+    const nocodbApi = { updateRecord: jest.fn().mockResolvedValue({}) };
+    await sendFollowUp(makeProspect(3), 3, nocodbApi, { _postFn: makePostFn() });
+    expect(nocodbApi.updateRecord).toHaveBeenCalledWith(
+      'Outreach_Prospects', 'p1', expect.objectContaining({ followup_count: 3 })
+    );
+  });
+
+  test('FU1: payload includes In-Reply-To header', async () => {
+    let capturedPayload = null;
+    const postFn = jest.fn().mockImplementation((url, opts) => {
+      capturedPayload = JSON.parse(opts.body);
+      return Promise.resolve({ status: 200, json: () => Promise.resolve({ id: 'r1' }) });
+    });
+    const nocodbApi = { updateRecord: jest.fn().mockResolvedValue({}) };
+    const aiClient = { call: jest.fn().mockResolvedValue(makeFu1AiResponse()) };
+    await sendFollowUp(makeProspect(1), 1, nocodbApi, { _aiClient: aiClient, _postFn: postFn });
+    expect(capturedPayload.headers['In-Reply-To']).toBe('<resend-abc-123>');
+  });
+});
+
+// ── section-05: cancelFollowUps ───────────────────────────────────────────
+
+describe('section-05: cancelFollowUps', () => {
+  test('sets followup_count=99 on the given prospect ID', async () => {
+    const nocodbApi = { updateRecord: jest.fn().mockResolvedValue({}) };
+    await cancelFollowUps('p42', nocodbApi);
+    expect(nocodbApi.updateRecord).toHaveBeenCalledWith(
+      'Outreach_Prospects', 'p42', { followup_count: 99 }
+    );
+  });
+});
+
+// ── section-05: FU1 banned-phrase retry (M-8) ─────────────────────────────
+
+describe('section-05: sendFollowUp FU1 banned-phrase retry', () => {
+  function makeProspect() {
+    return {
+      id: 'p1',
+      contact_email: 'ed@site.com',
+      contact_name: 'Ed',
+      site_name: 'FinSite',
+      domain: 'finsite.com',
+      last_resend_id: 'resend-abc-123',
+      original_subject: 'Want to partner?',
+      followup_count: 0,
+    };
+  }
+
+  function makePostFn() {
+    return jest.fn().mockResolvedValue({
+      status: 200,
+      json: () => Promise.resolve({ id: 'r1' }),
+    });
+  }
+
+  test('retries FU1 when first AI response contains banned phrase, succeeds on 2nd attempt', async () => {
+    const bannedBody = 'synergy ' + Array(60).fill('interesting').join(' ');
+    const cleanBody = Array(60).fill('interesting').join(' ');
+    let callCount = 0;
+    const aiClient = {
+      call: jest.fn().mockImplementation(() => {
+        callCount++;
+        return Promise.resolve(callCount === 1 ? bannedBody : cleanBody);
+      }),
+    };
+    const nocodbApi = { updateRecord: jest.fn().mockResolvedValue({}) };
+    await sendFollowUp(makeProspect(), 1, nocodbApi, { _aiClient: aiClient, _postFn: makePostFn() });
+    expect(aiClient.call).toHaveBeenCalledTimes(2);
+  });
+
+  test('throws after 3 FU1 failures all containing banned phrases', async () => {
+    const bannedBody = 'synergy ' + Array(60).fill('interesting').join(' ');
+    const aiClient = { call: jest.fn().mockResolvedValue(bannedBody) };
+    const nocodbApi = { updateRecord: jest.fn().mockResolvedValue({}) };
+    await expect(
+      sendFollowUp(makeProspect(), 1, nocodbApi, { _aiClient: aiClient, _postFn: makePostFn() })
+    ).rejects.toThrow(/attempts/i);
+  });
+});
+
+// ── section-05: FU2 banned-phrase check (M-9) ─────────────────────────────
+
+describe('section-05: sendFollowUp FU2 banned-phrase check', () => {
+  function makeProspect() {
+    return {
+      id: 'p1',
+      contact_email: 'ed@site.com',
+      contact_name: 'Ed',
+      site_name: 'FinSite',
+      domain: 'finsite.com',
+      last_resend_id: null,
+      original_subject: 'Want to partner?',
+      followup_count: 1,
+    };
+  }
+
+  function makePostFn() {
+    return jest.fn().mockResolvedValue({
+      status: 200,
+      json: () => Promise.resolve({ id: 'r2' }),
+    });
+  }
+
+  function makeFu2Response(body) {
+    return 'Subject: Noticed something specific?\n\n' + body;
+  }
+
+  test('rejects FU2 body with banned phrase and retries', async () => {
+    const bannedBody = 'synergy ' + Array(40).fill('interesting').join(' ');
+    const cleanBody = Array(40).fill('interesting').join(' ');
+    let callCount = 0;
+    const aiClient = {
+      call: jest.fn().mockImplementation(() => {
+        callCount++;
+        return Promise.resolve(makeFu2Response(callCount === 1 ? bannedBody : cleanBody));
+      }),
+    };
+    const nocodbApi = { updateRecord: jest.fn().mockResolvedValue({}) };
+    await sendFollowUp(makeProspect(), 2, nocodbApi, { _aiClient: aiClient, _postFn: makePostFn() });
+    expect(aiClient.call).toHaveBeenCalledTimes(2);
+  });
+});
+
+// ── section-05: HTML escaping in follow-up payloads (L-4) ─────────────────
+
+describe('section-05: HTML escaping in follow-up payloads', () => {
+  test('buildFuThreadedPayload escapes & in body', () => {
+    const payload = buildFuThreadedPayload(
+      'ed@site.com', 'Re: Test?', 'S&P 500 data is here', FROM_NAME, null
+    );
+    expect(payload.html).toContain('S&amp;P 500 data is here');
+    expect(payload.html).not.toContain('S&P');
+  });
+
+  test('buildFu2Payload escapes < and > in body', () => {
+    const payload = buildFu2Payload(
+      'ed@site.com', 'New angle?', 'Insiders <buy> at peaks', FROM_NAME
+    );
+    expect(payload.html).toContain('Insiders &lt;buy&gt; at peaks');
   });
 });

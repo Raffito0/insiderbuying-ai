@@ -194,3 +194,23 @@ async function cancelFollowUps(prospectId, nocodbApi) {
 - `last_article_title` (cached from section-04 scraping) is available on the prospect record — FU1 can optionally reference it as a callback: "I mentioned your piece on X earlier…" but this is optional. The scraping is not re-run during follow-ups.
 - Send rate limits and `isValidSendTime()` from section-06 apply to follow-up sends as well. Follow-up sends count toward the daily warm-up limit tracked in `Outreach_Daily_Stats`.
 - Follow-up sends store their own Resend IDs back in `last_resend_id` only if you need to support threading beyond FU3. For 3 stages this is not needed — keep `last_resend_id` as the initial email ID throughout the sequence.
+
+---
+
+## Deviations from Plan
+
+1. **FU2 banned-phrase check added**: Code review finding (H-1) — plan was silent. Added `BANNED_PHRASES` loop to FU2 retry block, consistent with `generateEmail` and `_generateFollowUpBody`.
+
+2. **Prompt injection sanitization**: Plan was silent. Code review finding (M-1) — `contact_name`/`site_name` stripped of newlines and capped at 80 chars before AI prompt interpolation. Same pattern as `buildEmailPrompt` for `last_article_title`.
+
+3. **`getFollowUpStage` explicit guard for `followupCount >= 3`**: Plan showed fallthrough-only logic. Code review (M-2) — added `if (followupCount >= 3) return null;` guard at function top.
+
+4. **`sendFollowUp` contact_email guard**: Plan was silent. Code review (M-6) — throws early with descriptive message when `contact_email` is missing.
+
+5. **FU2 subject parsing case-insensitive**: Plan used `startsWith('Subject: ')`. Code review (M-4) — changed to `toLowerCase().startsWith('subject: ')`.
+
+6. **`RESEND_API_KEY` fail-fast behavior**: Attempted as L-1 fix but incompatible with test injection pattern. Documented in comment at caller level instead.
+
+7. **Test file location**: Tests in `tests/insiderbuying/send-outreach.test.js` (109 total — sections 01-05).
+
+8. **Functions added to exports**: `getFollowUpStage`, `checkFollowUpsDue`, `buildFu3Body`, `buildFuThreadedPayload`, `buildFu2Payload`, `sendInitialOutreach`, `sendFollowUp`, `cancelFollowUps`.
