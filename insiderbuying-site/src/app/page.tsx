@@ -163,7 +163,7 @@ export default function HomePage() {
           {STATS.map((s) => (
             <div key={s.value} className="bg-white p-[32px] py-[40px]">
               <p className="font-[var(--font-montaga)] text-[40px] lg:text-[48px] font-normal leading-[1.1] tracking-[0.5px] text-[color:var(--color-text)]">{s.value}</p>
-              <p className="font-[var(--font-montaga)] text-[20px] font-normal leading-[28px] text-[color:var(--color-text)] mb-[8px] mt-[4px]">{s.label}</p>
+              <p className="font-[var(--font-montaga)] text-[20px] font-normal leading-[28px] text-[color:var(--color-text)] mb-[16px] mt-[4px]">{s.label}</p>
               <p className="text-[16px] font-normal leading-[23px] text-[color:var(--color-text-secondary)] mb-[12px]">{s.desc}</p>
               <p className="text-[13px] font-normal leading-[23px] tracking-[0.5px] text-[color:var(--color-text-muted)]">{s.source}</p>
             </div>
