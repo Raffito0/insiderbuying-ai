@@ -103,7 +103,7 @@ export default function HomePage() {
             <img key={i} src={`https://cdn.brandfetch.io/domain/${logo.domain}/w/400/h/120/logo?c=1idSo4YEEODo2rW6Anw`} alt={logo.name} className="w-auto shrink-0 object-contain" style={{ height: `${logo.h}px` }} loading="lazy" />
           ))}
         </div>
-        <style>{`@keyframes scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}.logo-ticker{animation:scroll 40s linear infinite}@media(max-width:768px){.logo-ticker{animation-duration:20s}}`}</style>
+        <style>{`@keyframes scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}.logo-ticker{animation:scroll 40s linear infinite}@media(max-width:768px){.logo-ticker{animation-duration:40s}}`}</style>
       </section>
 
 
