@@ -39,7 +39,28 @@ const FAQS = [
   { q: "Can I cancel anytime?", a: "Yes. Cancel in one click from your dashboard. No contracts, no cancellation fees. Annual plans refunded pro-rata for unused months." },
 ];
 
-const LOGOS = ["NVIDIA","Apple","Microsoft","Amazon","Meta","Tesla","Google","JPMorgan","Goldman Sachs","Berkshire","J&J","UnitedHealth","Visa","Mastercard","Pfizer","Eli Lilly","Broadcom","AMD","Netflix","Costco"];
+const LOGOS: { name: string; domain: string }[] = [
+  { name: "NVIDIA", domain: "nvidia.com" },
+  { name: "Apple", domain: "apple.com" },
+  { name: "Microsoft", domain: "microsoft.com" },
+  { name: "Amazon", domain: "amazon.com" },
+  { name: "Meta", domain: "meta.com" },
+  { name: "Tesla", domain: "tesla.com" },
+  { name: "Google", domain: "google.com" },
+  { name: "JPMorgan", domain: "jpmorgan.com" },
+  { name: "Goldman Sachs", domain: "goldmansachs.com" },
+  { name: "Berkshire", domain: "berkshirehathaway.com" },
+  { name: "J&J", domain: "jnj.com" },
+  { name: "UnitedHealth", domain: "unitedhealthgroup.com" },
+  { name: "Visa", domain: "visa.com" },
+  { name: "Mastercard", domain: "mastercard.com" },
+  { name: "Pfizer", domain: "pfizer.com" },
+  { name: "Eli Lilly", domain: "lilly.com" },
+  { name: "Broadcom", domain: "broadcom.com" },
+  { name: "AMD", domain: "amd.com" },
+  { name: "Netflix", domain: "netflix.com" },
+  { name: "Costco", domain: "costco.com" },
+];
 
 export default function HomePage() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
@@ -75,9 +96,9 @@ export default function HomePage() {
 
       {/* ═══ 1.5 LOGO TICKER ═══ */}
       <section className="w-full py-[24px] bg-white overflow-hidden" aria-hidden="true">
-        <div className="flex gap-[48px] animate-[scroll_30s_linear_infinite] whitespace-nowrap">
+        <div className="flex items-center gap-[48px] animate-[scroll_30s_linear_infinite] whitespace-nowrap">
           {[...LOGOS, ...LOGOS].map((logo, i) => (
-            <span key={i} className="text-[13px] font-medium text-[color:var(--color-text)]/60 shrink-0">{logo}</span>
+            <img key={i} src={`https://img.logo.dev/${logo.domain}?token=pk_I9HfmU7yQtOtljYFEYrDHQ&size=60&format=png`} alt={logo.name} className="h-[28px] w-auto shrink-0 opacity-60 grayscale" loading="lazy" />
           ))}
         </div>
         <style>{`@keyframes scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}`}</style>
