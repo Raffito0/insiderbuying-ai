@@ -111,7 +111,7 @@ export default function HomePage() {
         <div className="flex flex-wrap items-center gap-[40px]">
           {LOGOS.map((logo) => (
             <div key={logo.domain} className="flex flex-col items-center gap-[8px] p-[16px] bg-white border border-[#e5e5e5]">
-              <img src={`https://cdn.brandfetch.io/domain/${logo.domain}/w/800/h/253/logo?c=1idSo4YEEODo2rW6Anw`} alt={logo.name} className="max-h-[28px] max-w-[120px] w-auto h-auto object-contain" />
+              <img src={`https://cdn.brandfetch.io/domain/${logo.domain}/w/800/h/253/logo?c=1idSo4YEEODo2rW6Anw`} alt={logo.name} className="h-[28px] w-auto object-contain" />
               <span className="text-[11px] text-[#999]">{logo.name}</span>
             </div>
           ))}
