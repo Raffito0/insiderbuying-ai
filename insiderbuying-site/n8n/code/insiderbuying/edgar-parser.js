@@ -239,8 +239,15 @@ async function fetchForm4Xml(issuerCik, accessionNumber, fetchFn) {
 
   async function doFetch(url) {
     if (fetchFn) return fetchFn(url, HEADERS);
-    const body = await httpsGet(url);
-    return { status: 200, text: async () => body };
+    try {
+      const body = await httpsGet(url);
+      return { status: 200, text: async () => body };
+    } catch (err) {
+      // Surface HTTP error status codes so callers can branch (e.g. 404 → index.json fallback)
+      const m = err && err.message && err.message.match(/^HTTP (\d+)/);
+      if (m) return { status: parseInt(m[1], 10), text: async () => '' };
+      throw err; // re-throw network-level errors (timeout, DNS)
+    }
   }
 
   try {
@@ -344,7 +351,8 @@ function decodeXmlEntities(str) {
     .replace(/&gt;/g, '>')
     .replace(/&apos;/g, "'")
     .replace(/&quot;/g, '"')
-    .replace(/&#x([0-9a-fA-F]+);/g, (_, h) => String.fromCharCode(parseInt(h, 16)));
+    .replace(/&#x([0-9a-fA-F]+);/g, (_, h) => String.fromCharCode(parseInt(h, 16)))
+    .replace(/&#(\d+);/g, (_, d) => String.fromCharCode(parseInt(d, 10)));
 }
 
 function parseNum(str) {
