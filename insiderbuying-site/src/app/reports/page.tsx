@@ -138,11 +138,11 @@ export default function ReportsPage() {
               <div className="flex items-center gap-[12px] pt-[24px] border-t border-[var(--color-border-light)] mt-[16px]">
                 <Link
                   href="/signup"
-                  className="h-[40px] px-[20px] flex items-center justify-center text-[14px] font-medium tracking-[1px] leading-[16px] transition-colors bg-[var(--color-primary)] text-white hover:bg-[var(--color-primary-dark)]"
+                  className="flex-1 h-[40px] flex items-center justify-center text-[14px] font-medium tracking-[1px] leading-[16px] transition-colors bg-[var(--color-primary)] text-white hover:bg-[var(--color-primary-dark)]"
                 >
                   Get Report
                 </Link>
-                <Link href="/reports" className="text-[13px] font-medium text-[color:var(--color-primary)] hover:underline">Preview</Link>
+                <Link href="/reports" className="text-[13px] font-medium text-[color:var(--color-primary)] hover:underline whitespace-nowrap">Preview</Link>
               </div>
             </div>
           ))}
