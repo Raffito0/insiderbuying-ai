@@ -86,10 +86,10 @@ export default function HomePage() {
             All data sourced directly from SEC EDGAR.
           </p>
           <div className="flex flex-col sm:flex-row gap-[12px] sm:gap-[16px]">
-            <Link href="/alerts" className="flex items-center justify-center h-[50px] sm:h-[62px] px-[24px] sm:px-[40px] bg-[var(--color-primary)] text-white text-[18px] font-semibold hover:bg-[var(--color-primary-dark)] transition-colors">
+            <Link href="/alerts" className="flex items-center justify-center h-[58px] sm:h-[62px] px-[24px] sm:px-[40px] bg-[var(--color-primary)] text-white text-[18px] font-semibold hover:bg-[var(--color-primary-dark)] transition-colors">
               See Recent Insider Trades
             </Link>
-            <Link href="#how-it-works" className="flex items-center justify-center h-[50px] sm:h-[62px] px-[24px] sm:px-[40px] border border-white/80 text-white text-[18px] font-semibold hover:bg-white/10 transition-colors">
+            <Link href="#how-it-works" className="flex items-center justify-center h-[58px] sm:h-[62px] px-[24px] sm:px-[40px] border border-white/80 text-white text-[18px] font-semibold hover:bg-white/10 transition-colors">
               How It Works
             </Link>
           </div>
