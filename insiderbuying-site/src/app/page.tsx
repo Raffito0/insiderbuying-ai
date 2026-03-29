@@ -98,7 +98,10 @@ export default function HomePage() {
       <section className="w-full py-[24px] bg-white overflow-hidden" aria-hidden="true">
         <div className="flex items-center gap-[48px] animate-[scroll_30s_linear_infinite] whitespace-nowrap">
           {[...LOGOS, ...LOGOS].map((logo, i) => (
-            <img key={i} src={`https://img.logo.dev/${logo.domain}?token=pk_I9HfmU7yQtOtljYFEYrDHQ&size=60&format=png`} alt={logo.name} className="h-[28px] w-auto shrink-0 opacity-60 grayscale" loading="lazy" />
+            <div key={i} className="flex items-center gap-[8px] shrink-0 opacity-70">
+              <img src={`https://img.logo.dev/${logo.domain}?token=pk_I9HfmU7yQtOtljYFEYrDHQ&size=60&format=png`} alt={logo.name} className="h-[24px] w-[24px] object-contain" loading="lazy" />
+              <span className="text-[14px] font-medium text-[color:var(--color-text)]">{logo.name}</span>
+            </div>
           ))}
         </div>
         <style>{`@keyframes scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}`}</style>
