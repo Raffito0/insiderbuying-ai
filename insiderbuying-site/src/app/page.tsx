@@ -86,24 +86,24 @@ export default function HomePage() {
       {/* ═══ 2. LIVE ALERT FEED ═══ */}
       <section className="w-full py-[var(--section-y-mobile)] px-[20px] md:pt-[var(--section-y)] md:px-[48px] md:pb-[var(--section-y)] bg-white">
         <div className="max-w-[1154px] mx-auto">
-          <div className="flex flex-col items-center lg:flex-row lg:items-center gap-[12px] lg:gap-[var(--gap-tight)] mb-[24px]">
+          <div className="flex flex-col items-center lg:flex-row lg:items-center lg:justify-center gap-[12px] lg:gap-[16px] mb-[24px]">
+            <h2 className="font-[var(--font-montaga)] text-[39px] md:text-[length:var(--text-title)] font-normal leading-[1.1] tracking-[0.5px] text-[color:var(--color-text)] text-center">SEC Form 4 Feed</h2>
             <div className="flex items-center gap-[8px] bg-[#00de16]/20 px-[12px] py-[4px] rounded-full">
               <div className="w-[8px] h-[8px] rounded-full bg-[var(--color-signal-green)]" />
               <span className="text-[12px] font-medium tracking-[0.5px] text-[color:var(--color-signal-green)]">Live</span>
             </div>
-            <h2 className="font-[var(--font-montaga)] text-[39px] md:text-[length:var(--text-title)] font-normal leading-[1.1] tracking-[0.5px] text-[color:var(--color-text)] text-center lg:text-left">SEC Form 4 Feed</h2>
           </div>
           {/* Desktop rows — attached block */}
           <div className="hidden lg:flex flex-col mb-[var(--gap-tight)] overflow-hidden shadow-[0px_1px_2px_rgba(0,0,0,0.05)]">
             {ALERTS.map((a, i) => (
               <div key={i} className={`flex items-center justify-between h-[112px] px-[32px] ${i % 2 === 0 ? "bg-[var(--color-bg-alt)]" : "bg-white"} ${i > 0 ? "border-t border-[var(--color-border)]" : ""}`}>
                 <div className="flex items-center gap-[24px] w-[280px] shrink-0">
-                  <div className="w-[64px] h-[64px] rounded-full bg-[#d9d9d9] flex items-center justify-center text-[14px] font-semibold text-[color:var(--color-text-muted)]">
+                  <div className="w-[58px] h-[58px] rounded-full bg-[#d9d9d9] flex items-center justify-center text-[13px] font-semibold text-[color:var(--color-text-muted)]">
                     {a.name.split(" ").map(n => n[0]).join("")}
                   </div>
                   <div className="flex flex-col gap-[4px]">
                     <span className="text-[13px] font-normal text-[color:var(--color-text-muted)]">{a.title}</span>
-                    <span className="font-[var(--font-montaga)] text-[18px] font-normal leading-[28px] text-[color:var(--color-text)]">{a.name}</span>
+                    <span className="font-[var(--font-montaga)] text-[16px] font-normal leading-[24px] text-[color:var(--color-text)]">{a.name}</span>
                   </div>
                 </div>
                 <span className="text-[24px] font-medium leading-[32px] text-[color:var(--color-text)]">{a.ticker}</span>
