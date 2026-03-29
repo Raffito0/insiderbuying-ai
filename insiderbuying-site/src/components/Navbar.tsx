@@ -17,7 +17,7 @@ export function Navbar() {
     <header className="sticky top-0 z-50 bg-white border-b border-[var(--color-border-light)]">
       <nav aria-label="Main menu" className="mx-auto max-w-[1280px] flex items-center justify-between h-20 px-6">
         {/* Logo */}
-        <Link href="/" className="flex items-baseline gap-0 text-xl">
+        <Link href="/" className="flex items-baseline gap-0 text-[22px] md:text-[26px]">
           <span className="font-[var(--font-inter)] font-normal text-[color:var(--color-text)]">
             Early
           </span>

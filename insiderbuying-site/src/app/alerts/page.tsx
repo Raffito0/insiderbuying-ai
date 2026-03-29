@@ -249,7 +249,7 @@ export default function AlertsPage() {
 
                 {/* Footer */}
                 <div className="flex items-center justify-between">
-                  <span className="text-[12px] font-normal leading-[16px] text-[color:var(--color-text-muted)]">{a.time} &bull; SEC Form 4</span>
+                  <span className="text-[12px] font-normal leading-[16px] text-[color:var(--color-text-muted)]">{a.time}</span>
                   <Link href="/pricing" className="flex items-center gap-[3px] text-[13px] md:text-[14px] font-medium leading-[20px] text-[color:var(--color-primary)] hover:underline">
                     Full Analysis
                     <svg className="w-[8px] h-[8px]" viewBox="0 0 8 8" fill="#000592"><path d="M0 4h6M4 2l2 2-2 2" stroke="#000592" strokeWidth="1.5" fill="none"/></svg>
