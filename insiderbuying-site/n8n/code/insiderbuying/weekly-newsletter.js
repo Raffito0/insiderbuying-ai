@@ -5,6 +5,8 @@ const _https = require('https');
 const _http = require('http');
 const { URL } = require('url');
 
+const { createOpusClient } = require('./ai-client');
+
 // ---------------------------------------------------------------------------
 // Internal helpers
 // ---------------------------------------------------------------------------
@@ -35,15 +37,70 @@ function _httpsGet(url) {
 }
 
 /**
+ * Minimal HTTPS POST returning a fetch-like response object.
+ */
+function _httpsPost(url, headersObj, bodyStr) {
+  return new Promise((resolve, reject) => {
+    const parsed = new URL(url);
+    const proto = parsed.protocol === 'https:' ? _https : _http;
+    const opts = {
+      hostname: parsed.hostname,
+      path: parsed.pathname + (parsed.search || ''),
+      method: 'POST',
+      headers: Object.assign({ 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(bodyStr) }, headersObj),
+    };
+    const req = proto.request(opts, (res) => {
+      let data = '';
+      res.on('data', (chunk) => { data += chunk; });
+      res.on('end', () => {
+        resolve({
+          status: res.statusCode,
+          json: () => { try { return Promise.resolve(JSON.parse(data)); } catch (e) { return Promise.resolve({ _raw: data }); } },
+          text: () => Promise.resolve(data),
+        });
+      });
+    });
+    req.on('error', reject);
+    req.write(bodyStr);
+    req.end();
+  });
+}
+
+/**
  * Parse a CSV string into an array of objects using the first line as headers.
- * Handles CRLF and LF line endings.
+ * Handles CRLF and LF line endings. RFC-4180 compliant: quoted fields with
+ * embedded commas are parsed correctly (e.g. "Alphabet Inc, Class A").
  */
 function _parseCsv(text) {
   const lines = text.trim().replace(/\r\n/g, '\n').split('\n');
   if (lines.length < 2) return [];
-  const headers = lines[0].split(',').map((h) => h.trim());
+
+  function splitCsvLine(line) {
+    const fields = [];
+    let field = '';
+    let inQuotes = false;
+    for (let i = 0; i < line.length; i++) {
+      const ch = line[i];
+      if (inQuotes) {
+        if (ch === '"') {
+          if (line[i + 1] === '"') { field += '"'; i++; } // escaped quote
+          else { inQuotes = false; }
+        } else {
+          field += ch;
+        }
+      } else {
+        if (ch === '"') { inQuotes = true; }
+        else if (ch === ',') { fields.push(field.trim()); field = ''; }
+        else { field += ch; }
+      }
+    }
+    fields.push(field.trim());
+    return fields;
+  }
+
+  const headers = splitCsvLine(lines[0]);
   return lines.slice(1).filter((l) => l.trim()).map((line) => {
-    const values = line.split(',').map((v) => v.trim());
+    const values = splitCsvLine(line);
     const obj = {};
     headers.forEach((h, i) => { obj[h] = values[i] !== undefined ? values[i] : ''; });
     return obj;
@@ -79,28 +136,27 @@ function _createDefaultFinnhubClient() {
 async function computeAlertPerformance(alerts, finnhubClient, _opts) {
   const sleepFn = (_opts && _opts._sleep) ? _opts._sleep : _sleep;
 
-  const settled = await Promise.allSettled(
-    alerts.map(async (alert, i) => {
-      if (i > 0) await sleepFn(250);
-      const ticker = alert.ticker;
-      const quote = await finnhubClient.getQuote(ticker);
+  const results = [];
+  for (let i = 0; i < alerts.length; i++) {
+    if (i > 0) await sleepFn(250);
+    try {
+      const alert = alerts[i];
+      const quote = await finnhubClient.getQuote(alert.ticker);
       const currentPrice = quote && typeof quote.c === 'number' ? quote.c : null;
       const filingPrice = typeof alert.price_at_filing === 'number' ? alert.price_at_filing : null;
 
       if (currentPrice === null || filingPrice === null || filingPrice === 0) {
-        return { ticker, return: 'N/A', winner: false };
+        results.push({ ticker: alert.ticker, return: 'N/A', winner: false });
+      } else {
+        const pct = ((currentPrice - filingPrice) / filingPrice) * 100;
+        const sign = pct >= 0 ? '+' : '';
+        results.push({ ticker: alert.ticker, return: sign + pct.toFixed(1) + '%', winner: pct > 0 });
       }
-
-      const pct = ((currentPrice - filingPrice) / filingPrice) * 100;
-      const sign = pct >= 0 ? '+' : '';
-      return { ticker, return: sign + pct.toFixed(1) + '%', winner: pct > 0 };
-    })
-  );
-
-  return settled.map((result, i) => {
-    if (result.status === 'fulfilled') return result.value;
-    return { ticker: alerts[i].ticker, return: 'N/A', winner: false };
-  });
+    } catch (e) {
+      results.push({ ticker: alerts[i].ticker, return: 'N/A', winner: false });
+    }
+  }
+  return results;
 }
 
 // ---------------------------------------------------------------------------
@@ -131,7 +187,7 @@ async function getUpcomingEarnings(nocodbApi, _opts) {
   if (cached && cached.updated_at) {
     const ageMs = nowMs - new Date(cached.updated_at).getTime();
     if (ageMs < 24 * 60 * 60 * 1000) {
-      return JSON.parse(cached.data);
+      try { return JSON.parse(cached.data); } catch (e) { /* corrupt cache — fall through to fetch */ }
     }
   }
 
@@ -139,6 +195,10 @@ async function getUpcomingEarnings(nocodbApi, _opts) {
   const apiKey = process.env.ALPHA_VANTAGE_API_KEY || '';
   const avUrl = 'https://www.alphavantage.co/query?function=EARNINGS_CALENDAR&horizon=3month&apikey=' + apiKey;
   const resp = await fetchFn(avUrl);
+  if (resp.status !== 200) {
+    console.warn('[weekly-newsletter] Alpha Vantage returned HTTP ' + resp.status + ' — skipping cache write');
+    return [];
+  }
   const csvText = await resp.text();
 
   // Parse CSV and filter to next 14 days
@@ -240,6 +300,125 @@ async function gatherWeeklyContent(nocodbApi, _opts) {
 }
 
 // ---------------------------------------------------------------------------
+// generateNewsletter
+// ---------------------------------------------------------------------------
+
+const _NEWSLETTER_SYSTEM_PROMPT = 'You are a financial newsletter writer for EarlyInsider, covering SEC Form 4 insider buying signals. Write engaging, authoritative editorial copy. Respond with raw JSON only — no markdown fences, no explanation, no preamble.';
+
+const _NEWSLETTER_SECTION_DESCRIPTIONS = [
+  's1 — Opening Hook (100-150 words): Personal first-person observation, no data yet. Set the tone.',
+  's2 — Move of the Week (200-250 words): Deep dive on alerts[0] (or macro context if no alerts).',
+  's3 — Scorecard (150-200 words): Last week performance. Include winners AND losers with returns.',
+  's4 — Pattern Recognition (150-200 words): Sector rotation or pre-earnings patterns in the data.',
+  "s5 — What I'm Watching (100-150 words): 3-4 specific upcoming events with dates from earnings.",
+  's6_free — The Wrap P.S.: Invite free subscribers to upgrade. One short paragraph.',
+  's6_pro — The Wrap P.S.: Referral ask. Must contain the exact merge tag {{rp_refer_url}}.',
+].join('\n');
+
+const _NEWSLETTER_SCHEMA = JSON.stringify({
+  sections: { s1: 'string', s2: 'string', s3: 'string', s4: 'string', s5: 'string', s6_free: 'string', s6_pro: 'string' },
+  subjectA: 'curiosity-gap subject line (always sent to Beehiiv for delivery)',
+  subjectB: 'number-specific subject line (logged to NocoDB only)',
+}, null, 2);
+
+/**
+ * POST a message to Telegram using native https.
+ */
+function _sendTelegramAlert(msg, env) {
+  const token = env.TELEGRAM_BOT_TOKEN;
+  const chatId = env.TELEGRAM_CHAT_ID;
+  if (!token || !chatId) return Promise.resolve();
+  return new Promise((resolve) => {
+    const body = JSON.stringify({ chat_id: chatId, text: msg });
+    const options = {
+      hostname: 'api.telegram.org',
+      path: '/bot' + token + '/sendMessage',
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(body) },
+    };
+    const req = _https.request(options, (res) => { res.resume(); resolve(); });
+    req.on('error', () => resolve());
+    req.write(body);
+    req.end();
+  });
+}
+
+/**
+ * Generate all six newsletter sections and two subject lines in one Opus call.
+ *
+ * @param {object} data - Output of gatherWeeklyContent()
+ * @param {object} [_opts]
+ * @param {object}   [_opts._aiClient]   Injectable Opus client { complete }
+ * @param {Function} [_opts._telegramFn] Injectable Telegram sender (msg) => Promise
+ * @param {object}   [_opts._env]        Override process.env
+ * @returns {Promise<{ sections: object, subjectA: string, subjectB: string }>}
+ */
+async function generateNewsletter(data, _opts) {
+  const MAX_RETRIES = 3;
+  const REQUIRED_KEYS = ['s1', 's2', 's3', 's4', 's5', 's6_free', 's6_pro'];
+
+  const env = (_opts && _opts._env) ? _opts._env : process.env;
+
+  // Token budget: clamp inputs before prompt injection
+  const alerts = (data.topAlerts || []).slice(0, 5);
+  const articles = data.articles || [];
+  const performance = data.performance || [];
+  const earnings = (data.upcomingEarnings || []).slice(0, 10);
+
+  // Empty-state prefix prevents AI from hallucinating tickers
+  const emptyPrefix = alerts.length === 0
+    ? 'IMPORTANT: No major insider moves this week. For section s2, write about macro market trends and broader market context instead of a specific ticker. Do not reference or imply any specific insider trade.\n\n'
+    : '';
+
+  const dataBlock = 'DATA:\n' + JSON.stringify({ alerts, articles, performance, earnings });
+  const basePrompt = emptyPrefix + dataBlock + '\n\nSECTIONS TO WRITE:\n' + _NEWSLETTER_SECTION_DESCRIPTIONS + '\n\nRESPONSE FORMAT (raw JSON only, no fences):\n' + _NEWSLETTER_SCHEMA;
+
+  const aiClient = (_opts && _opts._aiClient)
+    ? _opts._aiClient
+    : createOpusClient(_httpsGet, (env.KIEAI_API_KEY || ''));
+
+  const telegramFn = (_opts && _opts._telegramFn)
+    ? _opts._telegramFn
+    : (msg) => _sendTelegramAlert(msg, env);
+
+  let lastError = '';
+  for (let attempt = 0; attempt < MAX_RETRIES; attempt++) {
+    const prompt = attempt === 0
+      ? basePrompt
+      : basePrompt + '\n\nPrevious attempt failed: ' + lastError + '. Fix the issue and return valid JSON only.';
+
+    try {
+      const aiResult = await aiClient.complete(_NEWSLETTER_SYSTEM_PROMPT, prompt);
+      const raw = (aiResult && aiResult.content) ? aiResult.content : '';
+      const stripped = raw
+        .replace(/^\s*```(?:json)?\s*/i, '')
+        .replace(/\s*```\s*$/, '')
+        .trim();
+      const parsed = JSON.parse(stripped);
+
+      // Validate shape
+      const missing = REQUIRED_KEYS.filter(
+        (k) => !parsed.sections || !parsed.sections[k] || typeof parsed.sections[k] !== 'string' || !parsed.sections[k].trim()
+      );
+      if (missing.length > 0) { lastError = 'Missing or empty section keys: ' + missing.join(', '); continue; }
+      if (!parsed.subjectA || typeof parsed.subjectA !== 'string' || !parsed.subjectA.trim()) { lastError = 'subjectA missing or empty'; continue; }
+      if (!parsed.subjectB || typeof parsed.subjectB !== 'string' || !parsed.subjectB.trim()) { lastError = 'subjectB missing or empty'; continue; }
+
+      return parsed;
+    } catch (e) {
+      lastError = (e && e.message) ? e.message : String(e);
+    }
+  }
+
+  // All attempts failed — alert operator
+  const alertMsg = '[EarlyInsider] Newsletter AI generation failed after 3 attempts.\nLast error: ' + lastError;
+  try { await telegramFn(alertMsg); } catch (tgErr) {
+    console.error('[generateNewsletter] Telegram alert failed:', (tgErr && tgErr.message) || tgErr);
+  }
+  throw new Error('generateNewsletter failed after ' + MAX_RETRIES + ' attempts: ' + lastError);
+}
+
+// ---------------------------------------------------------------------------
 // generateSummaries
 // ---------------------------------------------------------------------------
 
@@ -324,52 +503,350 @@ function assembleNewsletter(summaries, content) {
   return html;
 }
 
-// ---------------------------------------------------------------------------
-// sendViaBeehiiv
-// ---------------------------------------------------------------------------
-
-/**
- * Send newsletter via Beehiiv API.
- * @param {string} html - Newsletter HTML
- * @param {string} subject - Subject line
- * @param {string} previewText - Preview text
- * @returns {object} { success, newsletterId }
- */
-function sendViaBeehiiv(html, subject, previewText) {
-  var apiKey = process.env.BEEHIIV_API_KEY;
-  var pubId = process.env.BEEHIIV_PUBLICATION_ID;
-
-  if (!apiKey || !pubId) {
-    return { success: false, error: 'Beehiiv credentials not configured' };
-  }
-
-  return {
-    method: 'POST',
-    url: 'https://api.beehiiv.com/v2/publications/' + pubId + '/posts',
-    headers: {
-      'Authorization': 'Bearer ' + apiKey,
-      'Content-Type': 'application/json',
-    },
-    body: {
-      title: subject,
-      subtitle: previewText,
-      content: html,
-      status: 'confirmed',
-    },
-    success: true,
-  };
-}
-
 function escapeHTML(str) {
   if (!str) return '';
   return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+// ---------------------------------------------------------------------------
+// Section 03: Quality Gates, HTML Assembly, Send
+// ---------------------------------------------------------------------------
+
+/**
+ * Validate word count of joined sections is within [1000, 1400].
+ * Strips HTML tags before counting so markup does not inflate the count.
+ */
+function checkWordCount(sections) {
+  const s6 = (sections.s6_pro || '').length >= (sections.s6_free || '').length
+    ? (sections.s6_pro || '') : (sections.s6_free || '');
+  const joined = [
+    sections.s1 || '', sections.s2 || '', sections.s3 || '',
+    sections.s4 || '', sections.s5 || '', s6,
+  ].join(' ');
+  const text = joined.replace(/<[^>]+>/g, ' ');
+  const count = text.trim().split(/\s+/).filter(Boolean).length;
+  if (count < 1000 || count > 1400) {
+    throw new Error('Word count out of range: ' + count + ' (expected 1000-1400)');
+  }
+}
+
+/**
+ * Validate <a href count in assembled HTML is <= 7.
+ */
+function checkLinkCount(html, label) {
+  const count = (html.match(/<a href/gi) || []).length;
+  if (count > 7) {
+    throw new Error('Link count exceeded for ' + label + ': ' + count + ' (max 7)');
+  }
+}
+
+/** Build the insider alert table (top 3 rows). */
+function _buildAlertTable(topAlerts) {
+  const fmt = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
+  const rows = (topAlerts || []).slice(0, 3).map(function(a) {
+    return '<tr>'
+      + '<td style="padding:8px;border-bottom:1px solid #e2e8f0;">' + escapeHTML(a.ticker || '') + '</td>'
+      + '<td style="padding:8px;border-bottom:1px solid #e2e8f0;">' + escapeHTML(a.insider_name || '') + '</td>'
+      + '<td style="padding:8px;border-bottom:1px solid #e2e8f0;">' + fmt.format(a.total_value || 0) + '</td>'
+      + '<td style="padding:8px;border-bottom:1px solid #e2e8f0;">' + escapeHTML(String(a.score || 0)) + '/10</td>'
+      + '</tr>';
+  });
+  if (rows.length === 0) {
+    rows.push('<tr><td colspan="4" style="padding:8px;text-align:center;color:#94a3b8;">No major moves this week</td></tr>');
+  }
+  return '<table style="width:100%;border-collapse:collapse;">'
+    + '<thead><tr>'
+    + '<th style="padding:8px;text-align:left;border-bottom:2px solid #002A5E;font-size:12px;">Ticker</th>'
+    + '<th style="padding:8px;text-align:left;border-bottom:2px solid #002A5E;font-size:12px;">Insider</th>'
+    + '<th style="padding:8px;text-align:left;border-bottom:2px solid #002A5E;font-size:12px;">Value</th>'
+    + '<th style="padding:8px;text-align:left;border-bottom:2px solid #002A5E;font-size:12px;">Score</th>'
+    + '</tr></thead>'
+    + '<tbody>' + rows.join('') + '</tbody>'
+    + '</table>';
+}
+
+var _EMAIL_HEAD = '<!DOCTYPE html><html><head>'
+  + '<meta charset="utf-8">'
+  + '<meta name="viewport" content="width=device-width, initial-scale=1.0">'
+  + '<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">'
+  + '<style>'
+  + 'body{font-family:Inter,sans-serif;background:#f8fafc;margin:0;padding:0;}'
+  + '.container{max-width:600px;margin:0 auto;background:#ffffff;padding:32px;}'
+  + 'h2{color:#002A5E;margin:24px 0 8px;}'
+  + '@media (max-width: 480px) { .container { padding: 16px !important; } }'
+  + '</style>'
+  + '</head><body><div class="container">';
+
+var _EMAIL_HEADER_BLOCK = '<div style="text-align:center;padding:16px 0;border-bottom:2px solid #002A5E;">'
+  + '<h1 style="color:#002A5E;margin:0;">EarlyInsider</h1>'
+  + '<p style="color:#64748b;margin:4px 0 0;">Weekly Insider Intelligence</p>'
+  + '</div>';
+
+var _EMAIL_FOOTER_CLOSE = '<div style="margin-top:32px;padding-top:20px;border-top:1px solid #e2e8f0;'
+  + 'text-align:center;font-size:12px;color:#94a3b8;">'
+  + '<p>EarlyInsider | <a href="https://earlyinsider.com" style="color:#94a3b8;">earlyinsider.com</a></p>'
+  + '</div>'
+  + '</div></body></html>';
+
+/**
+ * Assemble the Free-tier newsletter HTML.
+ * Includes s1-s3, alert table, upgrade CTA, s6_free, and List-Unsubscribe footer.
+ */
+function assembleFreeHtml(sections, topAlerts, subjectA) {
+  var alertTable = _buildAlertTable(topAlerts);
+  return _EMAIL_HEAD
+    + _EMAIL_HEADER_BLOCK
+    + '<div style="margin:24px 0;">' + escapeHTML(sections.s1 || '') + '</div>'
+    + '<h2>Move of the Week</h2>'
+    + '<div style="margin:16px 0;">' + escapeHTML(sections.s2 || '') + '</div>'
+    + '<h2>Scorecard</h2>'
+    + '<div style="margin:16px 0;">' + escapeHTML(sections.s3 || '') + '</div>'
+    + '<h2>Top Insider Moves</h2>'
+    + alertTable
+    + '<div style="margin:32px 0;padding:24px;background:#f0f9ff;border-left:4px solid #002A5E;border-radius:4px;">'
+    + '<p style="margin:0 0 12px;font-weight:600;color:#002A5E;">Want the full analysis? Pattern Recognition, What I\'m Watching, and the complete scorecard are available to Pro subscribers.</p>'
+    + '<a href="https://earlyinsider.com/pricing" style="display:inline-block;padding:10px 20px;background:#002A5E;color:#ffffff;text-decoration:none;border-radius:4px;font-weight:600;">Upgrade to Pro</a>'
+    + '</div>'
+    + '<div style="margin:24px 0;">' + escapeHTML(sections.s6_free || '') + '</div>'
+    + '<div style="margin-top:32px;padding-top:20px;border-top:1px solid #e2e8f0;text-align:center;font-size:12px;color:#94a3b8;">'
+    + '<p>EarlyInsider | <a href="https://earlyinsider.com" style="color:#94a3b8;">earlyinsider.com</a></p>'
+    + '<p><a href="https://earlyinsider.com/unsubscribe" style="color:#94a3b8;">Unsubscribe</a> | List-Unsubscribe</p>'
+    + '</div>'
+    + '</div></body></html>';
+}
+
+/**
+ * Assemble the Pro-tier newsletter HTML.
+ * Includes all 6 sections, alert table, "5 more alerts" block, and referral block with {{rp_refer_url}}.
+ */
+function assembleProHtml(sections, topAlerts, subjectA) {
+  var alertTable = _buildAlertTable(topAlerts);
+  return _EMAIL_HEAD
+    + _EMAIL_HEADER_BLOCK
+    + '<div style="margin:24px 0;">' + escapeHTML(sections.s1 || '') + '</div>'
+    + '<h2>Move of the Week</h2>'
+    + '<div style="margin:16px 0;">' + escapeHTML(sections.s2 || '') + '</div>'
+    + '<h2>Scorecard</h2>'
+    + '<div style="margin:16px 0;">' + escapeHTML(sections.s3 || '') + '</div>'
+    + '<h2>Pattern Recognition</h2>'
+    + '<div style="margin:16px 0;">' + escapeHTML(sections.s4 || '') + '</div>'
+    + '<h2>What I\'m Watching</h2>'
+    + '<div style="margin:16px 0;">' + escapeHTML(sections.s5 || '') + '</div>'
+    + '<h2>Top Insider Moves</h2>'
+    + alertTable
+    + '<div style="margin:24px 0;padding:16px;background:#f8fafc;border-radius:4px;">'
+    + '<a href="https://earlyinsider.com/alerts" style="color:#002A5E;font-weight:600;">See 5 more alerts from this week &rarr;</a>'
+    + '</div>'
+    + '<div style="margin:24px 0;padding:16px;background:#f0f9ff;border-radius:4px;">'
+    + '<p style="margin:0;">Share EarlyInsider and earn rewards: <a href="{{rp_refer_url}}" style="color:#002A5E;">{{rp_refer_url}}</a></p>'
+    + '</div>'
+    + '<div style="margin:24px 0;">' + escapeHTML(sections.s6_pro || '') + '</div>'
+    + _EMAIL_FOOTER_CLOSE;
+}
+
+/**
+ * Send newsletter via Beehiiv API. Falls back to Resend if Beehiiv returns non-confirmed status.
+ *
+ * @param {string} html
+ * @param {string} subjectA
+ * @param {string} tier  'free' | 'pro'
+ * @param {object} [_opts]
+ * @param {Function} [_opts._postFn]    Injectable HTTP POST (url, headers, bodyStr) => Promise
+ * @param {Function} [_opts._resendFn]  Injectable fallback (html, subjectA, tier) => Promise
+ * @param {object}   [_opts._env]       Override process.env
+ */
+async function sendViaBeehiiv(html, subjectA, tier, _opts) {
+  const env = (_opts && _opts._env) ? _opts._env : process.env;
+  const postFn = (_opts && _opts._postFn) ? _opts._postFn : _httpsPost;
+  const resendFn = (_opts && _opts._resendFn) ? _opts._resendFn : null;
+
+  const apiKey = env.BEEHIIV_API_KEY || '';
+  // NOTE: if BEEHIIV_PUBLICATION_ID is missing the URL becomes /publications//posts (404).
+  // The Resend fallback will handle it, but watch for this in env setup.
+  const pubId = env.BEEHIIV_PUBLICATION_ID || '';
+  const url = 'https://api.beehiiv.com/v2/publications/' + pubId + '/posts';
+
+  const payload = { email_subject_line: subjectA, content_html: html, status: 'confirmed' };
+  if (tier === 'pro') {
+    const tierIds = (env.BEEHIIV_PREMIUM_TIER_IDS || '').split(',').filter(Boolean);
+    if (tierIds.length > 0) payload.tier_ids = tierIds;
+  }
+
+  let useFallback = false;
+  let fallbackReason = '';
+  try {
+    const resp = await postFn(url, { 'Authorization': 'Bearer ' + apiKey }, JSON.stringify(payload));
+    if (resp.status >= 200 && resp.status < 300) {
+      const body = await resp.json();
+      if (body && body.data && body.data.status !== 'confirmed') {
+        useFallback = true;
+        fallbackReason = 'Beehiiv status: ' + body.data.status;
+      } else {
+        console.log('[sendViaBeehiiv] Sent via Beehiiv (' + tier + ')');
+        return;
+      }
+    } else {
+      useFallback = true;
+      fallbackReason = 'Beehiiv HTTP ' + resp.status;
+    }
+  } catch (e) {
+    useFallback = true;
+    fallbackReason = (e && e.message) ? e.message : String(e);
+  }
+
+  if (useFallback) {
+    console.warn('[sendViaBeehiiv] Falling back to Resend (' + tier + '): ' + fallbackReason);
+    if (resendFn) {
+      await resendFn(html, subjectA, tier);
+    } else {
+      throw new Error('[sendViaBeehiiv] Beehiiv failed and no resendFn provided: ' + fallbackReason);
+    }
+  }
+}
+
+/**
+ * Send via Resend batch endpoint in chunks of 500 recipients.
+ *
+ * @param {string}   html
+ * @param {string}   subjectA
+ * @param {string}   tier
+ * @param {string[]} subscribers  Array of recipient email strings
+ * @param {object}   [_opts]
+ * @param {Function} [_opts._postFn]  Injectable HTTP POST
+ * @param {object}   [_opts._env]     Override process.env
+ */
+async function sendViaResend(html, subjectA, tier, subscribers, _opts) {
+  const env = (_opts && _opts._env) ? _opts._env : process.env;
+  const postFn = (_opts && _opts._postFn) ? _opts._postFn : _httpsPost;
+  const apiKey = env.RESEND_API_KEY || '';
+  const BATCH_SIZE = 500;
+
+  for (let i = 0; i < subscribers.length; i += BATCH_SIZE) {
+    const batch = subscribers.slice(i, i + BATCH_SIZE);
+    const payload = batch.map(function(email) {
+      return {
+        from: 'Ryan from EarlyInsider <ryan@earlyinsider.com>',
+        to: [email],
+        subject: subjectA,
+        html: html,
+        headers: { 'List-Unsubscribe': '<mailto:unsubscribe@earlyinsider.com?subject=unsubscribe>' },
+      };
+    });
+    const resp = await postFn('https://api.resend.com/emails/batch', { 'Authorization': 'Bearer ' + apiKey }, JSON.stringify(payload));
+    if (resp.status < 200 || resp.status >= 300) {
+      const body = await resp.text();
+      throw new Error('Resend batch failed with HTTP ' + resp.status + ': ' + body);
+    }
+  }
+  console.log('[sendViaResend] Sent to ' + subscribers.length + ' ' + tier + ' recipients in '
+    + Math.ceil(subscribers.length / BATCH_SIZE) + ' batch(es)');
+}
+
+/**
+ * Write a Newsletter_Sends record to NocoDB after a successful send.
+ */
+async function logSendToNocodb(nocodbApi, logData) {
+  await nocodbApi.create('Newsletter_Sends', {
+    sent_at: new Date().toISOString(),
+    subject_a: logData.subjectA,
+    subject_b: logData.subjectB,
+    send_path: logData.sendPath || 'beehiiv',
+    word_count: logData.wordCount,
+    free_link_count: logData.freeLinkCount,
+    pro_link_count: logData.proLinkCount,
+  });
+}
+
+/**
+ * Top-level orchestrator: gathers content → generates AI copy → gates → assembles → sends → logs.
+ *
+ * @param {object} nocodbApi  NocoDB client
+ * @param {object} [_opts]
+ * @param {Function} [_opts._gatherFn]    Override gatherWeeklyContent (for tests)
+ * @param {object}   [_opts._aiClient]    Passed to generateNewsletter
+ * @param {Function} [_opts._telegramFn]  Passed to generateNewsletter
+ * @param {Function} [_opts._postFn]      Injectable HTTP POST for Beehiiv + Resend
+ * @param {object}   [_opts._env]         Override process.env
+ */
+async function sendWeeklyNewsletter(nocodbApi, _opts) {
+  const env = (_opts && _opts._env) ? _opts._env : process.env;
+  const postFn = (_opts && _opts._postFn) ? _opts._postFn : _httpsPost;
+
+  // 1. Gather content
+  const gatherFn = (_opts && _opts._gatherFn)
+    ? _opts._gatherFn
+    : function() { return gatherWeeklyContent(nocodbApi, { _env: env }); };
+  const content = await gatherFn();
+
+  // 2. Generate AI sections
+  const aiResult = await generateNewsletter(content, {
+    _aiClient: _opts && _opts._aiClient,
+    _telegramFn: _opts && _opts._telegramFn,
+    _env: env,
+  });
+  const sections = aiResult.sections;
+  const subjectA = aiResult.subjectA;
+  const subjectB = aiResult.subjectB;
+
+  // 3. Quality gates
+  checkWordCount(sections);
+
+  // 4. Assemble HTML variants
+  const freeHtml = assembleFreeHtml(sections, content.topAlerts, subjectA);
+  const proHtml = assembleProHtml(sections, content.topAlerts, subjectA);
+  checkLinkCount(freeHtml, 'free');
+  checkLinkCount(proHtml, 'pro');
+
+  const s6forCount = (sections.s6_pro || '').length >= (sections.s6_free || '').length
+    ? (sections.s6_pro || '') : (sections.s6_free || '');
+  const wordCountText = [sections.s1, sections.s2, sections.s3, sections.s4, sections.s5, s6forCount]
+    .join(' ').replace(/<[^>]+>/g, ' ');
+  const wordCount = wordCountText.trim().split(/\s+/).filter(Boolean).length;
+  const freeLinkCount = (freeHtml.match(/<a href/gi) || []).length;
+  const proLinkCount = (proHtml.match(/<a href/gi) || []).length;
+
+  // Build Resend fallback closures (lazy subscriber fetch)
+  let sendPath = 'beehiiv';
+  function makeResendFallback(tier) {
+    return async function(html, subject) {
+      // NOTE: capped at 5000 subscribers — no pagination. Sufficient for pre-launch scale.
+      const subResult = await nocodbApi.list('Newsletter_Subscribers', {
+        where: '(tier,eq,' + tier + ')',
+        limit: 5000,
+      });
+      const subscribers = (subResult.list || []).map(function(s) { return s.email; }).filter(Boolean);
+      await sendViaResend(html, subject, tier, subscribers, { _postFn: postFn, _env: env });
+      sendPath = 'resend';
+    };
+  }
+
+  // 5. Send both tiers in parallel
+  await Promise.all([
+    sendViaBeehiiv(freeHtml, subjectA, 'free', {
+      _postFn: postFn, _resendFn: makeResendFallback('free'), _env: env,
+    }),
+    sendViaBeehiiv(proHtml, subjectA, 'pro', {
+      _postFn: postFn, _resendFn: makeResendFallback('pro'), _env: env,
+    }),
+  ]);
+
+  // 6. Log
+  await logSendToNocodb(nocodbApi, { subjectA, subjectB, sendPath, wordCount, freeLinkCount, proLinkCount });
 }
 
 module.exports = {
   gatherWeeklyContent,
   computeAlertPerformance,
   getUpcomingEarnings,
+  generateNewsletter,
   generateSummaries,
   assembleNewsletter,
+  checkWordCount,
+  checkLinkCount,
+  assembleFreeHtml,
+  assembleProHtml,
   sendViaBeehiiv,
+  sendViaResend,
+  logSendToNocodb,
+  sendWeeklyNewsletter,
 };

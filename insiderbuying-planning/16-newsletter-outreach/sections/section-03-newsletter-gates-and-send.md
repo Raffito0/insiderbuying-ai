@@ -300,3 +300,23 @@ These must be present at runtime. The module should throw a clear startup error 
 - **List-Unsubscribe:** The `List-Unsubscribe` header is set at the HTTP transport layer in the Resend fallback. The visible unsubscribe link in the Free version HTML footer covers the CAN-SPAM visible opt-out requirement for both paths.
 - **Currency formatting server-side:** `Intl.NumberFormat` is available in Node.js without any polyfill.
 - **Concurrent Free + Pro send:** Use `Promise.all` so both sends happen in parallel. If one fails (and falls back to Resend), the other still proceeds.
+
+---
+
+## Deviations from Plan
+
+1. **`_opts` injection pattern**: Plan showed `sendViaBeehiiv(html, subjectA, tier)`. Extended to `sendViaBeehiiv(html, subjectA, tier, _opts)` with `_postFn`, `_resendFn`, `_env` injection — consistent with the `_opts` pattern from sections 01-02.
+
+2. **`sendWeeklyNewsletter` also takes `_opts`**: Plan showed `sendWeeklyNewsletter(nocodbApi)`. Extended to `sendWeeklyNewsletter(nocodbApi, _opts)` with `_gatherFn`, `_aiClient`, `_telegramFn`, `_postFn`, `_env` injection — required for testability without module-level mocks.
+
+3. **AI section content escaped**: Plan was silent on this. User decided during code review to apply `escapeHTML()` to all AI-generated section text before insertion into HTML wrappers.
+
+4. **`sendViaBeehiiv` throws when `resendFn` is null and fallback needed**: Code review finding — original silently swallowed the failure. Fixed to throw.
+
+5. **`sendViaResend` checks HTTP response status**: Code review finding — original discarded the response. Fixed to throw on non-2xx with status code and body.
+
+6. **`_httpsPost.json()` handles non-JSON bodies**: Code review finding — wrapped `JSON.parse` in try/catch, returns `{ _raw: data }` on failure.
+
+7. **Test file location**: Plan referenced `n8n/tests/weekly-newsletter.test.js`. Tests live in `tests/insiderbuying/weekly-newsletter.test.js` (Jest, not node:test — consistent with project test setup).
+
+8. **Final test count**: 44 total (20 from sections 01-02, 24 from section 03).

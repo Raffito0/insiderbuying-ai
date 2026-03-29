@@ -2,10 +2,10 @@
 
 ## Overview
 
-Replace the existing `buildEmailTemplate()` stub in `weekly-newsletter.js` with a real single-call DeepSeek pipeline that produces all six newsletter sections plus two subject-line variants in one shot. Add a retry loop that re-prompts with constraint feedback on failure. Enforce a token budget before calling. Handle empty alert states explicitly.
+Add `generateNewsletter(data, _opts)` to `weekly-newsletter.js`. Uses Claude Opus via `ai-client.js` (see Deviations below) for a single call that produces all six newsletter sections plus two subject-line variants. Adds a retry loop that re-prompts with constraint feedback on failure. Enforces token budget before calling. Handles empty alert states explicitly.
 
 **File:** `n8n/code/insiderbuying/weekly-newsletter.js`
-**Test file:** `n8n/tests/weekly-newsletter.test.js`
+**Test file:** `tests/insiderbuying/weekly-newsletter.test.js` (Jest format)
 
 **Depends on:** section-01-newsletter-data-layer (provides the `{ topAlerts, articles, performance, upcomingEarnings }` data object)
 **Blocks:** section-03-newsletter-gates-and-send (consumes the AI output shape)
@@ -238,13 +238,25 @@ The `result` object passes through unchanged to section 03. Do not mutate it aft
 
 ## Acceptance Criteria
 
-All 8 tests pass. Specifically:
+All 20 tests pass (8 new + 12 existing). Section-02 criteria:
 
-1. DeepSeek called exactly once per non-retried invocation
-2. Code fences stripped successfully in the happy path and on retry
+1. AI client called exactly once per non-retried invocation
+2. Code fences stripped successfully (handles leading whitespace + `\`\`\`json` and bare `\`\`\`` variants)
 3. Return value matches the required shape with all 7 section keys + subjectA + subjectB
 4. Retry on malformed JSON resolves without throwing on second attempt
-5. Retry on missing section keys resolves without throwing
+5. Retry on missing section keys resolves without throwing; constraint feedback appears in retry prompt
 6. Telegram alert sent and error thrown after 3 failures
 7. Empty-state prefix appears in prompt when `topAlerts = []`
 8. Alert and earnings arrays clamped to 5 and 10 respectively before prompt injection
+
+## Deviations from Plan
+
+1. **AI provider: Claude Opus instead of DeepSeek**: Plan specified "plain `require('https')` call to the DeepSeek API". `analyze-alert.js` (the module the plan cited as the pattern) already uses `require('./ai-client')`, not raw DeepSeek. The entire codebase migrated to `ai-client.js` for all AI calls. Using `createOpusClient` (Opus via kie.ai) produces better editorial prose and is consistent with all other human-facing content generation.
+
+2. **`_opts._aiClient` injection for testability**: Plan showed `generateNewsletter(data)`. Extended to `generateNewsletter(data, _opts)` with `_aiClient`, `_telegramFn`, and `_env` injection — consistent with the `_opts` pattern established in section-01.
+
+3. **`_httpsGet` passed to `createOpusClient`**: The n8n sandbox has no global `fetch`; passing `undefined` as `fetchFn` would crash at runtime. The `_httpsGet` helper already defined in the module is passed instead.
+
+4. **Code-fence regex hardened**: Plan regex `/^```(?:json)?\s*/i` does not handle leading whitespace before the fence. Upgraded to `/^\s*```(?:json)?\s*/i` to avoid burning a retry when the AI emits a leading newline.
+
+5. **Telegram `resolve()` timing**: Resolves immediately in response callback instead of waiting for `'end'` event to avoid timing dependency on stream state.

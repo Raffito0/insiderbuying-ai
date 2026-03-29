@@ -4,8 +4,8 @@
 
 Replace the stubbed `gatherWeeklyContent()` function in `weekly-newsletter.js` with real NocoDB queries. Add `computeAlertPerformance()` for Finnhub price lookups and `getUpcomingEarnings()` with Alpha Vantage + NocoDB caching.
 
-**File to modify:** `n8n/code/insiderbuying/weekly-newsletter.js`
-**Test file:** `n8n/tests/weekly-newsletter.test.js`
+**File modified:** `n8n/code/insiderbuying/weekly-newsletter.js`
+**Test file:** `tests/insiderbuying/weekly-newsletter.test.js` (Jest format — not `n8n/tests/` which uses node:test)
 
 **Dependencies:** none — this section is the root of the newsletter pipeline and can be implemented in parallel with section-04.
 
@@ -167,6 +167,21 @@ CREATE TABLE Financial_Cache (
 
 - `gatherWeeklyContent` resolves with all four keys populated (arrays, possibly empty).
 - When `topAlerts` is empty, `result.emptyAlertsPrefix` is set to the correct string.
-- `computeAlertPerformance` never throws — all Finnhub failures are swallowed via `Promise.allSettled`.
-- `getUpcomingEarnings` reads from cache when fresh and writes to cache on miss.
-- All 9 test stubs pass.
+- `computeAlertPerformance` processes alerts sequentially (for loop + await), never throws — all Finnhub failures caught per-alert.
+- `getUpcomingEarnings` checks HTTP status before parsing; skips cache write on non-200. Corrupt cache JSON falls through to fetch.
+- `_parseCsv` handles RFC-4180 quoted fields (company names with commas).
+- All 12 tests pass.
+
+## Deviations from Plan
+
+1. **Test file location**: Moved from `n8n/tests/weekly-newsletter.test.js` to `tests/insiderbuying/weekly-newsletter.test.js`. The `n8n/tests/` directory uses `node:test` format, which Jest cannot run. All new tests written in Jest format.
+
+2. **`computeAlertPerformance` — sequential for loop**: The plan called for `Promise.allSettled` + map. Code review (B-1) found this is not actually sequential — all non-first callbacks start concurrently and sleep 250ms in parallel. Replaced with `for` loop + `await` per iteration + per-alert try/catch.
+
+3. **Alpha Vantage HTTP status check (B-2)**: Plan did not specify error handling. Added `if (resp.status !== 200) return []` to prevent empty array being cached on 429/500.
+
+4. **JSON.parse try/catch (B-3)**: Wrap `JSON.parse(cached.data)` — corrupt DB entry no longer crashes `gatherWeeklyContent`.
+
+5. **RFC-4180 CSV parser (B-4)**: Plan used naive comma split. Replaced `_parseCsv` with character-by-character parser that handles quoted fields with embedded commas (e.g. `"Alphabet Inc, Class A"`).
+
+6. **12 tests instead of 9**: Added T-1 (sleepFn called n-1 times) and T-2 (AV non-200 → no cache write), plus `emptyAlertsPrefix` test.

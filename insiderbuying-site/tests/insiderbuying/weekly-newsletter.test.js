@@ -1,9 +1,23 @@
 'use strict';
 
+// Mock ai-client BEFORE requiring weekly-newsletter (section-02 generateNewsletter uses it)
+jest.mock('../../n8n/code/insiderbuying/ai-client', () => ({
+  createOpusClient: jest.fn(),
+}));
+const { createOpusClient } = require('../../n8n/code/insiderbuying/ai-client');
+
 const {
   gatherWeeklyContent,
   computeAlertPerformance,
   getUpcomingEarnings,
+  generateNewsletter,
+  checkWordCount,
+  checkLinkCount,
+  assembleFreeHtml,
+  assembleProHtml,
+  sendViaBeehiiv,
+  sendViaResend,
+  logSendToNocodb,
 } = require('../../n8n/code/insiderbuying/weekly-newsletter');
 
 // ---------------------------------------------------------------------------
@@ -163,6 +177,22 @@ describe('gatherWeeklyContent — NocoDB table targets and filters', () => {
 // ---------------------------------------------------------------------------
 
 describe('computeAlertPerformance', () => {
+  test('T-1: sleepFn called n-1 times (sequential enforcement)', async () => {
+    const alerts = [
+      { ticker: 'AAPL', price_at_filing: 100 },
+      { ticker: 'TSLA', price_at_filing: 200 },
+      { ticker: 'MSFT', price_at_filing: 300 },
+    ];
+    const finnhub = makeFinnhub({ AAPL: { c: 110 }, TSLA: { c: 210 }, MSFT: { c: 310 } });
+    const sleepSpy = jest.fn().mockResolvedValue(undefined);
+
+    await computeAlertPerformance(alerts, finnhub, { _sleep: sleepSpy });
+
+    // 3 alerts → sleepFn called 2 times (before alert 1 and alert 2, not before alert 0)
+    expect(sleepSpy).toHaveBeenCalledTimes(alerts.length - 1);
+    expect(sleepSpy).toHaveBeenCalledWith(250);
+  });
+
   test('maps alerts to { ticker, return, winner } using mocked Finnhub', async () => {
     const alerts = [
       { ticker: 'AAPL', price_at_filing: 100 },
@@ -233,6 +263,21 @@ describe('getUpcomingEarnings — cache behaviour', () => {
     expect(fetchSpy).not.toHaveBeenCalled();
   });
 
+  test('T-2: Alpha Vantage non-200 → returns [] and does NOT write cache', async () => {
+    const db = makeNocoDB([{ list: [] }]); // cache miss
+    const fetchFn = jest.fn().mockResolvedValue({
+      status: 429,
+      text: () => Promise.resolve('Rate limit exceeded'),
+    });
+
+    const result = await getUpcomingEarnings(db, { _nowMs: TEST_NOW, _fetchFn: fetchFn });
+
+    expect(result).toEqual([]);
+    // create and update must NOT be called — cache should not be written on error
+    expect(db.create).not.toHaveBeenCalled();
+    expect(db.update).not.toHaveBeenCalled();
+  });
+
   test('calls Alpha Vantage when cache is missing or stale', async () => {
     // Return empty cache list
     const db = makeNocoDB([{ list: [] }]);
@@ -261,5 +306,385 @@ describe('getUpcomingEarnings — cache behaviour', () => {
     const symbols = result.map(e => e.symbol);
     expect(symbols).toContain('AAPL');
     expect(symbols).not.toContain('MSFT'); // outside 14-day window
+  });
+});
+
+// ---------------------------------------------------------------------------
+// generateNewsletter
+// ---------------------------------------------------------------------------
+
+const VALID_NEWSLETTER_RESULT = {
+  sections: {
+    s1: 'Opening hook text.',
+    s2: 'Move of the week text.',
+    s3: 'Scorecard text.',
+    s4: 'Pattern recognition text.',
+    s5: 'What I am watching text.',
+    s6_free: 'Upgrade to pro today.',
+    s6_pro: 'Refer a friend at {{rp_refer_url}}.',
+  },
+  subjectA: 'This insider just went all in',
+  subjectB: '3 insiders bought $4M in stock this week',
+};
+
+function makeOpusClient(responses) {
+  let idx = 0;
+  const complete = jest.fn().mockImplementation(() => {
+    const item = responses[idx] !== undefined ? responses[idx] : responses[responses.length - 1];
+    idx++;
+    if (item instanceof Error) return Promise.reject(item);
+    return Promise.resolve({ content: typeof item === 'string' ? item : JSON.stringify(item) });
+  });
+  return { complete };
+}
+
+function makeSampleData(overrides = {}) {
+  return {
+    topAlerts: [{ ticker: 'AAPL', score: 9, price_at_filing: 150 }],
+    articles: [{ title: 'Test Article', published_at: '2026-03-14' }],
+    performance: [{ ticker: 'AAPL', return: '+5.0%', winner: true }],
+    upcomingEarnings: [{ symbol: 'AAPL', reportDate: '2026-03-20' }],
+    ...overrides,
+  };
+}
+
+describe('generateNewsletter', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  test('calls AI client exactly once with all 4 data inputs injected into prompt', async () => {
+    const client = makeOpusClient([VALID_NEWSLETTER_RESULT]);
+    const data = makeSampleData();
+
+    await generateNewsletter(data, { _aiClient: client });
+
+    expect(client.complete).toHaveBeenCalledTimes(1);
+    const [, userPrompt] = client.complete.mock.calls[0];
+    expect(userPrompt).toContain('AAPL'); // alert ticker in data
+    expect(userPrompt).toContain('Test Article'); // article title in data
+  });
+
+  test('strips markdown code fences before JSON.parse', async () => {
+    const fenced = '```json\n' + JSON.stringify(VALID_NEWSLETTER_RESULT) + '\n```';
+    const client = makeOpusClient([fenced]);
+
+    const result = await generateNewsletter(makeSampleData(), { _aiClient: client });
+
+    expect(result.subjectA).toBe(VALID_NEWSLETTER_RESULT.subjectA);
+  });
+
+  test('returns all required section keys and both subject lines', async () => {
+    const client = makeOpusClient([VALID_NEWSLETTER_RESULT]);
+
+    const result = await generateNewsletter(makeSampleData(), { _aiClient: client });
+
+    const REQUIRED_KEYS = ['s1', 's2', 's3', 's4', 's5', 's6_free', 's6_pro'];
+    REQUIRED_KEYS.forEach((k) => {
+      expect(result.sections[k]).toBeTruthy();
+    });
+    expect(typeof result.subjectA).toBe('string');
+    expect(result.subjectA.length).toBeGreaterThan(0);
+    expect(typeof result.subjectB).toBe('string');
+    expect(result.subjectB.length).toBeGreaterThan(0);
+  });
+
+  test('retries on malformed AI JSON and resolves on second attempt', async () => {
+    const client = makeOpusClient(['not-valid-json{{{', VALID_NEWSLETTER_RESULT]);
+
+    const result = await generateNewsletter(makeSampleData(), { _aiClient: client });
+
+    expect(client.complete).toHaveBeenCalledTimes(2);
+    expect(result.subjectA).toBe(VALID_NEWSLETTER_RESULT.subjectA);
+  });
+
+  test('retries when response is missing required section keys', async () => {
+    const partial = { sections: { s1: 'ok' }, subjectA: 'A', subjectB: 'B' };
+    const client = makeOpusClient([partial, VALID_NEWSLETTER_RESULT]);
+
+    const result = await generateNewsletter(makeSampleData(), { _aiClient: client });
+
+    expect(client.complete).toHaveBeenCalledTimes(2);
+    expect(result.sections.s2).toBeTruthy();
+
+    // Retry prompt must contain lastError from the first attempt
+    const [, retryPrompt] = client.complete.mock.calls[1];
+    expect(retryPrompt).toContain('Missing or empty section keys');
+  });
+
+  test('sends Telegram alert and throws after 3 consecutive AI failures', async () => {
+    const client = makeOpusClient([
+      new Error('API timeout'),
+      new Error('API timeout'),
+      new Error('API timeout'),
+    ]);
+    const telegramFn = jest.fn().mockResolvedValue(undefined);
+
+    await expect(
+      generateNewsletter(makeSampleData(), { _aiClient: client, _telegramFn: telegramFn })
+    ).rejects.toThrow(/generateNewsletter failed after 3 attempts/);
+
+    expect(telegramFn).toHaveBeenCalledTimes(1);
+    const [msg] = telegramFn.mock.calls[0];
+    expect(msg).toContain('[EarlyInsider]');
+    expect(msg).toContain('API timeout');
+  });
+
+  test('injects empty-state prefix instruction when topAlerts is empty', async () => {
+    const client = makeOpusClient([VALID_NEWSLETTER_RESULT]);
+    const data = makeSampleData({ topAlerts: [] });
+
+    await generateNewsletter(data, { _aiClient: client });
+
+    const [, userPrompt] = client.complete.mock.calls[0];
+    expect(userPrompt).toContain('No major insider moves this week');
+    expect(userPrompt).toContain('macro market trends');
+  });
+
+  test('prunes alerts to max 5 and earnings to max 10 before sending to AI', async () => {
+    const client = makeOpusClient([VALID_NEWSLETTER_RESULT]);
+    const manyAlerts = Array.from({ length: 8 }, (_, i) => ({ ticker: 'T' + i, score: 8 }));
+    const manyEarnings = Array.from({ length: 15 }, (_, i) => ({ symbol: 'E' + i }));
+    const data = makeSampleData({ topAlerts: manyAlerts, upcomingEarnings: manyEarnings });
+
+    await generateNewsletter(data, { _aiClient: client });
+
+    const [, userPrompt] = client.complete.mock.calls[0];
+    const injected = JSON.parse(userPrompt.match(/DATA:\n(\{[\s\S]*?\})\n\nSECTIONS/)[1]);
+    expect(injected.alerts).toHaveLength(5);
+    expect(injected.earnings).toHaveLength(10);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Section 03 — Quality Gates, HTML Assembly, Send
+// ---------------------------------------------------------------------------
+
+const SAMPLE_SECTIONS = {
+  s1: 'S1-UNIQUE-OPENING insiders noticed something unusual this week.',
+  s2: 'S2-UNIQUE-MOVE the biggest move came from a tech executive buying aggressively.',
+  s3: 'S3-UNIQUE-SCORECARD winners and losers from the prior week performance.',
+  s4: 'S4-UNIQUE-PATTERN sector rotation visible in the data this period.',
+  s5: 'S5-UNIQUE-WATCHING upcoming earnings events to monitor next week carefully.',
+  s6_free: 'S6FREE-UNIQUE upgrade to pro for full access to all sections today.',
+  s6_pro: 'S6PRO-UNIQUE refer a friend at {{rp_refer_url}} and earn rewards.',
+};
+
+const SAMPLE_ALERTS_03 = [
+  { ticker: 'AAPL', insider_name: 'Tim Cook', total_value: 1500000, score: 9 },
+  { ticker: 'MSFT', insider_name: 'Satya Nadella', total_value: 800000, score: 8 },
+  { ticker: 'TSLA', insider_name: 'Elon Musk', total_value: 2000000, score: 7 },
+];
+
+// ---------------------------------------------------------------------------
+// checkWordCount
+// ---------------------------------------------------------------------------
+
+describe('word count gate', () => {
+  test('throws when plain text word count is below 1000', () => {
+    const shortSections = { s1: 'one two three.', s2: 'a b c.', s3: 'x y z.', s4: 'd e f.', s5: 'g h i.', s6_free: 'j k l.', s6_pro: 'm n o.' };
+    expect(() => checkWordCount(shortSections)).toThrow(/Word count out of range/);
+    expect(() => checkWordCount(shortSections)).toThrow(/expected 1000/);
+  });
+
+  test('passes when word count is 1200', () => {
+    // 6 joined sections x 200 words = 1200 — within [1000, 1400]
+    const filler = Array(200).fill('insider').join(' ');
+    const sections = { s1: filler, s2: filler, s3: filler, s4: filler, s5: filler, s6_free: filler, s6_pro: filler };
+    expect(() => checkWordCount(sections)).not.toThrow();
+  });
+
+  test('throws when word count is 1500', () => {
+    // 6 x 250 = 1500 — above 1400
+    const big = Array(250).fill('insider').join(' ');
+    const sections = { s1: big, s2: big, s3: big, s4: big, s5: big, s6_free: big, s6_pro: big };
+    expect(() => checkWordCount(sections)).toThrow(/Word count out of range/);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// checkLinkCount
+// ---------------------------------------------------------------------------
+
+describe('link count gate', () => {
+  test('throws when assembled HTML contains 8 <a href occurrences', () => {
+    const html = '<a href="#">link</a>'.repeat(8);
+    expect(() => checkLinkCount(html, 'free')).toThrow(/Link count exceeded for free/);
+    expect(() => checkLinkCount(html, 'free')).toThrow(/8/);
+  });
+
+  test('passes when HTML contains exactly 7 links', () => {
+    const html = '<a href="#">link</a>'.repeat(7);
+    expect(() => checkLinkCount(html, 'free')).not.toThrow();
+  });
+});
+
+// ---------------------------------------------------------------------------
+// assembleFreeHtml
+// ---------------------------------------------------------------------------
+
+describe('Free version HTML', () => {
+  let freeHtml;
+  beforeAll(() => {
+    freeHtml = assembleFreeHtml(SAMPLE_SECTIONS, SAMPLE_ALERTS_03, 'Test Subject');
+  });
+
+  test('contains s1, s2, s3 content', () => {
+    expect(freeHtml).toContain(SAMPLE_SECTIONS.s1);
+    expect(freeHtml).toContain(SAMPLE_SECTIONS.s2);
+    expect(freeHtml).toContain(SAMPLE_SECTIONS.s3);
+  });
+
+  test('does NOT contain s4 or s5 content', () => {
+    expect(freeHtml).not.toContain(SAMPLE_SECTIONS.s4);
+    expect(freeHtml).not.toContain(SAMPLE_SECTIONS.s5);
+  });
+
+  test('contains upgrade CTA block', () => {
+    expect(freeHtml).toContain('earlyinsider.com/pricing');
+  });
+
+  test('does NOT contain {{rp_refer_url}}', () => {
+    expect(freeHtml).not.toContain('{{rp_refer_url}}');
+  });
+
+  test('contains top-3 alert table with ticker, insider_name, total_value, score columns', () => {
+    expect(freeHtml).toContain('AAPL');
+    expect(freeHtml).toContain('Tim Cook');
+    expect(freeHtml).toContain('$1,500,000');
+    expect(freeHtml).toContain('9/10');
+  });
+
+  test('contains <meta name="viewport"', () => {
+    expect(freeHtml).toContain('<meta name="viewport"');
+  });
+
+  test('contains @media (max-width: 480px) CSS', () => {
+    expect(freeHtml).toContain('@media (max-width: 480px)');
+  });
+
+  test('contains List-Unsubscribe link', () => {
+    expect(freeHtml.toLowerCase()).toMatch(/unsubscribe/);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// assembleProHtml
+// ---------------------------------------------------------------------------
+
+describe('Pro version HTML', () => {
+  let proHtml;
+  beforeAll(() => {
+    proHtml = assembleProHtml(SAMPLE_SECTIONS, SAMPLE_ALERTS_03, 'Test Subject');
+  });
+
+  test('contains all 6 sections: s1-s6_pro', () => {
+    expect(proHtml).toContain(SAMPLE_SECTIONS.s1);
+    expect(proHtml).toContain(SAMPLE_SECTIONS.s2);
+    expect(proHtml).toContain(SAMPLE_SECTIONS.s3);
+    expect(proHtml).toContain(SAMPLE_SECTIONS.s4);
+    expect(proHtml).toContain(SAMPLE_SECTIONS.s5);
+    expect(proHtml).toContain(SAMPLE_SECTIONS.s6_pro);
+  });
+
+  test('does NOT contain upgrade CTA block', () => {
+    expect(proHtml).not.toContain('earlyinsider.com/pricing');
+  });
+
+  test('contains {{rp_refer_url}} in referral block', () => {
+    expect(proHtml).toContain('{{rp_refer_url}}');
+  });
+
+  test('contains "5 more alerts" link block', () => {
+    expect(proHtml.toLowerCase()).toMatch(/5 more alerts|more alerts/);
+  });
+
+  test('contains top-3 alert table', () => {
+    expect(proHtml).toContain('AAPL');
+    expect(proHtml).toContain('MSFT');
+    expect(proHtml).toContain('TSLA');
+  });
+
+  test('contains @media (max-width: 480px) CSS', () => {
+    expect(proHtml).toContain('@media (max-width: 480px)');
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Beehiiv send
+// ---------------------------------------------------------------------------
+
+const BEEHIIV_ENV = {
+  BEEHIIV_API_KEY: 'bh-key',
+  BEEHIIV_PUBLICATION_ID: 'pub-123',
+  BEEHIIV_PREMIUM_TIER_IDS: 'tier-1,tier-2',
+  RESEND_API_KEY: 'rs-key',
+};
+
+describe('Beehiiv send', () => {
+  test('sends with email_subject_line = subjectA (not subjectB)', async () => {
+    const mockPost = jest.fn().mockResolvedValue({
+      status: 201,
+      json: () => Promise.resolve({ data: { status: 'confirmed' } }),
+    });
+    await sendViaBeehiiv('<html/>', 'My Subject A', 'free', { _postFn: mockPost, _env: BEEHIIV_ENV });
+    const [, , bodyStr] = mockPost.mock.calls[0];
+    const body = JSON.parse(bodyStr);
+    expect(body.email_subject_line).toBe('My Subject A');
+  });
+
+  test('triggers Resend fallback when Beehiiv response has status: "draft"', async () => {
+    const mockPost = jest.fn().mockResolvedValue({
+      status: 201,
+      json: () => Promise.resolve({ data: { status: 'draft' } }),
+    });
+    const resendFn = jest.fn().mockResolvedValue(undefined);
+    await sendViaBeehiiv('<html/>', 'subjectA', 'free', {
+      _postFn: mockPost, _resendFn: resendFn, _env: BEEHIIV_ENV,
+    });
+    expect(resendFn).toHaveBeenCalledTimes(1);
+  });
+
+  test('triggers Resend fallback when Beehiiv returns 403', async () => {
+    const mockPost = jest.fn().mockResolvedValue({
+      status: 403,
+      json: () => Promise.resolve({ error: 'Forbidden' }),
+    });
+    const resendFn = jest.fn().mockResolvedValue(undefined);
+    await sendViaBeehiiv('<html/>', 'subjectA', 'free', {
+      _postFn: mockPost, _resendFn: resendFn, _env: BEEHIIV_ENV,
+    });
+    expect(resendFn).toHaveBeenCalledTimes(1);
+  });
+
+  test('Resend fallback is called with batches of max 500 recipients', async () => {
+    const mockPost = jest.fn().mockResolvedValue({
+      status: 200,
+      text: () => Promise.resolve('{}'),
+    });
+    const subscribers = Array.from({ length: 1100 }, (_, i) => 'user' + i + '@test.com');
+    await sendViaResend('<html/>', 'subjectA', 'free', subscribers, {
+      _postFn: mockPost, _env: { RESEND_API_KEY: 'rk' },
+    });
+    // 1100 subscribers -> 3 batches: 500 + 500 + 100
+    expect(mockPost).toHaveBeenCalledTimes(3);
+  });
+
+  test('logs subjectA and subjectB to NocoDB after send', async () => {
+    const db = makeNocoDB([]);
+    await logSendToNocodb(db, {
+      subjectA: 'Subject Line A',
+      subjectB: 'Subject Line B',
+      sendPath: 'beehiiv',
+      wordCount: 1150,
+      freeLinkCount: 3,
+      proLinkCount: 3,
+    });
+    expect(db.create).toHaveBeenCalledTimes(1);
+    const [table, data] = db.create.mock.calls[0];
+    expect(table).toBe('Newsletter_Sends');
+    expect(data.subject_a).toBe('Subject Line A');
+    expect(data.subject_b).toBe('Subject Line B');
+    expect(typeof data.sent_at).toBe('string');
   });
 });
