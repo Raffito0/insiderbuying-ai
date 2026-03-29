@@ -165,7 +165,7 @@ export default function PricingPage() {
             <div className="min-w-0">
             {/* Header */}
             <div className="flex bg-[#00058f]">
-              <div className="w-[45%] md:flex-1 py-[20px] md:py-[24px] px-[8px] md:px-[32px]">
+              <div className="w-[45%] md:flex-1 py-[20px] md:py-[24px] px-[16px] md:px-[32px]">
                 <span className="text-[12px] md:text-[14px] font-bold leading-[16px] md:tracking-[0.5px] text-white uppercase">Feature Matrix</span>
               </div>
               <div className="w-[18%] md:w-[139px] py-[20px] md:py-[24px] px-[2px] md:px-[16px] text-center">
