@@ -26,15 +26,15 @@ const FEATURED = {
 };
 
 const CARDS = [
-  { ticker: "NVDA", label: "NVDA \u00b7 MONTAGA", title: "NVIDIA Deep Dive", pages: "25-page analysis", features: ["Insider buying history", "Financial breakdown", "Competitor analysis", "AI forecast model"], price: "$14.99" },
-  { ticker: "AAPL", label: "AAPL \u00b7 MONTAGA", title: "Apple Ecosystem Value", pages: "32-page analysis", features: ["Services revenue deep-dive", "Hardware cycle analysis", "Insider conviction score", "Valuation framework"], price: "$14.99" },
-  { ticker: "TSLA", label: "TSLA \u00b7 MONTAGA", title: "Tesla Full Self-Driving", pages: "28-page analysis", features: ["FSD revenue projections", "Energy business analysis", "Insider selling patterns", "Autonomous fleet model"], price: "$14.99" },
-  { ticker: "MSFT", label: "MSFT \u00b7 MONTAGA", title: "Microsoft Cloud Edge", pages: "30-page analysis", features: ["Azure growth decomposition", "AI Copilot monetization", "Enterprise moat analysis", "Insider accumulation data"], price: "$14.99" },
-  { ticker: "AMZN", label: "AMZN \u00b7 MONTAGA", title: "Amazon Logistics Alpha", pages: "24-page analysis", features: ["AWS margin analysis", "Logistics cost reduction", "Prime membership economics", "Insider transaction history"], price: "$14.99" },
+  { ticker: "NVDA", label: "NVDA \u00b7 SINGLE STOCK", title: "NVIDIA Deep Dive", pages: "25-page analysis", features: ["Insider buying history", "Financial breakdown", "Competitor analysis", "AI forecast model"], price: "$14.99" },
+  { ticker: "AAPL", label: "AAPL \u00b7 SINGLE STOCK", title: "Apple Ecosystem Value", pages: "32-page analysis", features: ["Services revenue deep-dive", "Hardware cycle analysis", "Insider conviction score", "Valuation framework"], price: "$14.99" },
+  { ticker: "TSLA", label: "TSLA \u00b7 SINGLE STOCK", title: "Tesla Full Self-Driving", pages: "28-page analysis", features: ["FSD revenue projections", "Energy business analysis", "Insider selling patterns", "Autonomous fleet model"], price: "$14.99" },
+  { ticker: "MSFT", label: "MSFT \u00b7 SINGLE STOCK", title: "Microsoft Cloud Edge", pages: "30-page analysis", features: ["Azure growth decomposition", "AI Copilot monetization", "Enterprise moat analysis", "Insider accumulation data"], price: "$14.99" },
+  { ticker: "AMZN", label: "AMZN \u00b7 SINGLE STOCK", title: "Amazon Logistics Alpha", pages: "24-page analysis", features: ["AWS margin analysis", "Logistics cost reduction", "Prime membership economics", "Insider transaction history"], price: "$14.99" },
   { ticker: "S&P", label: "INDEX \u00b7 BUNDLE", title: "S&P 500 Sector Weights", pages: "50-page bundle", features: ["All 11 sectors analyzed", "Insider flow aggregation", "Conviction scoring model", "Allocation framework"], price: "$24.99", highlight: true },
-  { ticker: "AI", label: "SECTOR \u00b7 MONTAGA", title: "AI & Semi Sector Outlook", pages: "40-page analysis", features: ["Chip supply chain analysis", "Insider cluster detection", "Capex cycle forecasting", "Revenue growth modeling"], price: "$19.99" },
-  { ticker: "DIV", label: "DIVIDEND \u00b7 MONTAGA", title: "Dividend Kings 2026", pages: "35-page analysis", features: ["Top 30 dividend aristocrats", "Payout sustainability scoring", "Insider buying correlation", "Yield-growth framework"], price: "$19.99" },
-  { ticker: "HC", label: "TRENDS \u00b7 MONTAGA", title: "Healthcare Trends", pages: "26-page analysis", features: ["GLP-1 market dynamics", "Biotech insider activity", "Patent cliff analysis", "Demographic trend modeling"], price: "$14.99" },
+  { ticker: "AI", label: "SECTOR \u00b7 ANALYSIS", title: "AI & Semi Sector Outlook", pages: "40-page analysis", features: ["Chip supply chain analysis", "Insider cluster detection", "Capex cycle forecasting", "Revenue growth modeling"], price: "$19.99" },
+  { ticker: "DIV", label: "DIVIDEND \u00b7 INCOME", title: "Dividend Kings 2026", pages: "35-page analysis", features: ["Top 30 dividend aristocrats", "Payout sustainability scoring", "Insider buying correlation", "Yield-growth framework"], price: "$19.99" },
+  { ticker: "HC", label: "SECTOR \u00b7 ANALYSIS", title: "Healthcare Trends", pages: "26-page analysis", features: ["GLP-1 market dynamics", "Biotech insider activity", "Patent cliff analysis", "Demographic trend modeling"], price: "$14.99" },
 ];
 
 const CHECK = <svg className="w-[11px] h-[8px] shrink-0" viewBox="0 0 11 8"><path d="M1 4l3 3L10 1" stroke="#006d34" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round"/></svg>;
@@ -161,7 +161,7 @@ export default function ReportsPage() {
           <div className="flex flex-col items-center gap-[16px] pt-[16px]">
             <Link
               href="mailto:research@earlyinsider.com"
-              className="inline-flex items-center justify-center h-[54px] px-[32px] md:px-[40px] border border-[var(--color-primary)] text-[16px] font-medium tracking-[1px] leading-[20px] text-[color:var(--color-primary)] hover:bg-[var(--color-primary)] hover:text-white transition-colors w-full sm:w-auto"
+              className="inline-flex items-center justify-center h-[54px] px-[32px] md:px-[40px] bg-[var(--color-primary)] text-[16px] font-medium tracking-[1px] leading-[20px] text-white hover:bg-[var(--color-primary-dark)] transition-colors w-full sm:w-auto"
             >
               Request Custom Report
             </Link>
