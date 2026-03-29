@@ -126,7 +126,7 @@ export default function ReportsPage() {
               </div>
               <h3 className="font-[var(--font-montaga)] text-[22px] md:text-[length:var(--text-heading)] font-normal leading-[28px] text-[color:var(--color-text)] mb-[4px]">{card.title}</h3>
               <p className="text-[12px] font-normal leading-[16px] text-[color:var(--color-text-secondary)] mb-[20px]">{card.pages}</p>
-              <div className="flex flex-col gap-[12px] mb-[24px] flex-1">
+              <div className="flex flex-col gap-[12px] flex-1">
                 {card.features.map((f) => (
                   <div key={f} className="flex items-center gap-[8px]">
                     {CHECK}
@@ -134,17 +134,15 @@ export default function ReportsPage() {
                   </div>
                 ))}
               </div>
-              <div className="flex items-center justify-between pt-[24px] border-t border-[var(--color-border-light)]">
-                <span className="font-[var(--font-montaga)] text-[28px] md:text-[32px] font-normal leading-[36px] text-[color:var(--color-text)]">{card.price}</span>
-                <div className="flex items-center gap-[12px]">
-                  <Link href="/reports" className="text-[13px] font-medium text-[color:var(--color-primary)] hover:underline">Preview</Link>
-                  <Link
-                    href="/signup"
-                    className="h-[40px] px-[20px] flex items-center justify-center text-[14px] font-medium tracking-[1px] leading-[16px] transition-colors bg-[var(--color-primary)] text-white hover:bg-[var(--color-primary-dark)]"
-                  >
-                    Get Report
-                  </Link>
-                </div>
+              <span className="font-[var(--font-montaga)] text-[28px] md:text-[32px] font-normal leading-[36px] text-[color:var(--color-text)] mt-[24px]">{card.price}</span>
+              <div className="flex items-center gap-[12px] pt-[24px] border-t border-[var(--color-border-light)] mt-[16px]">
+                <Link
+                  href="/signup"
+                  className="h-[40px] px-[20px] flex items-center justify-center text-[14px] font-medium tracking-[1px] leading-[16px] transition-colors bg-[var(--color-primary)] text-white hover:bg-[var(--color-primary-dark)]"
+                >
+                  Get Report
+                </Link>
+                <Link href="/reports" className="text-[13px] font-medium text-[color:var(--color-primary)] hover:underline">Preview</Link>
               </div>
             </div>
           ))}
