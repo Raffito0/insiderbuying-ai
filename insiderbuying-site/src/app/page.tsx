@@ -230,11 +230,11 @@ export default function HomePage() {
         <div className="flex flex-col md:flex-row items-center justify-center gap-[32px] md:gap-[60px] pt-[50px]">
           {[{v:"$4.2B",l:"Tracked Monthly"},{v:"2,847",l:"Alerts Sent (24h)"},{v:"17,325+",l:"Companies Monitored"}].map((m,i)=>(
             <div key={m.v} className="flex items-center gap-[60px]">
-              <div>
+              <div className="text-center md:text-left">
                 <p className="font-[var(--font-montaga)] text-[48px] font-normal leading-[40px] tracking-[0.5px] text-[color:var(--color-text)]">{m.v}</p>
                 <p className="text-[14px] leading-[16px] text-[color:var(--color-text-secondary)] mt-[8px]">{m.l}</p>
               </div>
-              {i<2&&<div className="w-[1px] h-[48px] bg-[var(--color-text)]" />}
+              {i<2&&<div className="w-[1px] h-[48px] bg-[var(--color-text)] hidden md:block" />}
             </div>
           ))}
         </div>

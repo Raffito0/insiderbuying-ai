@@ -29,6 +29,12 @@ const CHECK = <svg className="w-[14px] h-[14px] shrink-0" viewBox="0 0 14 14" fi
 const DASH = <span className="text-[14px] text-[#c6c5d9]">&mdash;</span>;
 const DOT = <svg className="w-[14px] h-[11px] shrink-0" viewBox="0 0 14 11" fill="none"><path d="M1 5.5l4 4L13 1" stroke="#006d34" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/></svg>;
 
+const PRICING_PLANS = [
+  { name: "Free", desc: "Start monitoring.", priceAnnual: "$0", priceMonthly: "$0", features: ["Delayed Form 4 feed (15-minute lag)", "5 watchlist tickers", "Weekly insider digest email", "Basic filing data", "Access to CEO Alpha Report"], border: "", btn: "", iconType: "check" as const, checkoutId: () => "" },
+  { name: "Analyst", desc: "See what the data means.", priceAnnual: "$24", priceMonthly: "$29", features: ["Real-time Form 4 alerts (under 60 seconds)", "AI conviction scoring on every filing", "Plain-English analysis per transaction", "25 watchlist tickers with custom filters", "Weekly AI summary with sector patterns", "1 Deep Dive report per month", "Email and Slack delivery"], border: "border border-[var(--color-primary)]", btn: "bg-[var(--color-primary)] text-white hover:bg-[var(--color-primary-dark)]", popular: true, iconType: "badge" as const, checkoutId: (b: string) => b === "annual" ? (process.env.NEXT_PUBLIC_STRIPE_PRICE_PRO_ANNUAL || "price_1TFVfHBJM1hcMsSa9wD5IcfH") : (process.env.NEXT_PUBLIC_STRIPE_PRICE_PRO_MONTHLY || "price_1TFVfHBJM1hcMsSanZzyirRM") },
+  { name: "Investor", desc: "The complete research desk.", priceAnnual: "$84", priceMonthly: "$99", features: ["Everything in Analyst", "Unlimited Deep Dive reports", "API access: programmatic Form 4 data", "Webhook integration", "Unlimited watchlist tickers", "Priority custom report requests (24h)", "CSV and JSON data export"], border: "", btn: "border border-[var(--color-border)] text-[color:var(--color-text)] hover:bg-[var(--color-bg-alt)]", iconType: "check" as const, checkoutId: (b: string) => b === "annual" ? (process.env.NEXT_PUBLIC_STRIPE_PRICE_INVESTOR_ANNUAL || "price_INVESTOR_ANNUAL_TODO") : (process.env.NEXT_PUBLIC_STRIPE_PRICE_INVESTOR_MONTHLY || "price_INVESTOR_MONTHLY_TODO") },
+];
+
 const COMPARISON = [
   { category: "DATA & ALERTS", rows: [
     { feature: "Form 4 feed (delayed 15 min)", free: true, pro: true, premium: true },
@@ -105,86 +111,46 @@ export default function PricingPage() {
         </div>
       </section>
 
-      {/* ═══ SECTION 3: PRICING CARDS ═══ */}
+      {/* ═══ SECTION 3: PRICING CARDS (same style as homepage) ═══ */}
       <section className="bg-white pb-[var(--section-y-mobile)] md:pb-[var(--section-y)] px-[20px] md:px-[32px]">
-        <div className="max-w-[1216px] mx-auto grid grid-cols-1 md:grid-cols-3 gap-[24px]">
-
-          {/* FREE */}
-          <div className="bg-white border border-[var(--color-border-light)] p-[28px] md:p-[40px] flex flex-col">
-            <div className="mb-[32px]">
-              <p className="text-[14px] font-bold leading-[20px] text-[color:var(--color-text-secondary)] mb-[16px]">Free</p>
-              <div className="flex items-baseline gap-[4px]">
-                <span className="font-[var(--font-montaga)] text-[36px] font-normal leading-[40px] text-[color:var(--color-text)]">$0</span>
-                <span className="text-[14px] font-normal leading-[20px] text-[color:var(--color-text-secondary)]">/mo</span>
+        <div className="max-w-[1024px] mx-auto grid grid-cols-1 md:grid-cols-3 gap-[var(--gap-items)]">
+          {PRICING_PLANS.map((p) => (
+            <div key={p.name} className={`bg-white p-[28px] md:p-[48px] relative ${p.border}`}>
+              {p.popular && <div className="absolute -top-[15px] left-1/2 -translate-x-1/2 bg-[var(--color-signal-green)] text-white text-[11px] font-extrabold tracking-[1px] px-[16px] py-[4px] rounded-[2px] whitespace-nowrap">MOST POPULAR</div>}
+              <h3 className="font-[var(--font-montaga)] text-[32px] leading-[32px] tracking-[1px] text-[color:var(--color-text)] mb-[8px]">{p.name}</h3>
+              <p className="text-[14px] leading-[20px] tracking-[1px] text-[color:var(--color-text-secondary)] mb-[16px]">{p.desc}</p>
+              <div className="flex items-baseline mb-[8px]">
+                <span className="font-[var(--font-montaga)] text-[48px] leading-[48px] tracking-[0.5px] text-[color:var(--color-text)]">{billing === "annual" ? p.priceAnnual : p.priceMonthly}</span>
+                <span className="text-[16px] leading-[24px] text-[color:var(--color-text-muted)] ml-[4px]">/mo</span>
               </div>
+              {billing === "annual" && p.name !== "Free" && <p className="text-[12px] font-normal leading-[16px] text-[color:var(--color-text-muted)] mb-[32px]">billed annually</p>}
+              {(billing !== "annual" || p.name === "Free") && <div className="mb-[32px]" />}
+              <ul className="flex flex-col gap-[16px] mb-[48px]">
+                {p.features.map(f => (
+                  <li key={f} className="flex items-center gap-[12px] text-[14px] leading-[20px] text-[color:var(--color-text)]">
+                    {p.iconType === "badge" ? (
+                      <div className="w-[15px] h-[15px] rounded-full bg-[var(--color-primary)] flex items-center justify-center shrink-0">
+                        <svg className="w-[8px] h-[8px]" viewBox="0 0 8 8"><path d="M1 4l2 2L7 2" stroke="white" strokeWidth="1.5" fill="none"/></svg>
+                      </div>
+                    ) : (
+                      <svg className="w-[11px] h-[8px] shrink-0" viewBox="0 0 11 8"><path d="M1 4l3 3L10 1" stroke="#006d34" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                    )}
+                    {f}
+                  </li>
+                ))}
+              </ul>
+              {p.name === "Free" ? (
+                <Link href="/signup" className="flex items-center justify-center w-full h-[58px] text-[16px] font-medium tracking-[1px] transition-colors border border-[var(--color-border)] text-[color:var(--color-text)] hover:bg-[var(--color-bg-alt)]">Start Monitoring Free</Link>
+              ) : (
+                <button
+                  onClick={() => handleCheckout(p.checkoutId(billing))}
+                  className={`flex items-center justify-center w-full h-[58px] text-[16px] font-medium tracking-[1px] transition-colors cursor-pointer ${p.btn}`}
+                >
+                  Get Access
+                </button>
+              )}
             </div>
-            <ul className="flex flex-col gap-[16px] mb-[40px] flex-1">
-              {["Delayed Form 4 feed (15-minute lag)","5 watchlist tickers","Weekly insider digest email","Basic filing data","Access to CEO Alpha Report"].map(f => (
-                <li key={f} className="flex items-center gap-[12px]">{CHECK}<span className="text-[14px] font-normal leading-[20px] text-[color:var(--color-text-secondary)]">{f}</span></li>
-              ))}
-            </ul>
-            <Link href="/signup" className="flex items-center justify-center h-[54px] border border-[var(--color-border)] text-[16px] font-medium tracking-[1px] leading-[20px] text-[color:var(--color-text)] hover:bg-[var(--color-bg-alt)] transition-colors">
-              Start Monitoring Free
-            </Link>
-          </div>
-
-          {/* PRO (Most Popular) */}
-          <div className="bg-white border border-[var(--color-primary)] p-[28px] md:p-[40px] flex flex-col relative">
-            <div className="absolute -top-[12px] left-1/2 -translate-x-1/2 bg-[var(--color-signal-green)] text-white text-[11px] font-extrabold leading-[15px] px-[16px] py-[4px] rounded-[2px] whitespace-nowrap">
-              MOST POPULAR
-            </div>
-            <div className="mb-[30px]">
-              <p className="text-[14px] font-bold leading-[20px] text-[color:var(--color-primary)] mb-[16px]">Analyst</p>
-              <div className="flex items-baseline gap-[4px]">
-                <span className="font-[var(--font-montaga)] text-[36px] font-normal leading-[40px] text-[color:var(--color-text)]">
-                  ${billing === "annual" ? "24" : "29"}
-                </span>
-                <span className="text-[14px] font-normal leading-[20px] text-[color:var(--color-text-secondary)]">/mo</span>
-              </div>
-              {billing === "annual" && <p className="text-[12px] font-normal leading-[16px] text-[color:var(--color-text-muted)] mt-[4px]">billed annually</p>}
-            </div>
-            <ul className="flex flex-col gap-[16px] mb-[38px] flex-1">
-              {["Real-time Form 4 alerts (under 60 seconds)","AI conviction scoring on every filing","Plain-English analysis per transaction","25 watchlist tickers with custom filters","Weekly AI summary with sector patterns","1 Deep Dive report per month","Email and Slack delivery"].map(f => (
-                <li key={f} className="flex items-center gap-[12px]">
-                  <div className="w-[15px] h-[15px] rounded-full bg-[var(--color-primary)] flex items-center justify-center shrink-0">
-                    <svg className="w-[8px] h-[8px]" viewBox="0 0 8 8"><path d="M1 4l2 2L7 2" stroke="white" strokeWidth="1.5" fill="none"/></svg>
-                  </div>
-                  <span className="text-[14px] font-normal leading-[20px] text-[color:var(--color-text)]">{f}</span>
-                </li>
-              ))}
-            </ul>
-            <button
-              onClick={() => handleCheckout(billing === "annual" ? process.env.NEXT_PUBLIC_STRIPE_PRICE_PRO_ANNUAL || "price_1TFVfHBJM1hcMsSa9wD5IcfH" : process.env.NEXT_PUBLIC_STRIPE_PRICE_PRO_MONTHLY || "price_1TFVfHBJM1hcMsSanZzyirRM")}
-              className="flex items-center justify-center h-[54px] bg-[var(--color-primary)] text-[16px] font-medium tracking-[1px] leading-[20px] text-white hover:bg-[var(--color-primary-dark)] transition-colors w-full cursor-pointer"
-            >
-              Get Access
-            </button>
-          </div>
-
-          {/* PREMIUM */}
-          <div className="bg-white border border-[var(--color-border-light)] p-[28px] md:p-[40px] flex flex-col">
-            <div className="mb-[32px]">
-              <p className="text-[14px] font-bold leading-[20px] text-[color:var(--color-text-secondary)] mb-[16px]">Investor</p>
-              <div className="flex items-baseline gap-[4px]">
-                <span className="font-[var(--font-montaga)] text-[36px] font-normal leading-[40px] text-[color:var(--color-text)]">
-                  ${billing === "annual" ? "84" : "99"}
-                </span>
-                <span className="text-[14px] font-normal leading-[20px] text-[color:var(--color-text-secondary)]">/mo</span>
-              </div>
-              {billing === "annual" && <p className="text-[12px] font-normal leading-[16px] text-[color:var(--color-text-muted)] mt-[4px]">billed annually</p>}
-            </div>
-            <ul className="flex flex-col gap-[16px] mb-[40px] flex-1">
-              {["Everything in Analyst","Unlimited Deep Dive reports","API access: programmatic Form 4 data","Webhook integration","Unlimited watchlist tickers","Priority custom report requests (24h)","CSV and JSON data export"].map(f => (
-                <li key={f} className="flex items-center gap-[12px]">{CHECK}<span className="text-[14px] font-normal leading-[20px] text-[color:var(--color-text-secondary)]">{f}</span></li>
-              ))}
-            </ul>
-            <button
-              onClick={() => handleCheckout(billing === "annual" ? process.env.NEXT_PUBLIC_STRIPE_PRICE_INVESTOR_ANNUAL || "price_INVESTOR_ANNUAL_TODO" : process.env.NEXT_PUBLIC_STRIPE_PRICE_INVESTOR_MONTHLY || "price_INVESTOR_MONTHLY_TODO")}
-              className="flex items-center justify-center h-[54px] border border-[var(--color-border)] text-[16px] font-medium tracking-[1px] leading-[20px] text-[color:var(--color-text)] hover:bg-[var(--color-bg-alt)] transition-colors w-full"
-            >
-              Get Access
-            </button>
-          </div>
+          ))}
         </div>
       </section>
 
@@ -198,18 +164,18 @@ export default function PricingPage() {
           <div className="bg-white shadow-[0px_1px_2px_rgba(0,0,0,0.05)] overflow-hidden">
             <div className="min-w-0">
             {/* Header */}
-            <div className="flex border-b border-[var(--color-border-light)]">
+            <div className="flex bg-[#00058f]">
               <div className="flex-1 py-[20px] md:py-[24px] px-[12px] md:px-[32px]">
-                <span className="text-[10px] md:text-[14px] font-bold leading-[16px] md:tracking-[0.5px] text-[color:var(--color-text-muted)] uppercase">Feature Matrix</span>
+                <span className="text-[10px] md:text-[14px] font-bold leading-[16px] md:tracking-[0.5px] text-white uppercase">Feature Matrix</span>
               </div>
               <div className="w-[36px] md:w-[139px] py-[20px] md:py-[24px] px-[2px] md:px-[16px] text-center">
-                <span className="text-[10px] md:text-[14px] font-bold leading-[16px] md:tracking-[0.5px] text-[color:var(--color-text-muted)] uppercase">Free</span>
+                <span className="text-[10px] md:text-[14px] font-bold leading-[16px] md:tracking-[0.5px] text-white uppercase">Free</span>
               </div>
               <div className="w-[48px] md:w-[122px] py-[20px] md:py-[24px] px-[2px] md:px-[16px] text-center">
-                <span className="text-[10px] md:text-[14px] font-bold leading-[16px] md:tracking-[0.5px] text-[color:var(--color-primary)] uppercase">Analyst</span>
+                <span className="text-[10px] md:text-[14px] font-bold leading-[16px] md:tracking-[0.5px] text-white uppercase">Analyst</span>
               </div>
               <div className="w-[52px] md:w-[189px] py-[20px] md:py-[24px] px-[2px] md:px-[16px] text-center">
-                <span className="text-[10px] md:text-[14px] font-bold leading-[16px] md:tracking-[0.5px] text-[color:var(--color-text-muted)] uppercase">Investor</span>
+                <span className="text-[10px] md:text-[14px] font-bold leading-[16px] md:tracking-[0.5px] text-white uppercase">Investor</span>
               </div>
             </div>
 
@@ -217,8 +183,8 @@ export default function PricingPage() {
             {COMPARISON.map((cat) => (
               <div key={cat.category}>
                 {/* Category header */}
-                <div className="bg-[#f5f5f5] py-[12px] px-[16px] md:px-[32px]">
-                  <span className="text-[12px] font-bold leading-[20px] tracking-[0.5px] text-[color:var(--color-text-muted)] uppercase">{cat.category}</span>
+                <div className="bg-[#191ea8] py-[12px] px-[16px] md:px-[32px]">
+                  <span className="text-[12px] font-bold leading-[20px] tracking-[0.5px] text-white uppercase">{cat.category}</span>
                 </div>
                 {/* Rows */}
                 {cat.rows.map((row) => (
