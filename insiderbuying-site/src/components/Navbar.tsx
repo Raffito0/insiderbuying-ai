@@ -88,34 +88,37 @@ export function Navbar() {
         </button>
       </nav>
 
-      {/* Mobile menu */}
+      {/* Mobile menu — overlay, does not push page content */}
       {mobileOpen && (
-        <div id="mobile-nav" role="navigation" aria-label="Mobile menu" className="md:hidden border-t border-[var(--color-border-light)] bg-white px-6 py-4 space-y-3">
-          {NAV_LINKS.map((link) => (
+        <>
+          <div className="md:hidden fixed inset-0 top-[80px] bg-black/30 z-40" onClick={() => setMobileOpen(false)} />
+          <div id="mobile-nav" role="navigation" aria-label="Mobile menu" className="md:hidden fixed left-0 right-0 top-[80px] z-50 border-t border-[var(--color-border-light)] bg-white px-6 py-4 space-y-3 shadow-[0_8px_24px_rgba(0,0,0,0.12)]">
+            {NAV_LINKS.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="block text-sm font-medium text-[color:var(--color-muted)] hover:text-[color:var(--color-text)] transition-colors"
+                onClick={() => setMobileOpen(false)}
+              >
+                {link.label}
+              </Link>
+            ))}
             <Link
-              key={link.href}
-              href={link.href}
+              href="/login"
               className="block text-sm font-medium text-[color:var(--color-muted)] hover:text-[color:var(--color-text)] transition-colors"
               onClick={() => setMobileOpen(false)}
             >
-              {link.label}
+              Login
             </Link>
-          ))}
-          <Link
-            href="/login"
-            className="block text-sm font-medium text-[color:var(--color-muted)] hover:text-[color:var(--color-text)] transition-colors"
-            onClick={() => setMobileOpen(false)}
-          >
-            Login
-          </Link>
-          <Link
-            href="/signup"
-            className="block w-full text-center h-10 leading-10 text-sm font-semibold uppercase tracking-wider text-white bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] transition-colors"
-            onClick={() => setMobileOpen(false)}
-          >
-            Start Free
-          </Link>
-        </div>
+            <Link
+              href="/signup"
+              className="block w-full text-center h-10 leading-10 text-sm font-semibold uppercase tracking-wider text-white bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] transition-colors"
+              onClick={() => setMobileOpen(false)}
+            >
+              Start Free
+            </Link>
+          </div>
+        </>
       )}
     </header>
   );

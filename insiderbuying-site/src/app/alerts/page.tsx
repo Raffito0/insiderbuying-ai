@@ -159,7 +159,7 @@ export default function AlertsPage() {
       </section>
 
       {/* ═══ FILTER BAR ═══ */}
-      <section className="bg-white border-b border-[var(--color-border)] sticky top-[82px] z-40 overflow-x-auto">
+      <section className="bg-white border-b border-[var(--color-border)] sticky top-[80px] z-40 overflow-x-auto">
         <div className="max-w-[1280px] mx-auto px-[16px] md:px-[32px] h-[56px] flex items-center gap-[12px] md:gap-[16px] min-w-max">
           <div className="flex items-center gap-[8px] pl-[8px] md:pl-[16px]">
             <svg className="w-[12px] h-[8px]" viewBox="0 0 12 8" fill="#757688"><path d="M0 0h12M2 4h8M4 8h4" stroke="#757688" strokeWidth="2"/></svg>
