@@ -107,11 +107,13 @@ export default function HomePage() {
 
       {/* ═══ LOGO TEST — REMOVE LATER ═══ */}
       <section className="w-full py-[48px] px-[48px] bg-[#F8F8F8]">
-        <p className="text-[14px] font-bold text-red-500 mb-[24px]">LOGO TEST — DELETE THIS SECTION</p>
-        <div className="flex flex-wrap items-center gap-[40px]">
+        <p className="text-[14px] font-bold text-red-500 mb-[24px]">LOGO TEST — DELETE THIS SECTION. Ogni box e 140x40. Modifica w/h del box in DevTools per calibrare.</p>
+        <div className="flex flex-wrap items-center gap-[24px]">
           {LOGOS.map((logo) => (
-            <div key={logo.domain} className="flex flex-col items-center gap-[8px] p-[16px] bg-white border border-[#e5e5e5]">
-              <img src={`https://cdn.brandfetch.io/domain/${logo.domain}/w/800/h/253/logo?c=1idSo4YEEODo2rW6Anw`} alt={logo.name} className="h-[28px] w-auto object-contain" />
+            <div key={logo.domain} className="flex flex-col items-center gap-[8px]">
+              <div className="w-[140px] h-[40px] flex items-center justify-center p-[4px] bg-white border border-[#e5e5e5]">
+                <img src={`https://cdn.brandfetch.io/domain/${logo.domain}/w/400/h/120/logo?c=1idSo4YEEODo2rW6Anw`} alt={logo.name} className="max-w-full max-h-full object-contain" />
+              </div>
               <span className="text-[11px] text-[#999]">{logo.name}</span>
             </div>
           ))}
