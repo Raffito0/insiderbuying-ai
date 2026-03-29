@@ -94,7 +94,7 @@ export default function HomePage() {
             </div>
           </div>
           {/* Desktop rows — attached block */}
-          <div className="hidden lg:flex flex-col mb-[var(--gap-tight)] overflow-hidden shadow-[0px_1px_2px_rgba(0,0,0,0.05)]">
+          <div className="hidden lg:flex flex-col mb-[var(--gap-tight)] overflow-hidden shadow-[0px_1px_2px_rgba(0,0,0,0.05)] border border-[var(--color-border)]">
             {ALERTS.map((a, i) => (
               <div key={i} className={`flex items-center justify-between h-[112px] px-[32px] ${i % 2 === 0 ? "bg-[var(--color-bg-alt)]" : "bg-white"} ${i > 0 ? "border-t border-[var(--color-border)]" : ""}`}>
                 <div className="flex items-center gap-[24px] w-[280px] shrink-0">
@@ -114,9 +114,9 @@ export default function HomePage() {
           </div>
 
           {/* Mobile/tablet rows — attached, card layout */}
-          <div className="lg:hidden bg-[var(--color-bg-alt)] overflow-hidden mb-[var(--gap-tight)]">
+          <div className="lg:hidden overflow-hidden mb-[var(--gap-tight)] border border-[var(--color-border)]">
             {ALERTS.map((a, i) => (
-              <div key={i} className={`flex items-center gap-[12px] px-[var(--gap-tight)] py-[14px] ${i > 0 ? "border-t border-[var(--color-border)]" : ""}`}>
+              <div key={i} className={`flex items-center gap-[12px] px-[var(--gap-tight)] py-[14px] ${i % 2 === 0 ? "bg-[#F8F8F8]" : "bg-white"} ${i > 0 ? "border-t border-[var(--color-border)]" : ""}`}>
                 <div className="w-[40px] h-[40px] rounded-full bg-[#d9d9d9] flex items-center justify-center text-[12px] font-semibold text-[color:var(--color-text-muted)] shrink-0">
                   {a.name.split(" ").map(n => n[0]).join("")}
                 </div>
