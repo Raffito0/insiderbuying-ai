@@ -1,0 +1,62 @@
+{
+  "plugin_root": "C:\\Users\\rafca\\.claude\\plugins\\cache\\piercelamb-deep-implement",
+  "sections_dir": "C:\\Users\\rafca\\OneDrive\\Desktop\\Toxic or Nah\\ryan_cole\\insiderbuying-planning\\11-visual-engine\\sections",
+  "target_dir": "C:\\Users\\rafca\\OneDrive\\Desktop\\Toxic or Nah\\ryan_cole\\insiderbuying-site",
+  "state_dir": "C:\\Users\\rafca\\OneDrive\\Desktop\\Toxic or Nah\\ryan_cole\\insiderbuying-planning\\11-visual-engine\\implementation",
+  "git_root": "C:\\Users\\rafca\\OneDrive\\Desktop\\Toxic or Nah\\ryan_cole",
+  "commit_style": "simple",
+  "test_command": "uv run pytest",
+  "sections": [
+    "section-01-visual-css",
+    "section-02-chart-generation",
+    "section-03-templates-1-8",
+    "section-04-templates-9-15",
+    "section-05-report-covers",
+    "section-06-identity-logos",
+    "section-07-identity-photos",
+    "section-08-integration-wiring"
+  ],
+  "sections_state": {
+    "section-01-visual-css": {
+      "status": "complete",
+      "commit_hash": "31a46e3"
+    },
+    "section-02-chart-generation": {
+      "status": "complete",
+      "commit_hash": "affa94f"
+    },
+    "section-03-templates-1-8": {
+      "status": "complete",
+      "commit_hash": "3174642"
+    },
+    "section-04-templates-9-15": {
+      "status": "complete",
+      "commit_hash": "c5603ac"
+    },
+    "section-05-report-covers": {
+      "status": "complete",
+      "commit_hash": "e4a650e"
+    },
+    "section-06-identity-logos": {
+      "status": "complete",
+      "commit_hash": "16a4e42"
+    },
+    "section-07-identity-photos": {
+      "status": "complete",
+      "commit_hash": "16a4e42"
+    },
+    "section-08-integration-wiring": {
+      "status": "complete",
+      "commit_hash": "004cfe2"
+    }
+  },
+  "pre_commit": {
+    "present": false,
+    "type": "none",
+    "config_file": null,
+    "native_hook": null,
+    "may_modify_files": false,
+    "detected_formatters": []
+  },
+  "created_at": "2026-03-29T14:55:50.902709+00:00"
+}
