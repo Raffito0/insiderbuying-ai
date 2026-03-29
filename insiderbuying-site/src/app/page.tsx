@@ -77,7 +77,7 @@ export default function HomePage() {
         <div className="absolute inset-0 bg-black/50" />
         <div className="relative z-10 flex flex-col justify-center max-w-[1154px] mx-auto h-full px-[20px] md:px-[48px] pt-[100px] pb-[60px] lg:pt-[0px] lg:pb-[0px]">
           <h1 className="font-[var(--font-montaga)] text-[39px] md:text-[42px] lg:text-[54px] font-normal leading-[1.15] tracking-[0.5px] text-white mb-[16px]">
-            SEC Insider Trades.<br />Seconds, Not Days.
+            Know What CEOs Are Buying.<br />In Seconds, Not Days.
           </h1>
           <p className="text-[19px] font-normal leading-[32px] text-white/90 max-w-[672px] mb-[12px]">
             Every Form 4 filing across 17,325+ public companies &mdash; parsed, scored for conviction, and delivered to your inbox in under 60 seconds.
