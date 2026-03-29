@@ -198,6 +198,115 @@ function computeBaseScore(filing) {
   return Math.round(Math.max(1, Math.min(10, score)) * 10) / 10;
 }
 
+// ─── callDeepSeekForRefinement ───────────────────────────────────────────────
+
+const REFINEMENT_FALLBACK_REASON = 'AI refinement failed after 2 attempts — using base score';
+
+/**
+ * Builds direction-aware refinement prompt for the AI ±1 adjustment layer.
+ * @internal
+ */
+function _buildRefinementPrompt(filing, baseScore) {
+  const direction = filing.direction === 'D' ? 'sell' : 'buy';
+  const ticker = filing.ticker || 'unknown';
+  const name = filing.insider_name || 'insider';
+  const value = filing.transactionValue ? `$${(filing.transactionValue / 1_000_000).toFixed(1)}M` : 'unknown value';
+
+  let factors;
+  if (direction === 'buy') {
+    factors = `1. Is this the insider's first purchase in 2+ years after a long period of no buying?
+2. Did the insider buy into a recent earnings miss or analyst downgrade (buying a dip)?
+3. Did the insider significantly increase their position size vs. their typical trade size?
+4. Is there an unusual timing signal (bought right before a product launch or deal announcement window)?`;
+  } else {
+    factors = `1. Is this the insider's first sale in 2+ years after a long period of no selling?
+2. Did the insider sell into strength (stock near all-time highs) suggesting bearish conviction?
+3. Is the sell size unusually large relative to their typical sale history?
+4. Is there a timing signal suggesting informed selling rather than routine tax planning?`;
+  }
+
+  return `You are evaluating an insider ${direction} trade for ${name} at ${ticker} (${value}).
+The deterministic base score is ${baseScore} / 10.
+
+Assess only the following qualitative factors (answer YES/NO mentally, do not state them):
+${factors}
+
+Based on these factors, apply a constrained adjustment:
+- +1 if 2 or more factors clearly indicate exceptional conviction
+- -1 if 2 or more factors clearly indicate this is routine / low-conviction
+- 0 otherwise
+
+Respond with ONLY a JSON object, no prose, no markdown:
+{"adjustment": 0, "reason": "one sentence explanation"}`;
+}
+
+/**
+ * Strips markdown code fences from a string.
+ * @internal
+ */
+function _stripFences(text) {
+  return text.replace(/^```json?\s*/i, '').replace(/\s*```$/i, '').trim();
+}
+
+/**
+ * Calls DeepSeek for a constrained ±1 AI adjustment to the base score.
+ *
+ * @param {object} filing   - Filing object (needs: is10b5Plan, direction, ticker, insider_name, transactionValue)
+ * @param {number} baseScore - Score from computeBaseScore(), e.g. 7.3
+ * @param {object} deps     - { client: AIClient, sleep: fn }
+ * @returns {{ base_score, ai_adjustment, ai_reason, final_score }}
+ */
+async function callDeepSeekForRefinement(filing, baseScore, deps = {}) {
+  const { client, sleep } = deps;
+
+  // 10b5-1 plan: skip AI entirely, apply cap
+  if (filing.is10b5Plan) {
+    const final_score = parseFloat(Math.min(baseScore, 5).toFixed(1));
+    return {
+      base_score: baseScore,
+      ai_adjustment: 0,
+      ai_reason: '10b5-1 plan — cap applied, refinement skipped',
+      final_score,
+    };
+  }
+
+  const prompt = _buildRefinementPrompt(filing, baseScore);
+
+  let rawText = null;
+  let parsed = null;
+
+  for (let attempt = 0; attempt < 2; attempt++) {
+    try {
+      if (attempt > 0 && sleep) await sleep(2000);
+      const response = await client.complete(null, prompt, { temperature: 0.0 });
+      rawText = _stripFences((response.content || '').trim());
+      if (!rawText) continue; // treat empty as invalid, retry
+      parsed = JSON.parse(rawText);
+      break;
+    } catch {
+      rawText = null;
+      parsed = null;
+    }
+  }
+
+  if (!parsed || typeof parsed.adjustment !== 'number') {
+    console.warn('[score-alert] ' + REFINEMENT_FALLBACK_REASON);
+    const final_score = parseFloat(Math.min(10, Math.max(1, baseScore)).toFixed(1));
+    return { base_score: baseScore, ai_adjustment: 0, ai_reason: REFINEMENT_FALLBACK_REASON, final_score };
+  }
+
+  // Clamp adjustment to valid range
+  const ai_adjustment = Math.max(-1, Math.min(1, Math.round(parsed.adjustment)));
+  const ai_reason = (parsed.reason && typeof parsed.reason === 'string' && parsed.reason.trim())
+    ? parsed.reason.trim()
+    : 'No reason provided';
+
+  const raw = baseScore + ai_adjustment;
+  const final_score = parseFloat(Math.min(10, Math.max(1, raw)).toFixed(1));
+
+  return { base_score: baseScore, ai_adjustment, ai_reason, final_score };
+}
+
 // ─── 3.2 buildHaikuPrompt ───────────────────────────────────────────────────
 
 /**
@@ -405,4 +514,5 @@ module.exports = {
   callHaiku,
   runScoreAlert,
   computeBaseScore,
+  callDeepSeekForRefinement,
 };

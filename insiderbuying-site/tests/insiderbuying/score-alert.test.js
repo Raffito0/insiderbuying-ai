@@ -17,6 +17,7 @@ const {
   callHaiku,
   runScoreAlert,
   computeBaseScore,
+  callDeepSeekForRefinement,
 } = require('../../n8n/code/insiderbuying/score-alert');
 
 const { NocoDB } = require('../../n8n/code/insiderbuying/nocodb-client');
@@ -792,6 +793,173 @@ describe('computeBaseScore', () => {
     test('zero transactionValue — Factor 1 skipped (no bonus, no penalty)', () => {
       const score = computeBaseScore({ ...NEUTRAL, transactionValue: 0 });
       expect(score).toBe(5.5);
+    });
+  });
+});
+
+// ─── callDeepSeekForRefinement ───────────────────────────────────────────────
+
+describe('callDeepSeekForRefinement', () => {
+  const sleep = jest.fn().mockResolvedValue(undefined);
+
+  function makeClient(responses) {
+    let i = 0;
+    return {
+      complete: jest.fn().mockImplementation(() => {
+        const r = responses[i++];
+        if (r instanceof Error) return Promise.reject(r);
+        return Promise.resolve({ content: r });
+      }),
+    };
+  }
+
+  const BASE_FILING = {
+    direction: 'A', is10b5Plan: false,
+    ticker: 'NVDA', insider_name: 'Jensen Huang',
+    transactionValue: 5_000_000,
+  };
+
+  // ─ Response parsing ─
+  describe('response parsing', () => {
+    test('adjustment +1 — applied correctly', async () => {
+      const client = makeClient(['{"adjustment": 1, "reason": "first buy in years"}']);
+      const result = await callDeepSeekForRefinement(BASE_FILING, 7.0, { client, sleep });
+      expect(result.ai_adjustment).toBe(1);
+      expect(result.final_score).toBe(8.0);
+      expect(result.base_score).toBe(7.0);
+    });
+
+    test('adjustment 0 — score unchanged', async () => {
+      const client = makeClient(['{"adjustment": 0, "reason": "routine cluster trade"}']);
+      const result = await callDeepSeekForRefinement(BASE_FILING, 6.5, { client, sleep });
+      expect(result.ai_adjustment).toBe(0);
+      expect(result.final_score).toBe(6.5);
+    });
+
+    test('adjustment -1 — applied correctly', async () => {
+      const client = makeClient(['{"adjustment": -1, "reason": "heavy selling context"}']);
+      const result = await callDeepSeekForRefinement(BASE_FILING, 5.0, { client, sleep });
+      expect(result.ai_adjustment).toBe(-1);
+      expect(result.final_score).toBe(4.0);
+    });
+
+    test('JSON wrapped in markdown fences — stripped and parsed', async () => {
+      const client = makeClient(['```json\n{"adjustment": 0, "reason": "ok"}\n```']);
+      const result = await callDeepSeekForRefinement(BASE_FILING, 5.0, { client, sleep });
+      expect(result.ai_adjustment).toBe(0);
+    });
+
+    test('out-of-range adjustment +2 — clamped to +1', async () => {
+      const client = makeClient(['{"adjustment": 2, "reason": "very high"}']);
+      const result = await callDeepSeekForRefinement(BASE_FILING, 5.0, { client, sleep });
+      expect(result.ai_adjustment).toBe(1);
+      expect(result.final_score).toBe(6.0);
+    });
+
+    test('out-of-range adjustment -2 — clamped to -1', async () => {
+      const client = makeClient(['{"adjustment": -2, "reason": "very low"}']);
+      const result = await callDeepSeekForRefinement(BASE_FILING, 5.0, { client, sleep });
+      expect(result.ai_adjustment).toBe(-1);
+      expect(result.final_score).toBe(4.0);
+    });
+  });
+
+  // ─ Retry and fallback ─
+  describe('retry and fallback', () => {
+    test('invalid JSON on first call, valid on second — uses second result', async () => {
+      const client = makeClient(['not-json', '{"adjustment": 1, "reason": "retry worked"}']);
+      const result = await callDeepSeekForRefinement(BASE_FILING, 5.0, { client, sleep });
+      expect(result.ai_adjustment).toBe(1);
+      expect(client.complete).toHaveBeenCalledTimes(2);
+    });
+
+    test('empty string on first call, valid on second — triggers retry', async () => {
+      const client = makeClient(['', '{"adjustment": 0, "reason": "ok"}']);
+      const result = await callDeepSeekForRefinement(BASE_FILING, 5.0, { client, sleep });
+      expect(result.ai_adjustment).toBe(0);
+      expect(client.complete).toHaveBeenCalledTimes(2);
+    });
+
+    test('both calls return invalid JSON — fallback (adjustment=0)', async () => {
+      const client = makeClient(['bad', 'also-bad']);
+      const result = await callDeepSeekForRefinement(BASE_FILING, 5.0, { client, sleep });
+      expect(result.ai_adjustment).toBe(0);
+      expect(result.final_score).toBe(5.0);
+      expect(result.ai_reason).toMatch(/failed/i);
+    });
+
+    test('network error on first call, valid on second — recovers', async () => {
+      const client = makeClient([new Error('network'), '{"adjustment": 1, "reason": "ok"}']);
+      const result = await callDeepSeekForRefinement(BASE_FILING, 5.0, { client, sleep });
+      expect(result.ai_adjustment).toBe(1);
+    });
+
+    test('network error on both calls — fallback (adjustment=0)', async () => {
+      const client = makeClient([new Error('network'), new Error('network again')]);
+      const result = await callDeepSeekForRefinement(BASE_FILING, 5.0, { client, sleep });
+      expect(result.ai_adjustment).toBe(0);
+      expect(result.final_score).toBe(5.0);
+    });
+  });
+
+  // ─ 10b5-1 plan cap ─
+  describe('10b5-1 plan handling', () => {
+    test('is10b5Plan=true — DeepSeek never called', async () => {
+      const client = makeClient([]);
+      const filing = { ...BASE_FILING, is10b5Plan: true };
+      await callDeepSeekForRefinement(filing, 7.0, { client, sleep });
+      expect(client.complete).not.toHaveBeenCalled();
+    });
+
+    test('is10b5Plan=true, base_score=4 — untouched (under cap)', async () => {
+      const client = makeClient([]);
+      const filing = { ...BASE_FILING, is10b5Plan: true };
+      const result = await callDeepSeekForRefinement(filing, 4.0, { client, sleep });
+      expect(result.final_score).toBe(4.0);
+    });
+
+    test('is10b5Plan=true, base_score=5 — exactly at cap (untouched)', async () => {
+      const filing = { ...BASE_FILING, is10b5Plan: true };
+      const result = await callDeepSeekForRefinement(filing, 5.0, { client: makeClient([]), sleep });
+      expect(result.final_score).toBe(5.0);
+    });
+
+    test('is10b5Plan=true, base_score=7 — capped to 5', async () => {
+      const filing = { ...BASE_FILING, is10b5Plan: true };
+      const result = await callDeepSeekForRefinement(filing, 7.0, { client: makeClient([]), sleep });
+      expect(result.final_score).toBe(5.0);
+      expect(result.ai_adjustment).toBe(0);
+    });
+
+    test('is10b5Plan=false, +1 at score 10 — clamped to 10', async () => {
+      const client = makeClient(['{"adjustment": 1, "reason": "high"}']);
+      const result = await callDeepSeekForRefinement(BASE_FILING, 10.0, { client, sleep });
+      expect(result.final_score).toBe(10);
+    });
+  });
+
+  // ─ Output shape ─
+  describe('output shape', () => {
+    test('result always has base_score, ai_adjustment, ai_reason, final_score', async () => {
+      const client = makeClient(['{"adjustment": 0, "reason": "ok"}']);
+      const result = await callDeepSeekForRefinement(BASE_FILING, 6.0, { client, sleep });
+      expect(result).toHaveProperty('base_score');
+      expect(result).toHaveProperty('ai_adjustment');
+      expect(result).toHaveProperty('ai_reason');
+      expect(result).toHaveProperty('final_score');
+    });
+
+    test('on success, ai_reason contains DeepSeek reason string', async () => {
+      const client = makeClient(['{"adjustment": 1, "reason": "first buy in years"}']);
+      const result = await callDeepSeekForRefinement(BASE_FILING, 6.0, { client, sleep });
+      expect(result.ai_reason).toBe('first buy in years');
+    });
+
+    test('on fallback, ai_adjustment=0 and ai_reason is a non-empty explanation', async () => {
+      const client = makeClient(['bad', 'also-bad']);
+      const result = await callDeepSeekForRefinement(BASE_FILING, 6.0, { client, sleep });
+      expect(result.ai_adjustment).toBe(0);
+      expect(result.ai_reason.length).toBeGreaterThan(0);
     });
   });
 });
