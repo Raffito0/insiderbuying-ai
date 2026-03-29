@@ -60,7 +60,7 @@ export default function ReportsPage() {
       </section>
 
       {/* ═══ SECTION 2: FILTER TABS ═══ */}
-      <section className="bg-white pt-[24px] px-[20px] md:px-[48px] overflow-x-auto">
+      <section className="bg-white pt-[24px] px-[20px] md:px-[48px] overflow-x-auto sticky top-[80px] z-40">
         <div className="max-w-[1184px] mx-auto border-b border-[var(--color-border)]">
           <div className="flex items-center gap-[var(--gap-items)] md:gap-[40px]">
             {TABS.map((tab) => (

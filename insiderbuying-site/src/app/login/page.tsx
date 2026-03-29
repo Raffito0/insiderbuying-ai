@@ -73,16 +73,18 @@ function LoginForm() {
   }
 
   return (
-    <div className="bg-white min-h-[calc(100vh-82px)] flex items-center justify-center px-[20px] md:px-[32px] py-[40px] md:py-[60px]">
+    <div className="bg-white min-h-[calc(100vh-82px)] flex items-start justify-center px-[20px] md:px-[32px] pt-[40px] md:pt-[60px] pb-[40px] md:pb-[60px]">
       <div className="w-full max-w-[420px] bg-white p-[20px] md:p-[48px]">
 
         {/* Logo */}
-        <div className="mb-[32px]">
-          <span className="text-[20px] font-normal leading-[30px] text-[#1a1a1a]">EarlyInsider</span>
+        <div className="mb-[32px] text-center">
+          <span className="text-[20px] leading-[30px] text-[#1a1a1a]">
+            <span className="font-[var(--font-inter)] font-normal">Early</span><span className="font-[var(--font-inter)] font-bold">Insider</span>
+          </span>
         </div>
 
         {/* Title */}
-        <div className="mb-[40px]">
+        <div className="mb-[40px] text-center">
           <h2 className="font-[var(--font-montaga)] text-[28px] font-normal leading-[35px] text-[#1a1a1a]">
             Welcome back
           </h2>
@@ -174,7 +176,7 @@ function LoginForm() {
         </form>
 
         {/* Bottom text */}
-        <p className="mt-[32px] text-[14px] font-normal leading-[21px] text-[#5c6670]">
+        <p className="mt-[32px] text-[14px] font-normal leading-[21px] text-[#5c6670] text-center">
           Don&apos;t have an account?{" "}
           <Link href="/signup" className="text-[#0075e2] hover:underline">Sign up</Link>
         </p>

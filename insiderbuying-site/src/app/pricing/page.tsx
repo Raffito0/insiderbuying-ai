@@ -27,7 +27,7 @@ async function handleCheckout(priceId: string) {
 
 const CHECK = <svg className="w-[14px] h-[14px] shrink-0" viewBox="0 0 14 14" fill="#006d34"><path d="M2 7l3.5 3.5L12 4" stroke="#006d34" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round"/></svg>;
 const DASH = <span className="text-[14px] text-[#c6c5d9]">&mdash;</span>;
-const DOT = <svg className="w-[14px] h-[14px] shrink-0" viewBox="0 0 14 14" fill="#006d34"><circle cx="7" cy="7" r="5"/></svg>;
+const DOT = <svg className="w-[14px] h-[11px] shrink-0" viewBox="0 0 14 11" fill="none"><path d="M1 5.5l4 4L13 1" stroke="#006d34" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/></svg>;
 
 const COMPARISON = [
   { category: "DATA & ALERTS", rows: [
@@ -129,7 +129,7 @@ export default function PricingPage() {
           </div>
 
           {/* PRO (Most Popular) */}
-          <div className="bg-white border border-[var(--color-primary)] p-[28px] md:p-[40px] flex flex-col relative shadow-[0px_25px_50px_rgba(0,0,0,0.08)]">
+          <div className="bg-white border border-[var(--color-primary)] p-[28px] md:p-[40px] flex flex-col relative">
             <div className="absolute -top-[12px] left-1/2 -translate-x-1/2 bg-[var(--color-signal-green)] text-white text-[11px] font-extrabold leading-[15px] px-[16px] py-[4px] rounded-[2px] whitespace-nowrap">
               MOST POPULAR
             </div>
@@ -157,7 +157,7 @@ export default function PricingPage() {
               onClick={() => handleCheckout(billing === "annual" ? process.env.NEXT_PUBLIC_STRIPE_PRICE_PRO_ANNUAL || "price_1TFVfHBJM1hcMsSa9wD5IcfH" : process.env.NEXT_PUBLIC_STRIPE_PRICE_PRO_MONTHLY || "price_1TFVfHBJM1hcMsSanZzyirRM")}
               className="flex items-center justify-center h-[54px] bg-[var(--color-primary)] text-[14px] font-bold leading-[20px] text-white hover:bg-[var(--color-primary-dark)] transition-colors w-full cursor-pointer"
             >
-              Start 14-Day Trial
+              Get Access
             </button>
           </div>
 
@@ -182,7 +182,7 @@ export default function PricingPage() {
               onClick={() => handleCheckout(billing === "annual" ? process.env.NEXT_PUBLIC_STRIPE_PRICE_INVESTOR_ANNUAL || "price_INVESTOR_ANNUAL_TODO" : process.env.NEXT_PUBLIC_STRIPE_PRICE_INVESTOR_MONTHLY || "price_INVESTOR_MONTHLY_TODO")}
               className="flex items-center justify-center h-[54px] border border-[var(--color-border)] text-[14px] font-bold leading-[20px] text-[color:var(--color-text)] hover:bg-[var(--color-bg-alt)] transition-colors w-full"
             >
-              Start 14-Day Trial
+              Get Access
             </button>
           </div>
         </div>
@@ -200,16 +200,16 @@ export default function PricingPage() {
             {/* Header */}
             <div className="flex border-b border-[var(--color-border-light)]">
               <div className="flex-1 py-[20px] md:py-[24px] px-[12px] md:px-[32px]">
-                <span className="text-[12px] md:text-[14px] font-medium leading-[16px] text-[color:var(--color-text-secondary)]">Feature Matrix</span>
+                <span className="text-[12px] md:text-[14px] font-bold leading-[16px] tracking-[0.5px] text-[color:var(--color-text-muted)] uppercase">Feature Matrix</span>
               </div>
               <div className="w-[44px] md:w-[139px] py-[20px] md:py-[24px] px-[4px] md:px-[16px] text-center">
-                <span className="font-[var(--font-montaga)] text-[11px] md:text-[14px] font-normal leading-[16px] text-[color:var(--color-text)]">Free</span>
+                <span className="text-[12px] md:text-[14px] font-bold leading-[16px] tracking-[0.5px] text-[color:var(--color-text-muted)] uppercase">Free</span>
               </div>
               <div className="w-[52px] md:w-[122px] py-[20px] md:py-[24px] px-[4px] md:px-[16px] text-center">
-                <span className="font-[var(--font-montaga)] text-[11px] md:text-[14px] font-normal leading-[16px] text-[color:var(--color-primary)]">Analyst</span>
+                <span className="text-[12px] md:text-[14px] font-bold leading-[16px] tracking-[0.5px] text-[color:var(--color-primary)] uppercase">Analyst</span>
               </div>
               <div className="w-[56px] md:w-[189px] py-[20px] md:py-[24px] px-[4px] md:px-[16px] text-center">
-                <span className="font-[var(--font-montaga)] text-[11px] md:text-[14px] font-normal leading-[16px] text-[color:var(--color-text)]">Investor</span>
+                <span className="text-[12px] md:text-[14px] font-bold leading-[16px] tracking-[0.5px] text-[color:var(--color-text-muted)] uppercase">Investor</span>
               </div>
             </div>
 
