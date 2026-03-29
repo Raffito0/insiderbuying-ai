@@ -4,11 +4,15 @@ const {
   selectProspects,
   buildEmailPrompt,
   validateEmail,
+  validateSubject,
   buildSendPayload,
   buildFollowUpPrompt,
   checkForFollowUps,
   logEmail,
+  scrapeRecentArticle,
+  generateEmail,
   BANNED_PHRASES,
+  FROM_NAME,
 } = require('../../n8n/code/insiderbuying/send-outreach');
 
 // ─── selectProspects ──────────────────────────────────────────────────────
@@ -303,5 +307,324 @@ describe('BANNED_PHRASES', () => {
   test('contains classic template phrases', () => {
     expect(BANNED_PHRASES.some((p) => p.toLowerCase().includes('hope this finds'))).toBe(true);
     expect(BANNED_PHRASES.some((p) => p.toLowerCase().includes('reaching out'))).toBe(true);
+  });
+});
+
+// ─── section-04: email rewrite + scraping ────────────────────────────────
+
+// Helper: build an AI response that passes all generateEmail validators
+function makeValidAiResponse(opts) {
+  var subject = (opts && opts.subject) || 'Ready to feature our AAPL insider data?';
+  var wordCount = (opts && opts.wordCount) || 110;
+  var banned = (opts && opts.bannedPhrase) || '';
+  // Build a body with exact word count including required phrases
+  // Required phrases: "We track 1,500+" and "Reply 'stop' to never hear from me again."
+  var requiredA = "We track 1,500+ SEC insider filings per month.";
+  var requiredB = "Reply 'stop' to never hear from me again.";
+  var requiredWords = (requiredA + ' ' + requiredB).split(/\s+/).length; // ~15
+  var fillerCount = Math.max(0, wordCount - requiredWords);
+  var filler = Array(fillerCount).fill('interesting').join(' ');
+  var body = requiredA + ' ' + filler + (banned ? ' ' + banned : '') + ' ' + requiredB;
+  return 'Subject: ' + subject + '\n\n' + body;
+}
+
+// ── section-04: buildEmailPrompt enhancements ─────────────────────────────
+
+describe('section-04: buildEmailPrompt no URL', () => {
+  const PROSPECT = { contact_name: 'Jane', site_name: 'FinBlog', domain: 'finblog.com' };
+  const ARTICLE  = { title: 'AAPL Insiders Load Up', url: 'https://earlyinsider.com/aapl', summary: 'CEO bought $5M.' };
+
+  test('does NOT include http:// or https:// in the prompt', () => {
+    const { prompt } = buildEmailPrompt(PROSPECT, ARTICLE);
+    expect(prompt).not.toMatch(/https?:\/\//);
+  });
+
+  test('prompt explicitly instructs AI not to include URLs', () => {
+    const { prompt } = buildEmailPrompt(PROSPECT, ARTICLE);
+    expect(prompt.toLowerCase()).toContain('url');
+  });
+});
+
+describe('section-04: buildEmailPrompt social proof', () => {
+  const PROSPECT = { contact_name: 'Bob', site_name: 'TradeBlog', domain: 'tradeblog.com' };
+
+  test('includes "1,500+" in the prompt', () => {
+    const { prompt } = buildEmailPrompt(PROSPECT, null);
+    expect(prompt).toContain('1,500+');
+  });
+});
+
+describe('section-04: buildEmailPrompt word count instruction', () => {
+  const PROSPECT = { contact_name: 'Bob', site_name: 'TradeBlog', domain: 'tradeblog.com' };
+
+  test('prompt instructs AI to write 100-125 words', () => {
+    const { prompt } = buildEmailPrompt(PROSPECT, null);
+    expect(prompt).toMatch(/100.{0,5}125/);
+  });
+});
+
+describe('section-04: buildEmailPrompt opt-out footer', () => {
+  const PROSPECT = { contact_name: 'Bob', site_name: 'TradeBlog', domain: 'tradeblog.com' };
+
+  test("prompt includes \"Reply 'stop'\" instruction", () => {
+    const { prompt } = buildEmailPrompt(PROSPECT, null);
+    expect(prompt.toLowerCase()).toContain("reply 'stop'");
+  });
+});
+
+describe('section-04: buildEmailPrompt article personalisation', () => {
+  const BASE_PROSPECT = { contact_name: 'Jane', site_name: 'FinBlog', domain: 'finblog.com' };
+
+  test('includes article title in prompt when last_article_title is set', () => {
+    const prospect = Object.assign({}, BASE_PROSPECT, { last_article_title: 'Why CEOs Buy In Q4' });
+    const { prompt } = buildEmailPrompt(prospect, null);
+    expect(prompt).toContain('Why CEOs Buy In Q4');
+  });
+
+  test('generates prompt without article reference when last_article_title is null', () => {
+    const { prompt } = buildEmailPrompt(BASE_PROSPECT, null);
+    expect(prompt).not.toContain("I just read your piece");
+  });
+});
+
+// ── section-04: validateSubject ───────────────────────────────────────────
+
+describe('section-04: validateSubject()', () => {
+  test('throws when subject has no question mark', () => {
+    expect(() => validateSubject('Insider buying update')).toThrow();
+    expect(() => validateSubject('Insider buying update')).toThrow(/question/i);
+  });
+
+  test('does not throw when subject ends with "?"', () => {
+    expect(() => validateSubject('Did you see the latest AAPL data?')).not.toThrow();
+  });
+
+  test('does not throw when subject contains "?" in the middle', () => {
+    expect(() => validateSubject('Is AAPL a buy? Here is the data')).not.toThrow();
+  });
+});
+
+// ── section-04: validateEmail new banned phrases ──────────────────────────
+
+describe('section-04: validateEmail new banned phrases (case-insensitive)', () => {
+  const newPhrases = [
+    'just wanted to reach out',
+    'I stumbled upon',
+    'I am a huge fan',
+    'big fan of your work',
+    'as per our conversation',
+    'circle back',
+    'synergy',
+  ];
+
+  newPhrases.forEach((phrase) => {
+    test(`rejects body containing "${phrase}" (passed in UPPER CASE)`, () => {
+      const body = phrase.toUpperCase() + ' Would you be interested in a guest post?';
+      const result = validateEmail(body);
+      expect(result.valid).toBe(false);
+      expect(result.issues.some((i) => i.toLowerCase().includes('banned'))).toBe(true);
+    });
+  });
+});
+
+// ── section-04: FROM_NAME constant ────────────────────────────────────────
+
+describe('section-04: FROM_NAME constant', () => {
+  test('equals "Ryan from EarlyInsider" <ryan@earlyinsider.com>', () => {
+    expect(FROM_NAME).toBe('"Ryan from EarlyInsider" <ryan@earlyinsider.com>');
+  });
+});
+
+// ── section-04: generateEmail from name ──────────────────────────────────
+
+describe('section-04: generateEmail from name', () => {
+  test('sets email.from to FROM_NAME constant', async () => {
+    const prospect = { contact_name: 'Jane', site_name: 'FinBlog', domain: 'finblog.com' };
+    const mockAi = { call: jest.fn().mockResolvedValue(makeValidAiResponse({})) };
+    const result = await generateEmail(prospect, null, { _aiClient: mockAi });
+    expect(result.from).toBe(FROM_NAME);
+  });
+});
+
+// ── section-04: generateEmail word count ─────────────────────────────────
+
+describe('section-04: generateEmail word count', () => {
+  test('produces an email body between 100 and 125 words', async () => {
+    const prospect = { contact_name: 'Jane', site_name: 'FinBlog', domain: 'finblog.com' };
+    const mockAi = { call: jest.fn().mockResolvedValue(makeValidAiResponse({ wordCount: 110 })) };
+    const result = await generateEmail(prospect, null, { _aiClient: mockAi });
+    const words = result.body.trim().split(/\s+/).filter((w) => w.length > 0);
+    expect(words.length).toBeGreaterThanOrEqual(100);
+    expect(words.length).toBeLessThanOrEqual(125);
+  });
+});
+
+// ── section-04: AI retry loop ────────────────────────────────────────────
+
+describe('section-04: generateEmail retry loop', () => {
+  const PROSPECT = { contact_name: 'Jane', site_name: 'FinBlog', domain: 'finblog.com' };
+
+  test('retries when AI returns a banned phrase — succeeds on clean 3rd attempt', async () => {
+    let calls = 0;
+    const mockAi = {
+      call: jest.fn().mockImplementation(async () => {
+        calls++;
+        if (calls <= 2) {
+          // synergy is banned
+          return makeValidAiResponse({ bannedPhrase: 'synergy great idea' });
+        }
+        return makeValidAiResponse({});
+      }),
+    };
+    const result = await generateEmail(PROSPECT, null, { _aiClient: mockAi });
+    expect(result.subject).toBeTruthy();
+    expect(calls).toBe(3);
+  });
+
+  test('retries when AI returns subject without "?"', async () => {
+    let calls = 0;
+    const mockAi = {
+      call: jest.fn().mockImplementation(async () => {
+        calls++;
+        if (calls === 1) return makeValidAiResponse({ subject: 'No question mark here' });
+        return makeValidAiResponse({});
+      }),
+    };
+    const result = await generateEmail(PROSPECT, null, { _aiClient: mockAi });
+    expect(result.subject).toContain('?');
+    expect(calls).toBe(2);
+  });
+
+  test('retries when AI returns body over 125 words', async () => {
+    let calls = 0;
+    const mockAi = {
+      call: jest.fn().mockImplementation(async () => {
+        calls++;
+        if (calls === 1) return makeValidAiResponse({ wordCount: 140 });
+        return makeValidAiResponse({});
+      }),
+    };
+    const result = await generateEmail(PROSPECT, null, { _aiClient: mockAi });
+    const words = result.body.trim().split(/\s+/).filter((w) => w.length > 0);
+    expect(words.length).toBeLessThanOrEqual(125);
+    expect(calls).toBe(2);
+  });
+
+  test('throws after 3 failed attempts', async () => {
+    const mockAi = {
+      call: jest.fn().mockResolvedValue(makeValidAiResponse({ subject: 'No question mark' })),
+    };
+    await expect(generateEmail(PROSPECT, null, { _aiClient: mockAi })).rejects.toThrow(/attempts/i);
+  });
+});
+
+// ── section-04: scrapeRecentArticle HTML mode ────────────────────────────
+
+describe('section-04: scrapeRecentArticle HTML mode', () => {
+  function mockFetch(body, contentType) {
+    return jest.fn().mockResolvedValue({
+      statusCode: 200,
+      headers: { 'content-type': contentType || 'text/html' },
+      body: body,
+    });
+  }
+
+  test('returns title and url from article:first-of-type a selector', async () => {
+    const html = '<html><body><article><a href="/post/1">AAPL Insiders Buy</a></article></body></html>';
+    const result = await scrapeRecentArticle('https://example.com', { _fetchFn: mockFetch(html) });
+    expect(result).not.toBeNull();
+    expect(result.title).toBe('AAPL Insiders Buy');
+    expect(result.url).toContain('/post/1');
+  });
+
+  test('falls back to .post:first-of-type a when article selector finds nothing', async () => {
+    const html = '<html><body><div class="post"><a href="/p/2">Insider Move</a></div></body></html>';
+    const result = await scrapeRecentArticle('https://example.com', { _fetchFn: mockFetch(html) });
+    expect(result).not.toBeNull();
+    expect(result.title).toBe('Insider Move');
+  });
+
+  test('falls back to h2 a:first-of-type as last resort', async () => {
+    const html = '<html><body><h2><a href="/p/3">Deep Dive</a></h2></body></html>';
+    const result = await scrapeRecentArticle('https://example.com', { _fetchFn: mockFetch(html) });
+    expect(result).not.toBeNull();
+    expect(result.title).toBe('Deep Dive');
+  });
+
+  test('returns null gracefully when scraping fails entirely', async () => {
+    const throwFn = jest.fn().mockRejectedValue(new Error('network error'));
+    const result = await scrapeRecentArticle('https://example.com', { _fetchFn: throwFn });
+    expect(result).toBeNull();
+  });
+
+  test('returns null gracefully when no selector matches', async () => {
+    const html = '<html><body><p>No links here</p></body></html>';
+    const result = await scrapeRecentArticle('https://example.com', { _fetchFn: mockFetch(html) });
+    expect(result).toBeNull();
+  });
+});
+
+// ── section-04: generateEmail — no AI client throws (L-10) ──────────────
+
+describe('section-04: generateEmail — no AI client', () => {
+  const PROSPECT = { contact_name: 'Jane', site_name: 'FinBlog', domain: 'finblog.com' };
+  test('throws immediately when no _aiClient provided', async () => {
+    await expect(generateEmail(PROSPECT, null, {})).rejects.toThrow(/AI client not provided/i);
+  });
+});
+
+// ── section-04: scrapeRecentArticle URL edge cases (L-11) ─────────────────
+
+describe('section-04: scrapeRecentArticle URL edge cases', () => {
+  function mockFetch(href) {
+    return jest.fn().mockResolvedValue({
+      statusCode: 200,
+      headers: { 'content-type': 'text/html' },
+      body: '<html><body><article><a href="' + href + '">Article Title</a></article></body></html>',
+    });
+  }
+
+  test('resolves protocol-relative href (//cdn.example.com/post)', async () => {
+    const result = await scrapeRecentArticle('https://example.com', {
+      _fetchFn: mockFetch('//cdn.example.com/post'),
+    });
+    expect(result).not.toBeNull();
+    expect(result.url).toMatch(/^https:\/\/cdn\.example\.com\/post/);
+  });
+
+  test('resolves relative href (/blog/post-1)', async () => {
+    const result = await scrapeRecentArticle('https://example.com', {
+      _fetchFn: mockFetch('/blog/post-1'),
+    });
+    expect(result).not.toBeNull();
+    expect(result.url).toMatch(/^https:\/\/example\.com\/blog\/post-1/);
+  });
+});
+
+// ── section-04: scrapeRecentArticle XML/RSS mode ─────────────────────────
+
+describe('section-04: scrapeRecentArticle XML/RSS mode', () => {
+  const RSS_BODY = '<?xml version="1.0"?><rss><channel><item><title>CEO Buys Big</title><link>https://blog.com/1</link></item></channel></rss>';
+
+  test('uses xmlMode when Content-Type is application/xml', async () => {
+    const fetchFn = jest.fn().mockResolvedValue({
+      statusCode: 200,
+      headers: { 'content-type': 'application/xml; charset=utf-8' },
+      body: RSS_BODY,
+    });
+    const result = await scrapeRecentArticle('https://blog.com', { _fetchFn: fetchFn });
+    expect(result).not.toBeNull();
+    expect(result.title).toBe('CEO Buys Big');
+  });
+
+  test('uses xmlMode when Content-Type is text/xml', async () => {
+    const fetchFn = jest.fn().mockResolvedValue({
+      statusCode: 200,
+      headers: { 'content-type': 'text/xml' },
+      body: RSS_BODY,
+    });
+    const result = await scrapeRecentArticle('https://blog.com', { _fetchFn: fetchFn });
+    expect(result).not.toBeNull();
+    expect(result.title).toBe('CEO Buys Big');
   });
 });
