@@ -39,27 +39,28 @@ const FAQS = [
   { q: "Can I cancel anytime?", a: "Yes. Cancel in one click from your dashboard. No contracts, no cancellation fees. Annual plans refunded pro-rata for unused months." },
 ];
 
-const LOGOS: { name: string; domain: string; w: number; h: number }[] = [
-  { name: "NVIDIA", domain: "nvidia.com", w: 140, h: 32 },
-  { name: "Apple", domain: "apple.com", w: 140, h: 30 },
-  { name: "Microsoft", domain: "microsoft.com", w: 140, h: 30 },
-  { name: "Amazon", domain: "amazon.com", w: 140, h: 30 },
-  { name: "Meta", domain: "meta.com", w: 140, h: 30 },
-  { name: "Tesla", domain: "tesla.com", w: 140, h: 30 },
-  { name: "Google", domain: "google.com", w: 140, h: 30 },
-  { name: "JPMorgan", domain: "jpmorgan.com", w: 140, h: 30 },
-  { name: "Goldman Sachs", domain: "goldmansachs.com", w: 140, h: 30 },
-  { name: "Berkshire Hathaway", domain: "berkshirehathaway.com", w: 141, h: 30 },
-  { name: "J&J", domain: "jnj.com", w: 145, h: 30 },
-  { name: "UnitedHealth", domain: "unitedhealthgroup.com", w: 145, h: 30 },
-  { name: "Visa", domain: "visa.com", w: 140, h: 30 },
-  { name: "Mastercard", domain: "mastercard.com", w: 140, h: 30 },
-  { name: "Pfizer", domain: "pfizer.com", w: 140, h: 30 },
-  { name: "Eli Lilly", domain: "lilly.com", w: 140, h: 30 },
-  { name: "Broadcom", domain: "broadcom.com", w: 140, h: 30 },
-  { name: "AMD", domain: "amd.com", w: 130, h: 30 },
-  { name: "Netflix", domain: "netflix.com", w: 140, h: 30 },
-  { name: "Costco", domain: "costco.com", w: 140, h: 30 },
+// h = visual height in px. Tall/square logos (VISA, AMD) get smaller h, wide/thin logos (Berkshire, J&J) get larger h
+const LOGOS: { name: string; domain: string; h: number }[] = [
+  { name: "NVIDIA", domain: "nvidia.com", h: 26 },
+  { name: "Apple", domain: "apple.com", h: 28 },
+  { name: "Microsoft", domain: "microsoft.com", h: 24 },
+  { name: "Amazon", domain: "amazon.com", h: 26 },
+  { name: "Meta", domain: "meta.com", h: 32 },
+  { name: "Tesla", domain: "tesla.com", h: 22 },
+  { name: "Google", domain: "google.com", h: 26 },
+  { name: "JPMorgan", domain: "jpmorgan.com", h: 26 },
+  { name: "Goldman Sachs", domain: "goldmansachs.com", h: 28 },
+  { name: "Berkshire Hathaway", domain: "berkshirehathaway.com", h: 34 },
+  { name: "J&J", domain: "jnj.com", h: 32 },
+  { name: "UnitedHealth", domain: "unitedhealthgroup.com", h: 32 },
+  { name: "Visa", domain: "visa.com", h: 18 },
+  { name: "Mastercard", domain: "mastercard.com", h: 24 },
+  { name: "Pfizer", domain: "pfizer.com", h: 24 },
+  { name: "Eli Lilly", domain: "lilly.com", h: 26 },
+  { name: "Broadcom", domain: "broadcom.com", h: 24 },
+  { name: "AMD", domain: "amd.com", h: 18 },
+  { name: "Netflix", domain: "netflix.com", h: 20 },
+  { name: "Costco", domain: "costco.com", h: 26 },
 ];
 
 export default function HomePage() {
@@ -99,9 +100,7 @@ export default function HomePage() {
       <section className="w-full py-[24px] bg-white overflow-hidden" aria-hidden="true">
         <div className="logo-ticker flex items-center gap-[56px] whitespace-nowrap">
           {[...LOGOS, ...LOGOS].map((logo, i) => (
-            <div key={i} className="shrink-0 flex items-center justify-center" style={{ width: `${logo.w}px`, height: `${logo.h}px` }}>
-              <img src={`https://cdn.brandfetch.io/domain/${logo.domain}/w/400/h/120/logo?c=1idSo4YEEODo2rW6Anw`} alt={logo.name} className="max-w-full max-h-full object-contain" />
-            </div>
+            <img key={i} src={`https://cdn.brandfetch.io/domain/${logo.domain}/w/400/h/120/logo?c=1idSo4YEEODo2rW6Anw`} alt={logo.name} className="w-auto shrink-0 object-contain" style={{ height: `${logo.h}px` }} loading="lazy" />
           ))}
         </div>
         <style>{`@keyframes scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}.logo-ticker{animation:scroll 40s linear infinite}@media(max-width:768px){.logo-ticker{animation-duration:20s}}`}</style>
@@ -113,10 +112,10 @@ export default function HomePage() {
         <div className="flex flex-wrap items-center gap-[24px]">
           {LOGOS.map((logo) => (
             <div key={logo.domain} className="flex flex-col items-center gap-[8px]">
-              <div className="flex items-center justify-center p-[4px] bg-white border border-[#e5e5e5]" style={{ width: `${logo.w}px`, height: `${logo.h}px` }}>
-                <img src={`https://cdn.brandfetch.io/domain/${logo.domain}/w/400/h/120/logo?c=1idSo4YEEODo2rW6Anw`} alt={logo.name} className="max-w-full max-h-full object-contain" />
+              <div className="flex items-center justify-center p-[4px] bg-white border border-[#e5e5e5]">
+                <img src={`https://cdn.brandfetch.io/domain/${logo.domain}/w/400/h/120/logo?c=1idSo4YEEODo2rW6Anw`} alt={logo.name} className="w-auto object-contain" style={{ height: `${logo.h}px` }} />
               </div>
-              <span className="text-[11px] text-[#999]">{logo.name} ({logo.w}x{logo.h})</span>
+              <span className="text-[11px] text-[#999]">{logo.name} (h:{logo.h})</span>
             </div>
           ))}
         </div>
