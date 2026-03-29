@@ -96,15 +96,12 @@ export default function HomePage() {
 
       {/* ═══ 1.5 LOGO TICKER ═══ */}
       <section className="w-full py-[24px] bg-white overflow-hidden" aria-hidden="true">
-        <div className="flex items-center gap-[48px] animate-[scroll_30s_linear_infinite] whitespace-nowrap">
+        <div className="logo-ticker flex items-center gap-[56px] whitespace-nowrap">
           {[...LOGOS, ...LOGOS].map((logo, i) => (
-            <div key={i} className="flex items-center gap-[10px] shrink-0 opacity-70">
-              <img src={`https://img.logo.dev/${logo.domain}?token=pk_I9HfmU7yQtOtljYFEYrDHQ&size=128&format=png&greyscale=false`} alt={logo.name} className="h-[34px] w-[34px] object-contain" loading="lazy" />
-              <span className="text-[16px] font-medium text-[color:var(--color-text)]">{logo.name}</span>
-            </div>
+            <span key={i} className="text-[18px] font-semibold tracking-[0.5px] text-[color:var(--color-text)] opacity-50 shrink-0">{logo.name}</span>
           ))}
         </div>
-        <style>{`@keyframes scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}`}</style>
+        <style>{`@keyframes scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}.logo-ticker{animation:scroll 20s linear infinite}`}</style>
       </section>
 
       {/* ═══ 2. LIVE ALERT FEED ═══ */}
