@@ -86,7 +86,7 @@ export default function HomePage() {
       {/* ═══ 2. LIVE ALERT FEED ═══ */}
       <section className="w-full py-[var(--section-y-mobile)] px-[20px] md:pt-[var(--section-y)] md:px-[48px] md:pb-[var(--section-y)] bg-white">
         <div className="max-w-[1154px] mx-auto">
-          <div className="flex flex-col items-center lg:flex-row lg:items-center lg:justify-center gap-[12px] lg:gap-[16px] mb-[48px]">
+          <div className="flex flex-col-reverse items-center lg:flex-row lg:items-center lg:justify-center gap-[12px] lg:gap-[16px] mb-[48px]">
             <h2 className="font-[var(--font-montaga)] text-[39px] md:text-[length:var(--text-title)] font-normal leading-[1.1] tracking-[0.5px] text-[color:var(--color-text)] text-center">SEC Form 4 Feed</h2>
             <div className="flex items-center gap-[8px] bg-[#00de16]/20 px-[12px] py-[4px] rounded-full">
               <div className="w-[8px] h-[8px] rounded-full bg-[var(--color-signal-green)]" />
