@@ -81,7 +81,7 @@ export default function ReportsPage() {
       {/* ═══ SECTION 3: FEATURED REPORT ═══ */}
       <section className="pt-[48px] pb-[48px] md:pt-[var(--section-y)] md:pb-[var(--section-y)] px-[20px] md:px-[48px]">
         <div className="max-w-[1184px] mx-auto relative">
-          <span className="absolute top-[16px] left-[16px] z-10 bg-[#00d26a] text-white text-[11px] font-black leading-[15px] px-[12px] py-[4px] rounded-[2px]">BEST VALUE</span>
+          <span className="absolute top-[16px] left-[24px] md:left-[40px] z-10 bg-[#00d26a] text-white text-[11px] font-black leading-[15px] px-[12px] py-[4px] rounded-[2px]">BEST SELLER</span>
           <div className="bg-white border border-[var(--color-border-light)] flex flex-col md:flex-row gap-[var(--gap-items)] md:gap-[48px] p-[24px] md:p-[40px] items-center">
             <div className="w-full md:w-[302px] h-[280px] md:h-[403px] bg-[var(--color-border-light)] shrink-0" />
             <div className="flex flex-col justify-center flex-1">
