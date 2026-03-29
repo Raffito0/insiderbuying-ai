@@ -55,9 +55,11 @@ Update `x-engagement.js` polling configuration:
 
 ```javascript
 const POLLING_FREQUENCIES = {
-  market_open: { hours: [9, 16], days: [1,2,3,4,5], intervalMs: 5 * 60 * 1000 },    // 9:30-16:00 EST weekdays
-  extended:    { hours: [16, 20], days: [1,2,3,4,5], intervalMs: 15 * 60 * 1000 },   // 16:00-20:00 EST
-  overnight:   { hours: [20, 9],  days: [0,1,2,3,4,5,6], intervalMs: 60 * 60 * 1000 } // nights + weekends
+  market_open: { hours: [9, 16], days: [1,2,3,4,5], intervalMs: 30 * 1000 },         // 9:30-16:00 EST — 30s for fastest reply timing
+  extended:    { hours: [16, 20], days: [1,2,3,4,5], intervalMs: 2 * 60 * 1000 },    // 16:00-20:00 EST — 2min
+  overnight:   { hours: [20, 9],  days: [0,1,2,3,4,5,6], intervalMs: 15 * 60 * 1000 } // nights + weekends — 15min
+  // Cost: ~2,880 calls/day market + ~240 extended + ~56 overnight ≈ $7-8/month twitterapi.io
+  // Reply latency: 15s avg polling + 15s Opus gen = ~30s from tweet to reply
 };
 
 function getCurrentPollingInterval() {
