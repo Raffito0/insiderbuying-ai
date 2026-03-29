@@ -190,7 +190,7 @@ export default function PricingPage() {
                 {cat.rows.map((row) => (
                   <div key={row.feature} className="flex border-b border-[var(--color-bg-alt)]">
                     <div className="w-[45%] md:flex-1 py-[16px] md:py-[20px] px-[8px] md:px-[32px]">
-                      <span className="text-[12px] md:text-[14px] font-normal leading-[18px] md:leading-[20px] text-[color:var(--color-text)]">{row.feature}</span>
+                      <span className="text-[13px] md:text-[14px] font-normal leading-[18px] md:leading-[20px] text-[color:var(--color-text)]">{row.feature}</span>
                     </div>
                     <div className="w-[18%] md:w-[139px] py-[16px] md:py-[18px] flex items-center justify-center">
                       {row.free ? DOT : DASH}
