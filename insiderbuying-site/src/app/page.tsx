@@ -179,8 +179,8 @@ export default function HomePage() {
                 <div className="w-[48px] h-[48px] rounded-full bg-[#d9d9d9] shrink-0" />
                 <div>
                   <h3 className="text-[16px] md:text-[20px] font-medium leading-[24px] md:leading-[28px] text-[color:var(--color-text)] font-[var(--font-montaga)]">NVDA / NVIDIA Corp</h3>
-                  <div className="flex items-center gap-[8px] mt-[2px]">
-                    <span className="bg-[var(--color-signal-green)] text-white text-[11px] px-[8px] py-[2px] rounded-[2px]">High Conviction</span>
+                  <div className="flex flex-col md:flex-row md:items-center gap-[4px] md:gap-[8px] mt-[2px]">
+                    <span className="bg-[var(--color-signal-green)] text-white text-[11px] px-[8px] py-[2px] rounded-[2px] self-start">High Conviction</span>
                     <span className="text-[12px] tracking-[0.5px] text-[color:var(--color-text-muted)]">Alert ID: #88321-X</span>
                   </div>
                 </div>
@@ -222,7 +222,7 @@ export default function HomePage() {
               </div>
             </div>
           </div>
-          <p className="text-[14px] leading-[20px] text-[color:var(--color-text-secondary)] text-center italic px-[32px] pb-[12px] pt-[25px]">
+          <p className="text-[14px] leading-[20px] text-[color:var(--color-text-secondary)] text-center italic px-[32px] py-[24px]">
             &ldquo;Huang&apos;s purchase is the largest individual open-market buy since Q2 2026, signaling immense internal confidence in upcoming product cycles.&rdquo;
           </p>
         </div>
@@ -335,7 +335,7 @@ export default function HomePage() {
                 <ul className="space-y-[var(--gap-tight)] mb-[48px]">
                   {p.features.map(f=>(<li key={f} className="flex items-center gap-[12px] text-[14px] leading-[20px] text-[color:var(--color-text)]"><div className="w-[11px] h-[11px] rounded-full border-2 border-[var(--color-signal-green)] flex items-center justify-center"><div className="w-[5px] h-[5px] rounded-full bg-[var(--color-signal-green)]"/></div>{f}</li>))}
                 </ul>
-                <Link href="/signup" className={`flex items-center justify-center w-full h-[58px] text-[16px] font-medium tracking-[1px] transition-colors ${p.btn}`}>{p.name === "Free" ? "Start Monitoring — Free" : "Start 14-Day Trial"}</Link>
+                <Link href="/signup" className={`flex items-center justify-center w-full h-[58px] text-[16px] font-medium tracking-[1px] transition-colors ${p.btn}`}>{p.name === "Free" ? "Start Monitoring Free" : "Get Access"}</Link>
               </div>
             ))}
           </div>

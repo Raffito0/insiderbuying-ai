@@ -132,7 +132,7 @@ export default function ReportsPage() {
                 ))}
               </div>
               <div className="flex items-center justify-between pt-[24px] border-t border-[var(--color-border-light)]">
-                <span className="font-[var(--font-montaga)] text-[22px] md:text-[24px] font-bold leading-[32px] text-[color:var(--color-text)]">{card.price}</span>
+                <span className="font-[var(--font-montaga)] text-[28px] md:text-[32px] font-normal leading-[36px] text-[color:var(--color-text)]">{card.price}</span>
                 <Link
                   href="/signup"
                   className={`h-[34px] px-[16px] flex items-center justify-center text-[12px] font-bold leading-[16px] transition-colors ${

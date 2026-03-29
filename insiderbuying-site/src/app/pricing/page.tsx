@@ -123,8 +123,8 @@ export default function PricingPage() {
                 <li key={f} className="flex items-center gap-[12px]">{CHECK}<span className="text-[14px] font-normal leading-[20px] text-[color:var(--color-text-secondary)]">{f}</span></li>
               ))}
             </ul>
-            <Link href="/signup" className="flex items-center justify-center h-[54px] border border-[var(--color-border)] text-[14px] font-bold leading-[20px] text-[color:var(--color-text)] hover:bg-[var(--color-bg-alt)] transition-colors">
-              Start Monitoring — Free
+            <Link href="/signup" className="flex items-center justify-center h-[54px] border border-[var(--color-border)] text-[16px] font-medium tracking-[1px] leading-[20px] text-[color:var(--color-text)] hover:bg-[var(--color-bg-alt)] transition-colors">
+              Start Monitoring Free
             </Link>
           </div>
 
@@ -155,7 +155,7 @@ export default function PricingPage() {
             </ul>
             <button
               onClick={() => handleCheckout(billing === "annual" ? process.env.NEXT_PUBLIC_STRIPE_PRICE_PRO_ANNUAL || "price_1TFVfHBJM1hcMsSa9wD5IcfH" : process.env.NEXT_PUBLIC_STRIPE_PRICE_PRO_MONTHLY || "price_1TFVfHBJM1hcMsSanZzyirRM")}
-              className="flex items-center justify-center h-[54px] bg-[var(--color-primary)] text-[14px] font-bold leading-[20px] text-white hover:bg-[var(--color-primary-dark)] transition-colors w-full cursor-pointer"
+              className="flex items-center justify-center h-[54px] bg-[var(--color-primary)] text-[16px] font-medium tracking-[1px] leading-[20px] text-white hover:bg-[var(--color-primary-dark)] transition-colors w-full cursor-pointer"
             >
               Get Access
             </button>
@@ -180,7 +180,7 @@ export default function PricingPage() {
             </ul>
             <button
               onClick={() => handleCheckout(billing === "annual" ? process.env.NEXT_PUBLIC_STRIPE_PRICE_INVESTOR_ANNUAL || "price_INVESTOR_ANNUAL_TODO" : process.env.NEXT_PUBLIC_STRIPE_PRICE_INVESTOR_MONTHLY || "price_INVESTOR_MONTHLY_TODO")}
-              className="flex items-center justify-center h-[54px] border border-[var(--color-border)] text-[14px] font-bold leading-[20px] text-[color:var(--color-text)] hover:bg-[var(--color-bg-alt)] transition-colors w-full"
+              className="flex items-center justify-center h-[54px] border border-[var(--color-border)] text-[16px] font-medium tracking-[1px] leading-[20px] text-[color:var(--color-text)] hover:bg-[var(--color-bg-alt)] transition-colors w-full"
             >
               Get Access
             </button>
