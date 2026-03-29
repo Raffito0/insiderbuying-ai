@@ -181,7 +181,7 @@ export default function HomePage() {
                 <div>
                   <h3 className="text-[16px] md:text-[20px] font-medium leading-[24px] md:leading-[28px] text-[color:var(--color-text)] font-[var(--font-montaga)]">NVDA / NVIDIA Corp</h3>
                   <div className="flex flex-col md:flex-row md:items-center gap-[4px] md:gap-[8px] mt-[2px]">
-                    <span className="bg-[var(--color-signal-green)] text-white text-[11px] px-[8px] py-[2px] rounded-[2px] self-start">High Conviction</span>
+                    <span className="bg-[var(--color-signal-green)] text-white text-[13px] px-[8px] py-[2px] rounded-[2px] self-start">High Conviction</span>
                     <span className="text-[12px] tracking-[0.5px] text-[color:var(--color-text-muted)]">Alert ID: #88321-X</span>
                   </div>
                 </div>
@@ -217,7 +217,7 @@ export default function HomePage() {
                   <p className="text-[16px] font-semibold text-[color:var(--color-text)] mb-[4px]">SENTIMENT SCORE</p>
                   <div className="flex items-center gap-[8px]">
                     <div className="flex-1 h-[4px] bg-[var(--color-border)] rounded-full"><div className="h-full w-[87%] bg-[var(--color-signal-green)] rounded-full" /></div>
-                    <span className="text-[14px] font-semibold text-[color:var(--color-signal-green)]">87/100</span>
+                    <span className="text-[16px] font-semibold text-[color:var(--color-signal-green)]">87/100</span>
                   </div>
                 </div>
               </div>
@@ -230,9 +230,9 @@ export default function HomePage() {
         <div className="flex flex-col md:flex-row items-center justify-center gap-[32px] md:gap-[60px] pt-[60px] pb-[16px]">
           {[{v:"$4.2B",l:"Tracked Monthly"},{v:"2,847",l:"Alerts Sent (24h)"},{v:"17,325+",l:"Companies Monitored"}].map((m,i)=>(
             <div key={m.v} className="flex items-center gap-[60px]">
-              <div className="text-center md:text-left">
+              <div className="text-center md:text-center">
                 <p className="font-[var(--font-montaga)] text-[48px] font-normal leading-[40px] tracking-[0.5px] text-[color:var(--color-text)]">{m.v}</p>
-                <p className="text-[14px] leading-[16px] text-[color:var(--color-text-secondary)] mt-[8px]">{m.l}</p>
+                <p className="text-[18px] leading-[20px] text-[color:var(--color-text-secondary)] mt-[14px]">{m.l}</p>
               </div>
               {i<2&&<div className="w-[1px] h-[48px] bg-[var(--color-text)] hidden md:block" />}
             </div>
