@@ -187,11 +187,7 @@ export default function AlertsPage() {
 
           {/* ALERT FEED */}
           <div className="flex-1 max-w-[888px] flex flex-col gap-[16px] md:gap-[24px]">
-            {isSampleData && (
-              <div className="bg-[#f0edf6] border border-[var(--color-border)] px-[16px] py-[10px] text-[13px] font-medium leading-[20px] text-[color:var(--color-text-secondary)] text-center">
-                Sample data &mdash; live alerts coming soon
-              </div>
-            )}
+            {/* Sample banner removed — alerts page shows data regardless */}
             {alerts.map((a, i) => (
               <div key={i} className={`bg-white border border-[var(--color-border)] p-[16px] md:p-[24px] flex flex-col gap-[16px] md:gap-[24px] ${a.isSample && !a.ai ? "opacity-60" : ""}`}>
                 {/* Top row: avatar + name + badge + amount */}
@@ -229,33 +225,27 @@ export default function AlertsPage() {
                   </div>
                 </div>
 
-                {/* AI Analysis (blurred) */}
-                {a.ai && (
-                  <div className="relative bg-[var(--color-bg-alt)] p-[16px] md:p-[24px]">
-                    <div className="flex items-center gap-[8px] mb-[8px]">
-                      <svg className="w-[13px] h-[14px]" viewBox="0 0 13 14" fill="#000592"><rect width="13" height="14" rx="2"/></svg>
-                      <span className="text-[12px] font-bold leading-[16px] text-[color:var(--color-primary)]">AI Sentiment Analysis</span>
-                    </div>
-                    <div className="relative">
-                      <p className={`text-[13px] md:text-[14px] font-normal leading-[22px] text-[color:var(--color-text)] ${!isPro ? "blur-[4px] select-none" : ""}`}>{a.ai}</p>
-                      {!isPro && (
-                        <div className="absolute inset-0 bg-[var(--color-bg-alt)]/60 flex flex-col items-center justify-center">
-                          <svg className="w-[14px] h-[19px] mb-[8px]" viewBox="0 0 14 19" fill="#1c1b1b"><path d="M7 0a5 5 0 00-5 5v3H1a1 1 0 00-1 1v9a1 1 0 001 1h12a1 1 0 001-1V9a1 1 0 00-1-1h-1V5a5 5 0 00-5-5zm3 8V5a3 3 0 10-6 0v3h6z"/></svg>
-                          <p className="text-[13px] md:text-[14px] font-medium leading-[20px] text-[color:var(--color-text)] text-center">
-                            {!isLoggedIn ? "Sign up for free to unlock AI analysis" : "Upgrade to Analyst for instant AI analysis"}
-                          </p>
-                          <Link href={!isLoggedIn ? "/signup" : "/pricing"} className="text-[12px] font-medium leading-[16px] text-[color:var(--color-primary)] mt-[4px]">
-                            {!isLoggedIn ? "Sign up free" : "Unlock this insight"} &rarr;
-                          </Link>
-                        </div>
-                      )}
-                    </div>
+                {/* AI Analysis (blurred for non-pro) */}
+                <div className="relative bg-[var(--color-bg-alt)] p-[16px] md:p-[24px] min-h-[100px]">
+                  <div className="relative">
+                    <p className={`text-[13px] md:text-[14px] font-normal leading-[22px] text-[color:var(--color-text)] ${!isPro ? "blur-[4px] select-none" : ""}`}>
+                      {a.ai || "Insider transaction analysis with conviction scoring, track record evaluation, and forward-looking catalyst identification based on SEC Form 4 filing data and historical patterns..."}
+                    </p>
+                    {!isPro && (
+                      <div className="absolute inset-0 bg-[var(--color-bg-alt)]/60 flex flex-col items-center justify-center">
+                        <svg className="w-[16px] h-[21px] mb-[8px]" viewBox="0 0 16 21" fill="none">
+                          <path d="M13 8V6a5 5 0 00-10 0v2H2a2 2 0 00-2 2v9a2 2 0 002 2h12a2 2 0 002-2v-9a2 2 0 00-2-2h-1zM5 6a3 3 0 116 0v2H5V6zm4 9a1 1 0 11-2 0v-2a1 1 0 112 0v2z" fill="#1c1b1b"/>
+                        </svg>
+                        <p className="text-[13px] md:text-[14px] font-medium leading-[20px] text-[color:var(--color-text)] text-center">
+                          {!isLoggedIn ? "Sign up for free to unlock AI analysis" : "Upgrade to Analyst for instant AI analysis"}
+                        </p>
+                        <Link href={!isLoggedIn ? "/signup" : "/pricing"} className="text-[12px] font-medium leading-[16px] text-[color:var(--color-primary)] mt-[4px]">
+                          {!isLoggedIn ? "Sign up free" : "Unlock this insight"} &rarr;
+                        </Link>
+                      </div>
+                    )}
                   </div>
-                )}
-
-                {!a.ai && (
-                  <div className="bg-[var(--color-bg-alt)] h-[80px]" />
-                )}
+                </div>
 
                 {/* Footer */}
                 <div className="flex items-center justify-between">
