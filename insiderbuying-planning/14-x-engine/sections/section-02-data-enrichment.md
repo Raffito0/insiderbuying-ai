@@ -193,6 +193,15 @@ module.exports = {
 
 ---
 
+## Implementation Notes
+
+**Actual changes from plan:**
+- `trackRecord` uses explicit `!= null && !== ''` check instead of `||` — preserves `"0%"` historical return
+- `_formatValue` sub-$1K uses `.toFixed(0)` for consistent integer formatting
+- `extractTicker` uses non-global regex (no lastIndex issues); `_extractAllTickers` internal helper uses global regex for `buildFilingContext`
+
+**Tests: 11 new tests in 2 describe blocks (extractTicker + buildFilingContext), all passing. 21 previous tests still pass. 32/32 total.**
+
 ## Regression Check
 
 After implementing, run the existing test suite to confirm no regressions:

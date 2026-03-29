@@ -110,8 +110,93 @@ function sendToTelegramReview(original, draft, chatId) {
   };
 }
 
+// ---------------------------------------------------------------------------
+// Data enrichment helpers
+// ---------------------------------------------------------------------------
+
+/**
+ * Extract the first cashtag from tweet text.
+ * Matches $TICKER (1-6 uppercase letters, optional .A/.B suffix).
+ * Returns ticker string without leading $, or null if not found.
+ * @param {string} tweetText
+ * @returns {string|null}
+ */
+function extractTicker(tweetText) {
+  if (!tweetText) return null;
+  var match = /\$([A-Z]{1,6}(?:\.[A-Z]{1,2})?)/.exec(tweetText);
+  return match ? match[1] : null;
+}
+
+/**
+ * Extract all cashtags from text (internal helper for buildFilingContext).
+ * @param {string} text
+ * @returns {string[]}
+ */
+function _extractAllTickers(text) {
+  var results = [];
+  var re = /\$([A-Z]{1,6}(?:\.[A-Z]{1,2})?)/g;
+  var m;
+  while ((m = re.exec(text)) !== null) {
+    results.push(m[1]);
+  }
+  return results;
+}
+
+/**
+ * Format a dollar value as abbreviated string.
+ * @param {number} val
+ * @returns {string}
+ */
+function _formatValue(val) {
+  if (val >= 1000000) return '$' + (val / 1000000).toFixed(1) + 'M';
+  if (val >= 1000) return '$' + (val / 1000).toFixed(1) + 'K';
+  return '$' + Number(val).toFixed(0);
+}
+
+/**
+ * Build a FilingContext from a tweet and pre-fetched filings array.
+ * Returns null if no matching filing is found.
+ * @param {object} tweet - { text: string }
+ * @param {Array} filings - NocoDB Insider_Filings records
+ * @returns {FilingContext|null}
+ */
+function buildFilingContext(tweet, filings) {
+  if (!filings || !Array.isArray(filings) || filings.length === 0) return null;
+  var text = tweet && tweet.text;
+  if (!text) return null;
+
+  var tickers = _extractAllTickers(text);
+  if (tickers.length === 0) return null;
+
+  var matchedTicker = null;
+  for (var i = 0; i < tickers.length; i++) {
+    var t = tickers[i];
+    if (filings.some(function(f) { return f.ticker === t; })) {
+      matchedTicker = t;
+      break;
+    }
+  }
+  if (!matchedTicker) return null;
+
+  var matched = filings.filter(function(f) { return f.ticker === matchedTicker; });
+  var primary = matched[0];
+
+  return {
+    ticker: matchedTicker,
+    insiderName: primary.insider_name,
+    insiderRole: primary.insider_role,
+    transactionValue: _formatValue(primary.transaction_value),
+    transactionDate: primary.transaction_date,
+    priceAtPurchase: primary.price_at_purchase,
+    trackRecord: (primary.historical_return != null && primary.historical_return !== '') ? primary.historical_return : null,
+    clusterCount: Math.min(matched.length, 3),
+  };
+}
+
 module.exports = {
   filterRelevant: filterRelevant,
   draftReply: draftReply,
   sendToTelegramReview: sendToTelegramReview,
+  extractTicker: extractTicker,
+  buildFilingContext: buildFilingContext,
 };
