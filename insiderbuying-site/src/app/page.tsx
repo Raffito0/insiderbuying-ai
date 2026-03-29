@@ -86,7 +86,7 @@ export default function HomePage() {
       {/* ═══ 2. LIVE ALERT FEED ═══ */}
       <section className="w-full py-[var(--section-y-mobile)] px-[20px] md:pt-[var(--section-y)] md:px-[48px] md:pb-[var(--section-y)] bg-white">
         <div className="max-w-[1154px] mx-auto">
-          <div className="flex flex-col items-center lg:flex-row lg:items-center lg:justify-center gap-[12px] lg:gap-[16px] mb-[24px]">
+          <div className="flex flex-col items-center lg:flex-row lg:items-center lg:justify-center gap-[12px] lg:gap-[16px] mb-[36px]">
             <h2 className="font-[var(--font-montaga)] text-[39px] md:text-[length:var(--text-title)] font-normal leading-[1.1] tracking-[0.5px] text-[color:var(--color-text)] text-center">SEC Form 4 Feed</h2>
             <div className="flex items-center gap-[8px] bg-[#00de16]/20 px-[12px] py-[4px] rounded-full">
               <div className="w-[8px] h-[8px] rounded-full bg-[var(--color-signal-green)]" />
@@ -103,7 +103,7 @@ export default function HomePage() {
                   </div>
                   <div className="flex flex-col gap-[4px]">
                     <span className="text-[13px] font-normal text-[color:var(--color-text-muted)]">{a.title}</span>
-                    <span className="font-[var(--font-montaga)] text-[16px] font-normal leading-[24px] text-[color:var(--color-text)]">{a.name}</span>
+                    <span className="font-[var(--font-montaga)] text-[15px] font-normal leading-[22px] text-[color:var(--color-text)]">{a.name}</span>
                   </div>
                 </div>
                 <span className="text-[24px] font-medium leading-[32px] text-[color:var(--color-text)]">{a.ticker}</span>
@@ -132,7 +132,7 @@ export default function HomePage() {
               </div>
             ))}
           </div>
-          <p className="text-[16px] font-normal leading-[20px] text-[color:var(--color-text-muted)] text-center">Source: SEC Form 4 Filings. Data updated every 15 seconds.</p>
+          <p className="text-[16px] font-normal leading-[20px] text-[color:var(--color-text-muted)] text-center mt-[12px]">Source: SEC Form 4 Filings. Data updated every 15 seconds.</p>
         </div>
       </section>
 
@@ -161,10 +161,10 @@ export default function HomePage() {
         <h2 className="font-[var(--font-montaga)] text-[39px] md:text-[length:var(--text-title)] font-normal leading-[1.1] tracking-[0.5px] text-[color:var(--color-text)] max-w-[1084px] mx-auto mb-[32px] text-center lg:text-left">Why Insider Buying Matters</h2>
         <div className="max-w-[1084px] mx-auto grid grid-cols-1 md:grid-cols-3 gap-[var(--gap-items)]">
           {STATS.map((s) => (
-            <div key={s.value} className="bg-white p-[32px]">
+            <div key={s.value} className="bg-white p-[32px] py-[40px]">
               <p className="font-[var(--font-montaga)] text-[40px] lg:text-[48px] font-normal leading-[1.1] tracking-[0.5px] text-[color:var(--color-text)]">{s.value}</p>
-              <p className="font-[var(--font-montaga)] text-[20px] font-normal leading-[28px] text-[color:var(--color-text)] mb-[6px]">{s.label}</p>
-              <p className="text-[16px] font-normal leading-[23px] text-[color:var(--color-text-secondary)] mb-[4px]">{s.desc}</p>
+              <p className="font-[var(--font-montaga)] text-[20px] font-normal leading-[28px] text-[color:var(--color-text)] mb-[8px] mt-[4px]">{s.label}</p>
+              <p className="text-[16px] font-normal leading-[23px] text-[color:var(--color-text-secondary)] mb-[12px]">{s.desc}</p>
               <p className="text-[13px] font-normal leading-[23px] tracking-[0.5px] text-[color:var(--color-text-muted)]">{s.source}</p>
             </div>
           ))}
