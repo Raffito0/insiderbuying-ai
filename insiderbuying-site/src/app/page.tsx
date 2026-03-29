@@ -52,7 +52,7 @@ const LOGOS: { name: string; domain: string; h: number }[] = [
   { name: "Goldman Sachs", domain: "goldmansachs.com", h: 32 },
   { name: "Berkshire Hathaway", domain: "berkshirehathaway.com", h: 21 },
   { name: "J&J", domain: "jnj.com", h: 20 },
-  { name: "UnitedHealth", domain: "unitedhealthgroup.com", h: 32 },
+  { name: "UnitedHealth", domain: "unitedhealthgroup.com", h: 22 },
   { name: "Visa", domain: "visa.com", h: 18 },
   { name: "Mastercard", domain: "mastercard.com", h: 24 },
   { name: "Pfizer", domain: "pfizer.com", h: 24 },
