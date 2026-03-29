@@ -286,7 +286,7 @@ export default function HomePage() {
                 </ul>
                 <p className="font-[var(--font-montaga)] text-[48px] leading-[36px] tracking-[1px] text-[color:var(--color-text)] mb-[8px]">{r.price}</p>
                 <p className="text-[14px] font-light tracking-[1px] text-[color:var(--color-text-muted)] mb-[24px]">*one-time payment</p>
-                <Link href="/reports" className="flex items-center justify-center w-full h-[50px] bg-[var(--color-primary)] text-white text-[14px] font-medium tracking-[1px]">GET REPORT</Link>
+                <Link href="/reports" className="flex items-center justify-center w-full h-[50px] bg-[var(--color-primary)] text-white text-[16px] font-medium tracking-[1px]">Get Access</Link>
               </div>
             ))}
           </div>
@@ -306,7 +306,7 @@ export default function HomePage() {
                 </ul>
                 <p className="font-[var(--font-montaga)] text-[36px] leading-[32px] tracking-[1px] text-[color:var(--color-text)] mb-[6px]">{r.price}</p>
                 <p className="text-[12px] font-light tracking-[1px] text-[color:var(--color-text-muted)] mb-[20px]">*one-time payment</p>
-                <Link href="/reports" className="flex items-center justify-center w-full h-[46px] bg-[var(--color-primary)] text-white text-[13px] font-medium tracking-[1px]">GET REPORT</Link>
+                <Link href="/reports" className="flex items-center justify-center w-full h-[46px] bg-[var(--color-primary)] text-white text-[16px] font-medium tracking-[1px]">Get Access</Link>
               </div>
             ))}
           </div>
@@ -366,7 +366,7 @@ export default function HomePage() {
         <div className="max-w-[1216px] mx-auto px-[32px] text-center">
           <h2 className="font-[var(--font-montaga)] text-[39px] md:text-[length:var(--text-title)] leading-[1.2] tracking-[0.5px] text-white mb-[var(--gap-tight)]">142 Form 4 Filings Today. Your Pipeline: Empty.</h2>
           <p className="text-[20px] leading-[28px] text-white/60 max-w-[672px] mx-auto mb-[32px]">Set up your watchlist in 60 seconds. The next filing that matters to your portfolio will arrive before you finish reading this sentence.</p>
-          <Link href="/signup" className="inline-flex items-center justify-center h-[56px] px-[48px] bg-[var(--color-primary)] text-white text-[16px] font-medium hover:bg-[var(--color-primary-dark)] transition-colors">Start Monitoring Free</Link>
+          <Link href="/signup" className="inline-flex items-center justify-center h-[56px] px-[48px] bg-[var(--color-primary)] text-white text-[16px] font-medium tracking-[1px] hover:bg-[var(--color-primary-dark)] transition-colors">Start Monitoring Free</Link>
         </div>
       </section>
 

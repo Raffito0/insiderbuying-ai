@@ -136,18 +136,22 @@ describe('get()', () => {
     expect(result).toBeNull();
   });
 
-  test('throws descriptive error on 500', async () => {
-    const fetchFn = makeFetch({ msg: 'Internal Server Error' }, false, 500);
+  test('returns null for id=0 (falsy but valid NocoDB ID) on 404', async () => {
+    const fetchFn = makeFetch({ msg: 'Not Found' }, false, 404);
     const db = makeClient(fetchFn);
-    // get() retries on 500, so provide enough 500s to exhaust retries
+    const result = await db.get('Alerts', 0);
+    expect(result).toBeNull();
+  });
+
+  test('throws descriptive error on 500 after retries exhausted', async () => {
     const retryFn = makeFetchSeq(
       { response: { msg: 'err' }, ok: false, status: 500 },
       { response: { msg: 'err' }, ok: false, status: 500 },
       { response: { msg: 'err' }, ok: false, status: 500 },
       { response: { msg: 'err' }, ok: false, status: 500 }
     );
-    const db2 = makeClient(retryFn);
-    await expect(db2.get('Alerts', 1)).rejects.toThrow(/500/);
+    const db = makeClient(retryFn);
+    await expect(db.get('Alerts', 1)).rejects.toThrow(/500/);
   });
 });
 
@@ -197,7 +201,7 @@ describe('update()', () => {
     expect(body).toEqual({ status: 'sent' });
   });
 
-  test('does not include Id or system fields if caller did not pass them', async () => {
+  test('passes through only the fields the caller provided (no extras added)', async () => {
     const fetchFn = makeFetch({ Id: 42, status: 'sent' });
     const db = makeClient(fetchFn);
     await db.update('Alerts', 42, { status: 'sent' });
@@ -318,20 +322,61 @@ describe('count()', () => {
   });
 });
 
+// --- bulkCreate edge cases ---------------------------------------------------
+
+describe('bulkCreate() edge cases', () => {
+  test('throws when NocoDB returns non-array response', async () => {
+    const fetchFn = makeFetch({ insertedCount: 5 });
+    const db = makeClient(fetchFn);
+    await expect(db.bulkCreate('Alerts', [{ ticker: 'AAPL' }])).rejects.toThrow(/expected array response/);
+  });
+
+  test('handles exactly 200 records in a single call', async () => {
+    const records = Array.from({ length: 200 }, (_, i) => ({ ticker: `T${i}` }));
+    const fetchFn = makeFetch(records);
+    const db = makeClient(fetchFn);
+    const result = await db.bulkCreate('Alerts', records);
+    expect(fetchFn).toHaveBeenCalledTimes(1);
+    expect(result).toHaveLength(200);
+  });
+});
+
+// --- count() edge cases ------------------------------------------------------
+
+describe('count() edge cases', () => {
+  test('throws when response is missing count key', async () => {
+    const fetchFn = makeFetch({});
+    const db = makeClient(fetchFn);
+    await expect(db.count('Alerts')).rejects.toThrow(/missing 'count' key/);
+  });
+});
+
 // --- error handling / retry --------------------------------------------------
 
 describe('_req() retry and error handling', () => {
-  test('retries on 500 and succeeds on third call', async () => {
-    const goodRecord = { Id: 1, ticker: 'AAPL' };
+  test('retries on 500 and succeeds on third call (using list)', async () => {
+    const goodResp = { list: [{ Id: 1 }], pageInfo: { isLastPage: true } };
     const fetchFn = makeFetchSeq(
       { response: { msg: 'err' }, ok: false, status: 500 },
       { response: { msg: 'err' }, ok: false, status: 500 },
-      { response: goodRecord, ok: true, status: 200 }
+      { response: goodResp, ok: true, status: 200 }
     );
     const db = makeClient(fetchFn);
-    const result = await db.get('Alerts', 1);
+    const result = await db.list('Alerts');
     expect(fetchFn).toHaveBeenCalledTimes(3);
-    expect(result).toEqual(goodRecord);
+    expect(result.list).toEqual([{ Id: 1 }]);
+  });
+
+  test('exhausts all 4 attempts on persistent 500 and throws', async () => {
+    const fetchFn = makeFetchSeq(
+      { response: { msg: 'err' }, ok: false, status: 500 },
+      { response: { msg: 'err' }, ok: false, status: 500 },
+      { response: { msg: 'err' }, ok: false, status: 500 },
+      { response: { msg: 'err' }, ok: false, status: 500 }
+    );
+    const db = makeClient(fetchFn);
+    await expect(db.list('Alerts')).rejects.toThrow(/500/);
+    expect(fetchFn).toHaveBeenCalledTimes(4);
   });
 
   test('does NOT retry on 404 — throws immediately', async () => {
@@ -353,7 +398,7 @@ describe('_req() retry and error handling', () => {
     expect(fetchFn).toHaveBeenCalledTimes(1);
   });
 
-  test('error message includes HTTP method, URL path, and status code', async () => {
+  test('error message includes HTTP method, URL path, and status code; err.statusCode is set', async () => {
     const fetchFn = makeFetchSeq(
       { response: { msg: 'Bad Request' }, ok: false, status: 400 }
     );
@@ -367,6 +412,7 @@ describe('_req() retry and error handling', () => {
     expect(err.message).toMatch(/POST/);
     expect(err.message).toMatch(/\/api\/v1\/db\/data\/noco\/proj123\/Alerts/);
     expect(err.message).toMatch(/400/);
+    expect(err.statusCode).toBe(400);
   });
 
   test('error message does NOT contain the xc-token value', async () => {

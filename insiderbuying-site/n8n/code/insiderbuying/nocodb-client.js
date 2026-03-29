@@ -28,6 +28,9 @@ class NocoDB {
   /**
    * Core HTTP helper with retry on 5xx.
    *
+   * Thrown errors have a `statusCode` property for programmatic handling.
+   * Error messages include method + path + status + body, but never the token.
+   *
    * @param {string} method   HTTP verb (GET, POST, PATCH, DELETE)
    * @param {string} path     URL path starting with /api/...
    * @param {object} [opts]
@@ -39,12 +42,10 @@ class NocoDB {
     const url = `${this.baseUrl}${path}${opts.query ? '?' + opts.query : ''}`;
     const reqOpts = {
       method,
-      headers: {
-        'Content-Type': 'application/json',
-        'xc-token': this.token,
-      },
+      headers: { 'xc-token': this.token },
     };
     if (opts.body !== undefined) {
+      reqOpts.headers['Content-Type'] = 'application/json';
       reqOpts.body = JSON.stringify(opts.body);
     }
 
@@ -58,13 +59,12 @@ class NocoDB {
         return res.json();
       }
 
-      // 404 is special — used by get() to return null; surface immediately
-      // 4xx (non-404) are caller errors — do NOT retry
+      // 4xx errors (including 404) — do NOT retry; surface immediately
       if (res.status !== 500 && res.status !== 503) {
         const body = await res.text();
-        throw new Error(
-          `NocoDB ${method} ${path} => ${res.status}: ${body}`
-        );
+        const err = new Error(`NocoDB ${method} ${path} => ${res.status}: ${body}`);
+        err.statusCode = res.status;
+        throw err;
       }
 
       // 500 or 503 — retry if we have attempts left
@@ -72,9 +72,8 @@ class NocoDB {
         await _sleep(RETRY_DELAYS[attempt]);
       } else {
         const body = await res.text();
-        lastErr = new Error(
-          `NocoDB ${method} ${path} => ${res.status}: ${body}`
-        );
+        lastErr = new Error(`NocoDB ${method} ${path} => ${res.status}: ${body}`);
+        lastErr.statusCode = res.status;
       }
     }
 
@@ -87,6 +86,9 @@ class NocoDB {
 
   /**
    * List records from a table.
+   *
+   * NOTE: Do NOT pre-encode `where` values — `list()` encodes them automatically
+   * via URLSearchParams. Pre-encoding will cause double-encoding (%28 → %2528).
    *
    * @param {string} table
    * @param {object} [opts]
@@ -122,7 +124,7 @@ class NocoDB {
     try {
       return await this._req('GET', path);
     } catch (err) {
-      if (err.message && err.message.includes('=> 404:')) {
+      if (err.statusCode === 404) {
         return null;
       }
       throw err;
@@ -175,6 +177,8 @@ class NocoDB {
    * Bulk endpoint URL differs from single-record URL:
    *   /api/v1/db/data/bulk/noco/{projectId}/{tableName}/  (note /bulk/ and trailing slash)
    *
+   * Passing an empty array is a no-op: returns [] without making any HTTP calls.
+   *
    * @param {string}   table
    * @param {object[]} records  Array of flat record objects
    * @returns {Promise<object[]>} Flattened array of all created records
@@ -187,9 +191,12 @@ class NocoDB {
     for (let i = 0; i < records.length; i += CHUNK_SIZE) {
       const chunk = records.slice(i, i + CHUNK_SIZE);
       const created = await this._req('POST', path, { body: chunk });
-      if (Array.isArray(created)) {
-        results.push(...created);
+      if (!Array.isArray(created)) {
+        throw new Error(
+          `NocoDB bulkCreate: expected array response from ${path}, got ${JSON.stringify(created)}`
+        );
       }
+      results.push(...created);
     }
 
     return results;
@@ -197,6 +204,8 @@ class NocoDB {
 
   /**
    * Count records matching an optional where clause.
+   *
+   * NOTE: Do NOT pre-encode the `where` value — it is encoded automatically.
    *
    * @param {string} table
    * @param {string} [where]  NocoDB where clause
@@ -208,6 +217,11 @@ class NocoDB {
     if (where) params.set('where', where);
     const query = params.toString();
     const result = await this._req('GET', path, query ? { query } : {});
+    if (result.count === undefined) {
+      throw new Error(
+        `NocoDB count: response missing 'count' key from ${path}: ${JSON.stringify(result)}`
+      );
+    }
     return result.count;
   }
 }
