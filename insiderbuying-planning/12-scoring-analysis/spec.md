@@ -66,7 +66,9 @@ function computeBaseScore(filing) {
 }
 ```
 
-Tests: score for 10 fixture filings with known expected scores. Verify: CEO $5M = ~8, Director $100K = ~5, 10b5-1 CEO $10M = 5 (capped), Gift = 0.
+**NOTE: Sales (S) are also scored.** The site shows both buy and sell alerts (`/alerts` page). Sales use the same `computeBaseScore()` formula — the score represents **conviction of the sell signal** (high score = insider making a large, significant sale). The `direction` field (`A` = acquisition, `D` = disposal) is passed through to the alert record so the frontend can display BUY vs SELL correctly. Score interpretation in AI analysis prompt differs: for sells, "high score" means bearish conviction, not bullish.
+
+Tests: score for 10 fixture filings with known expected scores. Verify: CEO $5M = ~8, Director $100K = ~5, 10b5-1 CEO $10M = 5 (capped), Gift = 0. Also: CEO $5M SALE = ~8 (high conviction sell).
 
 ### Section 2: AI Refinement Layer (±1 only)
 Update `callDeepSeekForRefinement()` in score-alert.js:

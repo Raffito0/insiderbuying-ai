@@ -1,0 +1,47 @@
+{
+  "plugin_root": "C:\\Users\\rafca\\.claude\\plugins\\cache\\piercelamb-deep-implement",
+  "sections_dir": "C:\\Users\\rafca\\OneDrive\\Desktop\\Toxic or Nah\\ryan_cole\\insiderbuying-planning\\08-nocodb-migration\\sections",
+  "target_dir": "C:\\Users\\rafca\\OneDrive\\Desktop\\Toxic or Nah\\ryan_cole\\insiderbuying-site",
+  "state_dir": "C:\\Users\\rafca\\OneDrive\\Desktop\\Toxic or Nah\\ryan_cole\\insiderbuying-planning\\08-nocodb-migration\\implementation",
+  "git_root": "C:\\Users\\rafca\\OneDrive\\Desktop\\Toxic or Nah\\ryan_cole",
+  "commit_style": "simple",
+  "test_command": "uv run pytest",
+  "sections": [
+    "section-01-nocodb-client",
+    "section-02-alerts-pipeline",
+    "section-03-social-pipeline",
+    "section-04-outreach-pipeline",
+    "section-05-validation-cleanup"
+  ],
+  "sections_state": {
+    "section-01-nocodb-client": {
+      "status": "complete",
+      "commit_hash": "2f4a85a"
+    },
+    "section-02-alerts-pipeline": {
+      "status": "complete",
+      "commit_hash": "53b75f5"
+    },
+    "section-03-social-pipeline": {
+      "status": "complete",
+      "commit_hash": "b28323b"
+    },
+    "section-04-outreach-pipeline": {
+      "status": "complete",
+      "commit_hash": "34c3594"
+    },
+    "section-05-validation-cleanup": {
+      "status": "complete",
+      "commit_hash": "bff9a71"
+    }
+  },
+  "pre_commit": {
+    "present": false,
+    "type": "none",
+    "config_file": null,
+    "native_hook": null,
+    "may_modify_files": false,
+    "detected_formatters": []
+  },
+  "created_at": "2026-03-29T01:20:34.905953+00:00"
+}

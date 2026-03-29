@@ -1,6 +1,6 @@
 'use strict';
 
-const { createDeepSeekClient } = require('./ai-client');
+const { createOpusClient, createDeepSeekClient } = require('./ai-client');
 
 // Try to import finnhub client (section 07). Stub if not yet available.
 let _getQuote = async () => null;
@@ -257,7 +257,7 @@ Return ONLY the analysis prose. No JSON, no markdown headers, no bullet points.`
  * Legacy entry point. New callers should use runAnalyzeAlert().
  *
  * @param {object} filing - Enriched filing object from score-alert.js
- * @param {object} helpers - { deepSeekApiKey, fetchFn }
+ * @param {object} helpers - { deepSeekApiKey, kieaiApiKey, fetchFn }
  * @returns {Promise<string|null>} - Prose analysis string, or null on skip/failure
  */
 async function analyze(filing, helpers) {
@@ -266,7 +266,9 @@ async function analyze(filing, helpers) {
   }
 
   const prompt = _buildLegacyPrompt(filing);
-  const client = createDeepSeekClient(helpers.fetchFn, helpers.deepSeekApiKey);
+  const client = filing.significance_score >= 9
+    ? createOpusClient(helpers.fetchFn, helpers.kieaiApiKey)
+    : createDeepSeekClient(helpers.fetchFn, helpers.deepSeekApiKey);
 
   try {
     let result = await client.complete(null, prompt);
@@ -349,9 +351,10 @@ async function runAnalyzeAlert(alert, deps = {}) {
   const marketData = { currentPrice, pctChangeToday, daysToEarnings, portfolioPct };
   const promptString = buildAnalysisPrompt(alert, marketData, wordTarget);
 
-  // Step 7: Call DeepSeek
-  const apiKey = deps.deepSeekApiKey || (env && env.DEEPSEEK_API_KEY);
-  const client = createDeepSeekClient(fetchFn, apiKey);
+  // Step 7: Route to Opus (score >= 9) or DeepSeek (score < 9)
+  const client = finalScore >= 9
+    ? createOpusClient(fetchFn, (env && env.KIEAI_API_KEY))
+    : createDeepSeekClient(fetchFn, deps.deepSeekApiKey || (env && env.DEEPSEEK_API_KEY));
 
   const insiderName = alert.insiderName || alert.insider_name || 'The insider';
   const actionVerb = direction === 'A' ? 'bought' : 'sold';

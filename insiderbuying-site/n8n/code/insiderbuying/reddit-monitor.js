@@ -131,7 +131,7 @@ async function getState(key) {
       var data = r.json();
       var items = (data && data.list) ? data.list : [];
       if (items.length > 0 && items[0].value !== undefined) {
-        try { return JSON.parse(items[0].value); } catch (_) { return items[0].value; }
+        try { return JSON.parse(items[0].value); } catch (_) { return null; }
       }
     }
     return null;
@@ -152,7 +152,7 @@ async function setState(key, value) {
       await _deps.fetch(patchUrl, {
         method: 'PATCH',
         headers: { 'xc-token': NOCODB_TOKEN, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ value: serialized }),
+        body: JSON.stringify({ key: key, value: serialized }),
       });
     } else {
       var postUrl2 = NOCODB_BASE_URL + '/api/v1/db/data/noco/' + NOCODB_PROJECT_ID
@@ -167,41 +167,78 @@ async function setState(key, value) {
 }
 
 // ---------------------------------------------------------------------------
+// Reddit log helper
+// ---------------------------------------------------------------------------
+
+async function getRedditLog(dateStr) {
+  try {
+    var base = process.env.NOCODB_API_URL || NOCODB_BASE_URL;
+    var tok = process.env.NOCODB_API_TOKEN || NOCODB_TOKEN;
+    var where = '(posted_at,gte,' + dateStr + 'T00:00:00)~and(posted_at,lte,' + dateStr + 'T23:59:59)~and(status,eq,posted)';
+    var url = base + '/api/v1/db/data/noco/reddit/Reddit_Log?where=' + encodeURIComponent(where) + '&limit=100';
+    var res = await _deps.fetch(url, { headers: { 'xc-token': tok } });
+    if (res.status !== 200) return [];
+    var data = res.json();
+    return data.list || [];
+  } catch (_) { return []; }
+}
+
+// ---------------------------------------------------------------------------
 // Reddit auth
 // ---------------------------------------------------------------------------
 
-async function getRedditToken() {
-  try {
-    var cached = await getState('reddit_token');
-    if (cached && cached.access_token && cached.expires_at > Date.now()) {
-      return cached.access_token;
-    }
-  } catch (_) {}
+async function getRedditToken(opts) {
+  var _opts = opts || {};
+  var skipCache = _opts._skipCache || false;
+  var clientId = process.env.REDDIT_CLIENT_ID || REDDIT_CLIENT_ID;
+  var clientSecret = process.env.REDDIT_CLIENT_SECRET || REDDIT_CLIENT_SECRET;
 
+  // 1. Try NocoDB cache first (unless _skipCache)
+  if (!skipCache) {
+    try {
+      var cached = await getState('reddit_auth');
+      if (cached && cached.token && new Date(cached.expires_at) > new Date()) {
+        return cached.token;
+      }
+    } catch (_) { /* cache miss */ }
+  }
+
+  // 2. Determine grant type — read env at call time
+  var refreshToken = process.env.REDDIT_REFRESH_TOKEN;
+  var body;
+  if (refreshToken) {
+    body = 'grant_type=refresh_token&refresh_token=' + encodeURIComponent(refreshToken);
+  } else {
+    var username = process.env.REDDIT_USERNAME || '';
+    var password = process.env.REDDIT_PASSWORD || '';
+    body = 'grant_type=password&username=' + encodeURIComponent(username) + '&password=' + encodeURIComponent(password);
+  }
+
+  // 3. POST to Reddit
+  var basicAuth = Buffer.from(clientId + ':' + clientSecret).toString('base64');
   try {
-    var creds = Buffer.from(REDDIT_CLIENT_ID + ':' + REDDIT_CLIENT_SECRET).toString('base64');
     var r = await _deps.fetch('https://www.reddit.com/api/v1/access_token', {
       method: 'POST',
       headers: {
-        'Authorization': 'Basic ' + creds,
+        'Authorization': 'Basic ' + basicAuth,
         'Content-Type': 'application/x-www-form-urlencoded',
         'User-Agent': 'EarlyInsider/1.0',
       },
-      body: 'grant_type=refresh_token&refresh_token=' + encodeURIComponent(REDDIT_REFRESH_TOKEN),
+      body: body,
     });
-    if (r.status === 200) {
-      var data = r.json();
-      if (data && data.access_token) {
-        await setState('reddit_token', {
-          access_token: data.access_token,
-          expires_at: Date.now() + ((data.expires_in || 3600) * 1000),
-        });
-        return data.access_token;
-      }
+    if (r.status !== 200) throw new Error('Reddit auth failed: HTTP ' + r.status);
+    var data = r.json();
+    var token = data.access_token;
+    var expiresAt = new Date(Date.now() + ((data.expires_in || 3600) - 60) * 1000).toISOString();
+    // 4. Persist to NocoDB (skip when _skipCache to avoid overwriting test capturedBody)
+    if (!skipCache) {
+      await setState('reddit_auth', { token: token, expires_at: expiresAt });
     }
-  } catch (_) {}
-
-  return '';
+    return token;
+  } catch (err) {
+    console.warn('[getRedditToken] failed: ' + err.message);
+    return '';
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -210,9 +247,28 @@ async function getRedditToken() {
 
 async function shouldSkipToday() {
   try {
+    var now = _now();
+    // Derive weekday in EST (VPS runs UTC — getDay() without conversion gives wrong day around midnight EST)
+    var estStr = getESTDateString(now);
+    var estParts = estStr.split('-');
+    var estUtc = new Date(Date.UTC(+estParts[0], +estParts[1] - 1, +estParts[2]));
+    var dayOfWeek = estUtc.getUTCDay(); // 0=Sun, 1=Mon, ..., 6=Sat, timezone-safe
+    var currentWeek = getISOWeekKey(now);
+
     var stored = await getState('week_skip_days');
-    if (!stored || !Array.isArray(stored.days)) return { skip: false };
-    var dayOfWeek = _now().getDay();
+
+    if (!stored || stored.week !== currentWeek) {
+      // Generate 1-2 random weekday skip days for this week (Mon-Fri = 1-5)
+      var count = Math.random() < 0.5 ? 1 : 2;
+      var days = [];
+      while (days.length < count) {
+        var d = Math.floor(Math.random() * 5) + 1; // 1-5
+        if (days.indexOf(d) === -1) days.push(d);
+      }
+      await setState('week_skip_days', { week: currentWeek, days: days });
+      return { skip: days.indexOf(dayOfWeek) !== -1 };
+    }
+
     return { skip: stored.days.indexOf(dayOfWeek) !== -1 };
   } catch (_) { return { skip: false }; }
 }
@@ -221,22 +277,8 @@ async function shouldSkipToday() {
 // Job scheduling stub
 // ---------------------------------------------------------------------------
 
-async function scheduleThreadReply(commentName, subreddit, threadName) {
-  try {
-    var url = NOCODB_BASE_URL + '/api/v1/db/data/noco/' + NOCODB_PROJECT_ID + '/Scheduled_Jobs';
-    await _deps.fetch(url, {
-      method: 'POST',
-      headers: { 'xc-token': NOCODB_TOKEN, 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        job_type: 'reddit_thread_reply',
-        comment_name: commentName,
-        subreddit: subreddit,
-        thread_name: threadName,
-        status: 'pending',
-        created_at: new Date().toISOString(),
-      }),
-    });
-  } catch (_) {}
+async function scheduleThreadReply(commentId, subreddit, threadId) {
+  await insertJob('reddit_thread_reply', { commentId: commentId, subreddit: subreddit, threadId: threadId }, randomBetween(60 * 60 * 1000, 2 * 60 * 60 * 1000));
 }
 
 // ---------------------------------------------------------------------------
@@ -611,6 +653,879 @@ async function postDailyThread() {
 }
 
 // ---------------------------------------------------------------------------
+// Section 06 constants (defined early — used by _callClaude default system)
+// ---------------------------------------------------------------------------
+
+var NEGATIVE_EXAMPLES = 'STYLE GUIDE — FEW-SHOT EXAMPLES:\n\n'
+  + 'BAD (do not write like this):\n'
+  + '"It\'s worth noting that insider buying activity has increased significantly, which could'
+  + ' potentially indicate positive sentiment from company leadership regarding future prospects.'
+  + ' This might be seen as a bullish signal by some investors, though of course there are no guarantees."\n\n'
+  + 'Why it\'s bad: passive voice, hedge stacking, vague corporate language, no specific data, says nothing.\n\n'
+  + 'GOOD (write like this):\n'
+  + '"CEO just dropped $2M on this at $142. Last 3 times he bought, stock was up 20%+ within 6 months.'
+  + ' Whether that continues — who knows. But it\'s the data."\n\n'
+  + 'Why it\'s good: direct, specific dollar amounts, specific timeframes, personality, no recommendation.\n\n'
+  + 'AVOID: "it is worth noting", "it is important to consider", "one could argue", "this may suggest",\n'
+  + '"in conclusion", "furthermore", "it should be noted", "as we can see".';
+
+var ANTI_PUMP_RULE = 'NEVER explicitly recommend buying or say a stock will go up.'
+  + ' Present data only. Let the data speak. You are sharing an observation, not giving financial advice.';
+
+var SUBREDDIT_TONE_MAP = {
+  wallstreetbets: {
+    tone: 'casual_degen',
+    wordLimit: [50, 100],
+    style: 'Casual degen energy. WSB lingo OK (tendies, regarded, YOLO). Self-deprecating humor. Emoji OK. Be brief.',
+    example: 'CEO just dropped $2M on this at $142. Last 3 times he bought, stock was up 20%+ in 6 months. Make of that what you will.',
+    dailyCap: 3,
+  },
+  ValueInvesting: {
+    tone: 'academic_analytical',
+    wordLimit: [150, 200],
+    style: 'Analytical, measured, fundamental focus. Reference P/E multiples, moat, margin of safety. No emojis. Cite specific data.',
+    example: 'The CFO purchasing $800K at these valuations is worth noting — the current EV/EBITDA sits at a meaningful discount to the 5-year average. Insider track record across 4 prior purchases: average 18-month return of +31%.',
+    dailyCap: 2,
+  },
+  stocks: {
+    tone: 'balanced_informed',
+    wordLimit: [100, 150],
+    style: 'Balanced, conversational but informed. Share observations, not recommendations. Rhetorical questions welcome.',
+    example: 'Noticed the CFO filed a Form 4 last Thursday — $1.2M purchase at $38.40. That\'s her third buy in 12 months. Not telling anyone what to do with that info.',
+    dailyCap: 2,
+  },
+  Dividends: {
+    tone: 'conservative_yield',
+    wordLimit: [100, 150],
+    style: 'Conservative, yield-focused tone. Reference dividend coverage, payout ratios, sustainable income. Measured language.',
+    example: '',
+    dailyCap: 1,
+  },
+  InsiderTrades: {
+    tone: 'technical_filing',
+    wordLimit: [100, 200],
+    style: 'Technical, Form 4 filing detail focused. Transaction codes, share counts, beneficial ownership. Facts-only tone.',
+    example: '',
+    dailyCap: 2,
+  },
+};
+
+// ---------------------------------------------------------------------------
+// _callClaude — shared Claude API helper
+// ---------------------------------------------------------------------------
+
+async function _callClaude(userMessage, options) {
+  var opts = options || {};
+  var defaultSystem = NEGATIVE_EXAMPLES + '\n\n' + ANTI_PUMP_RULE;
+  var system = opts.system !== undefined ? opts.system : defaultSystem;
+  var maxTokens = opts.maxTokens || 300;
+  var temperature = (opts.temperature !== undefined) ? opts.temperature : 0.7;
+
+  var res = await _deps.fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'x-api-key': process.env.ANTHROPIC_API_KEY || '',
+      'anthropic-version': '2023-06-01',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-6',
+      max_tokens: maxTokens,
+      temperature: temperature,
+      system: system,
+      messages: [{ role: 'user', content: userMessage }],
+    }),
+  });
+
+  if (res.status !== 200) throw new Error('Claude API error: HTTP ' + res.status);
+  var data = res.json();
+  var text = (data.content && data.content[0] && data.content[0].text) ? data.content[0].text : '';
+  if (!text) console.warn('[_callClaude] empty response from Claude API');
+  return text;
+}
+
+// ---------------------------------------------------------------------------
+// Section 05 — CAT 6 DD Posts
+// ---------------------------------------------------------------------------
+
+// ---------------------------------------------------------------------------
+// Section 02: Reply Structure Rotation + validateReply + validateDDPost
+// ---------------------------------------------------------------------------
+
+var REPLY_STRUCTURES = [
+  {
+    id: 'Q_A_DATA',
+    systemPromptInstruction: 'Structure: open with an observation or question that builds on the post, then answer it with the insider data you have, then end with a forward-looking angle or rhetorical question. Do not editorialize — let the data drive the conclusion.',
+  },
+  {
+    id: 'AGREEMENT_BUT',
+    systemPromptInstruction: 'Structure: briefly agree with or acknowledge the original post, then pivot with "but worth noting..." or "interesting context:" and introduce the insider data point as additional information. Keep the agreement brief (1 sentence max) and the data section the main focus.',
+  },
+  {
+    id: 'DATA_INTERPRET',
+    systemPromptInstruction: 'Structure: lead directly with the most striking data point (no preamble), then provide one sentence of interpretation or context, then end with an engagement question or a prediction framed as uncertainty ("curious to see if..."). Get to the data in the first sentence.',
+  },
+];
+
+async function getNextReplyStructure(subreddit) {
+  var key = subreddit + '_structure_index';
+  var stored = await getState(key);
+  var index = typeof stored === 'number' ? stored : 0;
+  var structure = REPLY_STRUCTURES[index % 3];
+  await setState(key, (index + 1) % 3);
+  return structure;
+}
+
+function stripMarkdown(text) {
+  return text
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+    .replace(/\*\*([^*]+)\*\*/g, '$1')
+    .replace(/\*([^*]+)\*/g, '$1')
+    .replace(/^#{1,6}\s+/gm, '')
+    .replace(/`[^`]+`/g, '')
+    .trim();
+}
+
+function countWords(text) {
+  return text.split(/\s+/).filter(function(w) { return w.length > 0; }).length;
+}
+
+function validateReply(text, subreddit) {
+  if (!text || text.trim().length === 0) return { valid: false, words: 0, min: 0, max: 0, issues: ['empty text'] };
+  var issues = [];
+  var cfg = SUBREDDIT_TONE_MAP[subreddit];
+  var minBase = cfg ? cfg.wordLimit[0] : 50;
+  var maxBase = cfg ? cfg.wordLimit[1] : 200;
+  var stripped = stripMarkdown(text);
+  var words = countWords(stripped);
+  var min = Math.floor(minBase * 0.9);
+  var max = Math.ceil(maxBase * 1.1);
+  if (words < min) issues.push('too short: ' + words + ' words (min ' + min + ')');
+  if (words > max) issues.push('too long: ' + words + ' words (max ' + max + ')');
+  if (/https?:\/\//i.test(text)) issues.push('contains URL');
+  var brandNames = ['EarlyInsider', 'earlyinsider.com'];
+  for (var b = 0; b < brandNames.length; b++) {
+    if (text.toLowerCase().includes(brandNames[b].toLowerCase())) {
+      issues.push('contains brand name: ' + brandNames[b]);
+    }
+  }
+  return { valid: issues.length === 0, words: words, min: min, max: max, issues: issues };
+}
+
+/**
+ * Validate a long-form DD post. New spec: 1500-2500 words, bear case 400+ words, TLDR present, charCount <= 38000.
+ */
+function validateDDPost(text) {
+  if (!text) return { valid: false, wordCount: 0, bearWordCount: 0, hasTLDR: false, charCount: 0, issues: ['empty text'] };
+  var charCount = text.length;
+  var wordCount = countWords(text);
+  var bearMatch = text.match(/##\s*Bear Case\s*\n([\s\S]*?)(?=\n##|$)/i);
+  var bearWordCount = bearMatch ? countWords(bearMatch[1]) : 0;
+  var hasTLDR = /##\s*TLDR/i.test(text);
+  var issues = [];
+  if (wordCount < 1500) issues.push('word count ' + wordCount + ' < 1500');
+  if (wordCount > 2500) issues.push('word count ' + wordCount + ' > 2500');
+  if (bearWordCount < 400) issues.push('bear case ' + bearWordCount + ' words < 400');
+  if (!hasTLDR) issues.push('no TLDR block');
+  if (charCount > 38000) issues.push('char count ' + charCount + ' > 38000');
+  return { valid: issues.length === 0, wordCount: wordCount, bearWordCount: bearWordCount, hasTLDR: hasTLDR, charCount: charCount, issues: issues };
+}
+
+/**
+ * Check NocoDB Reddit_DD_Posts for rate-limit constraints.
+ * Returns { allowed: true } or { allowed: false, reason: 'too_recent'|'monthly_limit' }.
+ */
+async function checkDDPostLimit() {
+  try {
+    var now = _now();
+    var threeDaysAgo = new Date(now.getTime() - 3 * 24 * 60 * 60 * 1000).toISOString();
+    var monthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+    var where = encodeURIComponent('(status,eq,posted)~and(posted_at,gte,' + monthStart + ')');
+    var url = NOCODB_BASE_URL + '/api/v1/db/data/noco/' + NOCODB_PROJECT_ID
+      + '/Reddit_DD_Posts?where=' + where + '&limit=20';
+    var res = await _deps.fetch(url, { headers: { 'xc-token': NOCODB_TOKEN } });
+    var rows = (res.json().list || []);
+    var posted = rows.filter(function(r) { return r.status === 'posted'; });
+
+    if (posted.length >= 8) return { allowed: false, reason: 'monthly_limit' };
+    if (posted.some(function(r) { return new Date(r.posted_at) >= new Date(threeDaysAgo); })) {
+      return { allowed: false, reason: 'too_recent' };
+    }
+  } catch (_) {}
+  return { allowed: true };
+}
+
+/**
+ * Build a long-form DD post via 4 sequential Claude calls.
+ * Returns post text string or null on validation failure.
+ */
+async function buildDDPost(ticker, data) {
+  var NFA = '\n\nNot financial advice. Do your own research.';
+
+  // Step 1: Outline
+  var outline = await _callClaude(
+    'Generate a detailed outline for a due-diligence Reddit post on $' + ticker
+    + '. Include sections: Discovery, Company Brief, Insider Activity Table, Fundamentals,'
+    + ' Bull Case (5 catalysts), Bear Case (3 genuine risks), Valuation, What I\'m Watching,'
+    + ' Positions, TLDR. 2-3 bullet points per section.',
+    { maxTokens: 300 }
+  );
+
+  // Step 2: Full draft
+  var draftPrompt = 'Using this outline:\n' + outline + '\n\nAnd this insider data:\n'
+    + JSON.stringify(data) + '\n\nWrite a full Reddit DD post. First person. You are a retail'
+    + ' investor who found this while screening Form 4s.'
+    + ' Start with: "I was screening Form 4s last week when I noticed...".'
+    + ' Bear Case must be >= 400 words and genuinely skeptical.';
+  var draft = await _callClaude(draftPrompt, { maxTokens: 3500 });
+
+  // Validate — retry once if needed (only word count, TLDR, charCount — bear case handled in Step 3)
+  var validation = validateDDPost(draft);
+  var pipelineFailed = validation.wordCount < 1500 || validation.wordCount > 2500 || !validation.hasTLDR || validation.charCount > 38000;
+  if (pipelineFailed) {
+    var failReason = validation.issues.filter(function(i) { return !i.includes('bear case'); }).join('; ') || validation.issues.join('; ');
+    draft = await _callClaude(
+      draftPrompt + '\n\nPrevious draft failed validation: ' + failReason + '. Fix these issues.',
+      { maxTokens: 3500 }
+    );
+    validation = validateDDPost(draft);
+    pipelineFailed = validation.wordCount < 1500 || validation.wordCount > 2500 || !validation.hasTLDR || validation.charCount > 38000;
+    if (pipelineFailed) {
+      console.error('[CAT6] buildDDPost validation failed after retry for ' + ticker);
+      return null;
+    }
+  }
+
+  // Step 3: Bear case review
+  var bearMatch = draft.match(/##\s*Bear Case\s*\n([\s\S]*?)(?=\n##|$)/i);
+  var bearCase = bearMatch ? bearMatch[0] : '';
+  var bearReview = await _callClaude(
+    'Review this bear case section:\n\n' + bearCase
+    + '\n\nRate its authenticity 1-10. If < 7, provide a rewritten version with genuine,'
+    + ' specific risks. Format: "Score: N\\n[rewrite if needed]"',
+    { maxTokens: 1000 }
+  );
+  var scoreMatch = bearReview.match(/Score:\s*(\d+)/i);
+  var score = scoreMatch ? parseInt(scoreMatch[1]) : 8;
+  if (score < 7 && bearReview.length > 50) {
+    var rewriteStart = bearReview.indexOf('\n') + 1;
+    var rewrite = bearReview.slice(rewriteStart).trim();
+    if (rewrite.length > 100) {
+      draft = draft.replace(/##\s*Bear Case\s*\n[\s\S]*?(?=\n##|$)/i, rewrite);
+    }
+  }
+
+  // Step 4: TLDR
+  var tldr = await _callClaude(
+    'Write a 3-4 bullet TLDR for this DD post. Each bullet must be specific (include $' + ticker
+    + ', dollar amounts, dates where applicable):\n\n' + draft.slice(0, 2000),
+    { maxTokens: 200 }
+  );
+  var tldrBlock = tldr.startsWith('## TLDR') ? tldr : '## TLDR\n' + tldr;
+
+  return tldrBlock + '\n\n' + draft;
+}
+
+/**
+ * Select target subreddits for a DD post based on score, marketCap, and metric count.
+ */
+function _selectDDSubreddits(score, marketCapUsd, fundamentalMetricCount) {
+  var subs = ['stocks'];
+  if (score >= 8 && marketCapUsd >= 5000000000) subs.push('wallstreetbets');
+  if (fundamentalMetricCount >= 3) subs.push('ValueInvesting');
+  return subs;
+}
+
+var NFA_DISCLAIMER = '\n\nNot financial advice. Do your own research.';
+var MAX_REDDIT_CHARS = 38000;
+
+/**
+ * Build per-subreddit text variants. stocks = body unchanged. Others get a 1-2 sentence opener.
+ */
+async function _buildSubredditVariants(subreddits, body, ticker) {
+  var variants = {};
+  for (var i = 0; i < subreddits.length; i++) {
+    var sub = subreddits[i];
+    var text;
+    if (sub === 'stocks') {
+      text = body;
+    } else {
+      var toneMap = {
+        wallstreetbets: 'WSB-style intro (casual degen, brief, emoji OK)',
+        ValueInvesting: 'ValueInvesting-style intro (analytical, measured, cite one key ratio)',
+      };
+      var tone = toneMap[sub] || 'conversational intro';
+      var opener = await _callClaude(
+        'Write a ' + tone + ' for a DD post on $' + ticker + '. 1-2 sentences only. No hype.',
+        { maxTokens: 100 }
+      );
+      text = opener.trim() + '\n\n' + body;
+    }
+    text = text + NFA_DISCLAIMER;
+    if (text.length > MAX_REDDIT_CHARS) {
+      var trimTo = MAX_REDDIT_CHARS - NFA_DISCLAIMER.length;
+      text = text.slice(0, trimTo) + NFA_DISCLAIMER;
+    }
+    variants[sub] = text;
+  }
+  return variants;
+}
+
+/**
+ * Upload DD post visuals to Imgur. Returns array of { label, url } links.
+ * Skips gracefully if visual-templates return null or Imgur fails.
+ */
+async function _uploadDDVisuals(ticker, filings, priceData, peers) {
+  var vt = require('./visual-templates.js');
+  var visuals = [
+    { label: 'Insider Transaction Table', base64: vt.generateInsiderTable(filings) },
+    { label: 'Price Chart', base64: vt.generatePriceChart(ticker, priceData) },
+    { label: 'Peer Radar', base64: vt.generatePeerRadar(ticker, peers) },
+  ];
+  var links = [];
+  for (var i = 0; i < visuals.length; i++) {
+    var v = visuals[i];
+    if (!v.base64) continue;
+    try {
+      var res = await _deps.fetch('https://api.imgur.com/3/image', {
+        method: 'POST',
+        headers: {
+          'Authorization': 'Client-ID ' + (process.env.IMGUR_CLIENT_ID || ''),
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ image: v.base64, type: 'base64', title: v.label }),
+      });
+      var data = res.json();
+      if (data.data && data.data.link) links.push({ label: v.label, url: data.data.link });
+    } catch (err) {
+      console.warn('[CAT6] Imgur upload failed for ' + v.label + ': ' + (err && err.message));
+    }
+  }
+  return links;
+}
+
+/**
+ * Select the best ticker for today's DD post from NocoDB Insider_Filings.
+ * Returns null if no suitable ticker found.
+ */
+async function _selectDDTicker() {
+  try {
+    var cutoff = new Date(_now().getTime() - 7 * 86400000).toISOString().split('T')[0];
+    var url = NOCODB_BASE_URL + '/api/v1/db/data/noco/' + NOCODB_PROJECT_ID
+      + '/Insider_Filings?where=(date,gte,' + cutoff + ')&sort=-score&limit=5';
+    var r = await _deps.fetch(url, { headers: { 'xc-token': NOCODB_TOKEN } });
+    if (r.status !== 200) return null;
+    var data = r.json();
+    var list = (data && data.list) ? data.list : [];
+    if (list.length === 0) return null;
+    var record = list[0];
+    return {
+      ticker: record.ticker,
+      filings: [record],
+      score: record.score || 7,
+      marketCapUsd: record.marketCapUsd || 0,
+      priceAtPost: record.price || 0,
+      priceHistory: [],
+      peers: [],
+    };
+  } catch (_) { return null; }
+}
+
+/**
+ * Insert a record to NocoDB Reddit_DD_Posts.
+ */
+async function _insertDDPostLog(info) {
+  try {
+    var url = NOCODB_BASE_URL + '/api/v1/db/data/noco/' + NOCODB_PROJECT_ID + '/Reddit_DD_Posts';
+    await _deps.fetch(url, {
+      method: 'POST',
+      headers: { 'xc-token': NOCODB_TOKEN, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        ticker: info.ticker || '',
+        post_url: info.post_url || '',
+        subreddit: info.subreddit || '',
+        price_at_post: info.price_at_post || 0,
+        authenticity_score: info.authenticity_score || 0,
+        status: info.status || 'posted',
+        posted_at: new Date().toISOString(),
+      }),
+    });
+  } catch (_) {}
+}
+
+/**
+ * Count fundamental metric keywords in post text (P/E, EV/EBITDA, ROE, etc.).
+ */
+function _countFundamentalMetrics(text) {
+  if (!text) return 0;
+  var metrics = ['P/E', 'EV/EBITDA', 'ROE', 'ROA', 'ROIC', 'P/S', 'P/B', 'debt/equity',
+    'free cash flow', 'FCF', 'gross margin', 'net margin', 'revenue growth', 'earnings growth'];
+  var lower = text.toLowerCase();
+  return metrics.filter(function(m) { return lower.includes(m.toLowerCase()); }).length;
+}
+
+function randomBetween(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+/**
+ * Insert a scheduled job to NocoDB Scheduled_Jobs.
+ */
+async function insertJob(type, payload, delayMs) {
+  try {
+    var base = process.env.NOCODB_API_URL || NOCODB_BASE_URL;
+    var tok = process.env.NOCODB_API_TOKEN || NOCODB_TOKEN;
+    var executeAfter = new Date(Date.now() + (delayMs || 0)).toISOString();
+    var url = base + '/api/v1/db/data/noco/reddit/Scheduled_Jobs';
+    await _deps.fetch(url, {
+      method: 'POST',
+      headers: { 'xc-token': tok, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        type: type,
+        payload: JSON.stringify(payload),
+        execute_after: executeAfter,
+        status: 'pending',
+        created_at: new Date().toISOString(),
+      }),
+    });
+  } catch (_) {}
+}
+
+/**
+ * Schedule follow-up DD reply jobs: exactly 2 jobs at 1h and 6h.
+ */
+async function scheduleDDReplies(postId, subreddit, ticker) {
+  try {
+    await insertJob('reddit_dd_reply', { postId: postId, subreddit: subreddit, ticker: ticker, delayLabel: '1h' }, 60 * 60 * 1000);
+    await insertJob('reddit_dd_reply', { postId: postId, subreddit: subreddit, ticker: ticker, delayLabel: '6h' }, 6 * 60 * 60 * 1000);
+  } catch (_) {}
+}
+
+/**
+ * CAT 6 entry point — post a long-form DD post to relevant subreddits.
+ */
+async function postDDPost() {
+  // 1. Frequency gate
+  var limitResult = await checkDDPostLimit();
+  if (!limitResult.allowed) {
+    console.log('[CAT6] limit: ' + limitResult.reason);
+    return;
+  }
+
+  // 2. Day/time gate (Tue-Thu, 10AM-2PM EST)
+  var now = _now();
+  var estDay = new Intl.DateTimeFormat('en-US', {
+    timeZone: 'America/New_York',
+    weekday: 'short',
+  }).format(now);
+  var estHourStr = new Intl.DateTimeFormat('en-US', {
+    timeZone: 'America/New_York',
+    hour: 'numeric',
+    hour12: false,
+  }).format(now);
+  var estHour = parseInt(estHourStr);
+  if (['Tue', 'Wed', 'Thu'].indexOf(estDay) === -1) {
+    console.log('[CAT6] wrong day: ' + estDay);
+    return;
+  }
+  if (estHour < 10 || estHour >= 14) {
+    console.log('[CAT6] outside window: ' + estHour + ':00 EST');
+    return;
+  }
+
+  // 3. Select ticker
+  var data = await _selectDDTicker();
+  if (!data) { console.log('[CAT6] no suitable ticker'); return; }
+  var ticker = data.ticker;
+  var filings = data.filings;
+  var score = data.score;
+  var marketCapUsd = data.marketCapUsd;
+  var priceAtPost = data.priceAtPost;
+
+  // 4. Build DD post (4 Claude calls)
+  var ddBody = await buildDDPost(ticker, data);
+  if (!ddBody) return;
+
+  // 5. Human-likeness check
+  var humanCheck = await _callClaude(
+    'Rate this post\'s human-likeness 1-10. If < 7, identify 3 specific AI-sounding phrases'
+    + ' and provide rewritten versions:\n\n' + ddBody.slice(0, 3000),
+    { maxTokens: 500 }
+  );
+  var humanMatch = humanCheck.match(/\b([0-9]|10)\b/);
+  var humanScore = humanMatch ? parseInt(humanMatch[0]) : 8;
+  var finalBody = ddBody;
+  if (humanScore < 7) {
+    finalBody = await _callClaude(
+      'Apply these rewrites to the post:\n' + humanCheck + '\n\nOriginal:\n' + ddBody,
+      { maxTokens: 3500 }
+    );
+    var recheckText = await _callClaude(
+      'Rate human-likeness 1-10:\n' + finalBody.slice(0, 2000),
+      { maxTokens: 50 }
+    );
+    var recheckMatch = recheckText.match(/\b([0-9]|10)\b/);
+    var recheckScore = recheckMatch ? parseInt(recheckMatch[0]) : 8;
+    if (recheckScore < 7) {
+      console.error('[CAT6] human-likeness < 7 after rewrite — aborting');
+      return;
+    }
+  }
+
+  // 6. Upload visuals
+  var imageLinks = await _uploadDDVisuals(ticker, filings, data.priceHistory, data.peers);
+  if (imageLinks.length > 0) {
+    var markdownImages = imageLinks.map(function(l) { return '[' + l.label + '](' + l.url + ')'; }).join('\n');
+    finalBody = finalBody.replace('## Bull Case', markdownImages + '\n\n## Bull Case');
+  }
+
+  // 7. Determine target subreddits and build per-sub variants
+  var fundamentalMetricCount = _countFundamentalMetrics(finalBody);
+  var targetSubs = _selectDDSubreddits(score, marketCapUsd, fundamentalMetricCount);
+  var variants = await _buildSubredditVariants(targetSubs, finalBody, ticker);
+
+  // 8. Post to each subreddit
+  var token = await getRedditToken();
+  var subEntries = Object.keys(variants);
+  for (var si = 0; si < subEntries.length; si++) {
+    var sub = subEntries[si];
+    var text = variants[sub];
+    try {
+      var postRes = await _deps.fetch('https://oauth.reddit.com/api/submit', {
+        method: 'POST',
+        headers: {
+          'Authorization': 'Bearer ' + token,
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'User-Agent': 'EarlyInsider/1.0',
+        },
+        body: 'sr=' + sub + '&kind=self&title='
+          + encodeURIComponent('$' + ticker + ' DD: Insider cluster buy — ' + (score >= 8 ? 'high conviction' : 'notable'))
+          + '&text=' + encodeURIComponent(text),
+      });
+      var postData = postRes.json();
+      var postName = postData && postData.json && postData.json.data && postData.json.data.name;
+      var postUrl = (postData && postData.json && postData.json.data && postData.json.data.url)
+        || ('https://www.reddit.com/r/' + sub);
+
+      // 9. Log to Reddit_DD_Posts
+      await _insertDDPostLog({
+        ticker: ticker,
+        post_url: postUrl,
+        subreddit: sub,
+        price_at_post: priceAtPost,
+        authenticity_score: humanScore,
+        status: 'posted',
+      });
+
+      // 10. Schedule AMA and follow-up replies
+      await insertJob('reddit_ama', { postId: postName, subreddit: sub, ticker: ticker }, randomBetween(300000, 600000));
+      await scheduleDDReplies(postName, sub, ticker);
+
+      console.log('[CAT6] posted DD on ' + sub + ': ' + postUrl);
+    } catch (err) {
+      console.error('[CAT6] failed to post to ' + sub + ': ' + (err && err.message));
+    }
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Section 06 — Anti-AI Detection
+// ---------------------------------------------------------------------------
+
+/**
+ * Build and send a comment prompt via Claude API.
+ * Replaces the old draftComment() stub with a real Claude call.
+ */
+async function buildCommentPrompt(post, insiderData, subreddit, structure) {
+  var cfg = SUBREDDIT_TONE_MAP[subreddit] || {};
+  var wordRange = cfg.wordLimit ? (cfg.wordLimit[0] + '-' + cfg.wordLimit[1] + ' words') : '100-150 words';
+
+  var systemParts = [
+    NEGATIVE_EXAMPLES,
+    ANTI_PUMP_RULE,
+    '\nSUBREDDIT TONE: ' + (cfg.style || 'balanced, conversational'),
+    'WORD LIMIT: ' + wordRange,
+    'STRUCTURE: ' + (structure && structure.systemPromptInstruction ? structure.systemPromptInstruction : 'Write a relevant reply.'),
+  ];
+  if (cfg.example) systemParts.push('\nEXAMPLE OF GOOD STYLE FOR THIS SUBREDDIT:\n' + cfg.example);
+  var systemPrompt = systemParts.filter(Boolean).join('\n\n');
+
+  var valueMil = insiderData && insiderData.value_usd ? (insiderData.value_usd / 1000000).toFixed(1) : '0';
+  var userMessage = 'Reddit post you are replying to:\n'
+    + 'Title: ' + ((post && post.title) || '') + '\n'
+    + 'Body: ' + ((post && post.selftext) || '(no body)') + '\n'
+    + 'Subreddit: r/' + (subreddit || '') + '\n\n'
+    + 'Insider filing data:\n'
+    + 'Ticker: $' + ((insiderData && insiderData.ticker) || '') + '\n'
+    + 'Insider: ' + ((insiderData && insiderData.insider_name) || '') + ' (' + ((insiderData && insiderData.role) || '') + ')\n'
+    + 'Transaction: purchased $' + valueMil + 'M worth on ' + ((insiderData && insiderData.date) || '') + '\n'
+    + (insiderData && insiderData.track_record ? 'Track record: ' + insiderData.track_record + '\n' : '')
+    + '\nWrite a reply that adds value to this thread. Follow the style guide and structure above.';
+
+  var res = await _callClaude(userMessage, {
+    system: systemPrompt,
+    maxTokens: 300,
+    temperature: 0.7,
+  });
+
+  if (!res || res.trim().length === 0) {
+    console.warn('[buildCommentPrompt] Claude returned empty response');
+    return null;
+  }
+
+  return res.trim();
+}
+
+// ---------------------------------------------------------------------------
+// Section 03: Daily Cap + Timing + Job Queue
+// ---------------------------------------------------------------------------
+
+async function checkDailyCommentLimit(subreddit) {
+  var today = getESTDateString(_now());
+  var logs = await getRedditLog(today);
+  var posted = logs.filter(function(l) { return l.status === 'posted'; });
+  if (posted.length >= 10) return { allowed: false, reason: 'global cap reached (' + posted.length + '/10)' };
+  var cap = (SUBREDDIT_TONE_MAP[subreddit] && SUBREDDIT_TONE_MAP[subreddit].dailyCap != null) ? SUBREDDIT_TONE_MAP[subreddit].dailyCap : 2;
+  var subCount = posted.filter(function(l) { return l.subreddit === subreddit; }).length;
+  if (subCount >= cap) return { allowed: false, reason: subreddit + ' cap reached (' + subCount + '/' + cap + ')' };
+  return { allowed: true };
+}
+
+async function upvoteContext(postId, comment1Id, comment2Id) {
+  try {
+    var token = await getRedditToken();
+    var vote = async function(id) {
+      await _deps.fetch('https://oauth.reddit.com/api/vote', {
+        method: 'POST',
+        headers: {
+          'Authorization': 'Bearer ' + token,
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'User-Agent': 'EarlyInsider/1.0',
+        },
+        body: 'id=' + encodeURIComponent(id) + '&dir=1&rank=2',
+      });
+    };
+    await vote(postId);
+    await vote(comment1Id);
+    await vote(comment2Id);
+  } catch (err) {
+    console.warn('[upvoteContext] failed: ' + err.message);
+  }
+}
+
+async function scheduleEditUpdate(commentId, ticker, subreddit, priceAtPost) {
+  await insertJob('reddit_edit', { commentId: commentId, ticker: ticker, subreddit: subreddit, priceAtPost: priceAtPost }, 2 * 60 * 60 * 1000);
+}
+
+async function _processRedditReplyDeferred(payload) {
+  var token = await getRedditToken();
+  var structure = payload.structure || REPLY_STRUCTURES[0];
+  var comment = await buildCommentPrompt(
+    { title: payload.postId || '', selftext: '', subreddit: payload.subreddit, score: 0, name: payload.postId },
+    payload.insiderData || { ticker: payload.ticker || '' },
+    payload.subreddit,
+    structure
+  );
+  if (!comment) return;
+  var valid = validateReply(comment, payload.subreddit);
+  if (!valid.valid) { console.warn('[processScheduledJobs] reply validation failed'); return; }
+  var postRes = await _deps.fetch('https://oauth.reddit.com/api/comment', {
+    method: 'POST',
+    headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/x-www-form-urlencoded', 'User-Agent': 'EarlyInsider/1.0' },
+    body: 'thing_id=' + encodeURIComponent(payload.postId) + '&text=' + encodeURIComponent(comment),
+  });
+  if (postRes.status !== 200) { console.warn('[_processRedditReplyDeferred] Reddit comment API returned HTTP ' + postRes.status); return; }
+  var postData = postRes.json();
+  var newCommentName = postData && postData.json && postData.json.data && postData.json.data.things && postData.json.data.things[0] && postData.json.data.things[0].data && postData.json.data.things[0].data.name;
+  await _logToRedditLog('', payload.subreddit, comment, 'posted');
+  if (newCommentName && payload.ticker) {
+    await scheduleEditUpdate(newCommentName, payload.ticker, payload.subreddit, 0);
+  }
+}
+
+async function _processRedditEdit(payload) {
+  var commentId = payload.commentId;
+  var token = await getRedditToken();
+  var infoRes = await _deps.fetch('https://oauth.reddit.com/api/info?id=' + encodeURIComponent(commentId), {
+    headers: { 'Authorization': 'Bearer ' + token, 'User-Agent': 'EarlyInsider/1.0' },
+  });
+  if (infoRes.status !== 200) return;
+  var infoData = infoRes.json();
+  var commentData = infoData && infoData.data && infoData.data.children && infoData.data.children[0] && infoData.data.children[0].data;
+  var score = commentData ? (commentData.score || 0) : 0;
+  if (score <= 3) { console.log('[processScheduledJobs] edit skipped: score=' + score); return; }
+  var editText = (commentData && commentData.body ? commentData.body : '') + '\n\n---\n*Edit: price has moved since this was posted.*';
+  await _deps.fetch('https://oauth.reddit.com/api/editusertext', {
+    method: 'POST',
+    headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/x-www-form-urlencoded', 'User-Agent': 'EarlyInsider/1.0' },
+    body: 'thing_id=' + encodeURIComponent(commentId) + '&text=' + encodeURIComponent(editText),
+  });
+}
+
+async function _processRedditThreadReply(payload) {
+  var token = await getRedditToken();
+  var comment = 'Interesting thread — worth noting the insider activity here.';
+  await _deps.fetch('https://oauth.reddit.com/api/comment', {
+    method: 'POST',
+    headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/x-www-form-urlencoded', 'User-Agent': 'EarlyInsider/1.0' },
+    body: 'thing_id=' + encodeURIComponent(payload.commentId || '') + '&text=' + encodeURIComponent(comment),
+  });
+}
+
+async function _processRedditAMA(payload) {
+  var token = await getRedditToken();
+  var comment = 'Happy to share some context on the insider activity here if useful.';
+  await _deps.fetch('https://oauth.reddit.com/api/comment', {
+    method: 'POST',
+    headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/x-www-form-urlencoded', 'User-Agent': 'EarlyInsider/1.0' },
+    body: 'thing_id=' + encodeURIComponent(payload.postId || '') + '&text=' + encodeURIComponent(comment),
+  });
+}
+
+async function _processRedditDDReply(payload) {
+  var token = await getRedditToken();
+  var comment = 'Thanks for the engagement — happy to discuss the data further.';
+  await _deps.fetch('https://oauth.reddit.com/api/comment', {
+    method: 'POST',
+    headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/x-www-form-urlencoded', 'User-Agent': 'EarlyInsider/1.0' },
+    body: 'thing_id=' + encodeURIComponent(payload.postId || '') + '&text=' + encodeURIComponent(comment),
+  });
+}
+
+async function processScheduledJobs(opts) {
+  var options = opts || {};
+  var base = process.env.NOCODB_API_URL || NOCODB_BASE_URL;
+  var tok = process.env.NOCODB_API_TOKEN || NOCODB_TOKEN;
+  var jobs;
+  if (options._fixedJobs) {
+    jobs = options._fixedJobs;
+  } else {
+    var now = new Date().toISOString();
+    var where = '(status,eq,pending)~and(execute_after,lte,' + now + ')';
+    var res = await _deps.fetch(base + '/api/v1/db/data/noco/reddit/Scheduled_Jobs?where=' + encodeURIComponent(where) + '&limit=50', {
+      headers: { 'xc-token': tok },
+    });
+    jobs = (res.json().list) || [];
+  }
+
+  for (var i = 0; i < jobs.length; i++) {
+    var job = jobs[i];
+    if (job.status === 'done' || job.status === 'skipped') continue;
+    var executeAfter = job.execute_after ? new Date(job.execute_after).getTime() : 0;
+    if (executeAfter > Date.now()) continue;
+    var payload = typeof job.payload === 'string' ? JSON.parse(job.payload) : (job.payload || {});
+    var newStatus = 'done';
+    try {
+      if (job.type === 'reddit_reply_deferred') {
+        await _processRedditReplyDeferred(payload);
+      } else if (job.type === 'reddit_edit') {
+        await _processRedditEdit(payload);
+      } else if (job.type === 'reddit_thread_reply') {
+        await _processRedditThreadReply(payload);
+      } else if (job.type === 'reddit_ama') {
+        await _processRedditAMA(payload);
+      } else if (job.type === 'reddit_dd_reply') {
+        await _processRedditDDReply(payload);
+      }
+    } catch (err) {
+      console.error('[processScheduledJobs] job ' + job.Id + ' type=' + job.type + ' failed: ' + (err && err.message));
+      newStatus = 'skipped';
+    }
+    try {
+      await _deps.fetch(base + '/api/v1/db/data/noco/reddit/Scheduled_Jobs/' + job.Id, {
+        method: 'PATCH',
+        headers: { 'xc-token': tok, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: newStatus }),
+      });
+    } catch (_) {}
+  }
+}
+
+function _extractTicker(text) {
+  var m = text && text.match(/\$([A-Z]{1,5})\b/);
+  return m ? m[1] : null;
+}
+
+async function _fetchInsiderData(ticker) {
+  try {
+    var base = process.env.NOCODB_API_URL || 'http://NocoDB:8080';
+    var tok = process.env.NOCODB_API_TOKEN || NOCODB_TOKEN;
+    var projectId = process.env.NOCODB_PROJECT_ID || NOCODB_PROJECT_ID;
+    var url = base + '/api/v1/db/data/noco/' + projectId + '/Insider_Filings?where=(ticker,eq,' + encodeURIComponent(ticker) + ')&sort=-date&limit=1';
+    var res = await _deps.fetch(url, { headers: { 'xc-token': tok } });
+    if (res.status !== 200) return null;
+    var data = res.json();
+    var list = (data && data.list) ? data.list : [];
+    return list.length > 0 ? list[0] : null;
+  } catch (_) { return null; }
+}
+
+async function _fetchSubredditPosts(subreddit, token) {
+  try {
+    var q = encodeURIComponent('insider buying OR insider purchase OR Form 4');
+    var url = 'https://www.reddit.com/r/' + subreddit + '/search.json?q=' + q + '&sort=new&restrict_sr=1&limit=10';
+    var headers = token
+      ? { 'Authorization': 'Bearer ' + token, 'User-Agent': 'EarlyInsider/1.0' }
+      : { 'User-Agent': 'EarlyInsider/1.0' };
+    var res = await _deps.fetch(url, { headers: headers });
+    if (res.status !== 200) return [];
+    var data = res.json();
+    return (data && data.data && data.data.children)
+      ? data.data.children.map(function(c) { return c.data; }).filter(function(p) { return p.score >= 5; })
+      : [];
+  } catch (_) { return []; }
+}
+
+async function _fetchTopComments(postName, token) {
+  try {
+    var url = 'https://www.reddit.com/comments/' + postName.replace('t3_', '') + '.json?sort=top&limit=5';
+    var headers = token
+      ? { 'Authorization': 'Bearer ' + token, 'User-Agent': 'EarlyInsider/1.0' }
+      : { 'User-Agent': 'EarlyInsider/1.0' };
+    var res = await _deps.fetch(url, { headers: headers });
+    if (res.status !== 200) return [];
+    var data = res.json();
+    if (!Array.isArray(data) || data.length < 2) return [];
+    var comments = data[1] && data[1].data && data[1].data.children ? data[1].data.children : [];
+    return comments.filter(function(c) { return c.data && c.data.body && c.data.body.length > 30; }).slice(0, 5).map(function(c) { return c.data; });
+  } catch (_) { return []; }
+}
+
+async function runCAT4Comments() {
+  try {
+    var skipResult = await shouldSkipToday();
+    if (skipResult.skip) { console.log('[CAT4] skip day — exiting'); return; }
+    var token = await getRedditToken();
+    var subreddits = Object.keys(SUBREDDIT_TONE_MAP);
+    for (var s = 0; s < subreddits.length; s++) {
+      var subreddit = subreddits[s];
+      var limitResult = await checkDailyCommentLimit(subreddit);
+      if (!limitResult.allowed) { console.log('[CAT4] ' + subreddit + ': ' + limitResult.reason); continue; }
+      var posts = await _fetchSubredditPosts(subreddit, token);
+      for (var p = 0; p < posts.length; p++) {
+        var post = posts[p];
+        var ticker = _extractTicker((post.title || '') + ' ' + (post.selftext || ''));
+        if (!ticker) continue;
+        var insiderData = await _fetchInsiderData(ticker);
+        if (!insiderData) continue;
+        var structure = await getNextReplyStructure(subreddit);
+        if (Math.random() < 0.5) {
+          var topComments = await _fetchTopComments(post.name, token);
+          if (topComments.length >= 2) {
+            await upvoteContext(post.name, topComments[0].name || topComments[0].id, topComments[1].name || topComments[1].id);
+          }
+        }
+        var delayMs = randomBetween(10 * 60 * 1000, 30 * 60 * 1000);
+        await insertJob('reddit_reply_deferred', { postId: post.name, subreddit: subreddit, ticker: ticker, insiderData: insiderData, structure: structure }, delayMs);
+        console.log('[CAT4] queued deferred reply to ' + post.name + ' on ' + subreddit);
+      }
+    }
+  } catch (err) {
+    console.error('[runCAT4Comments] error: ' + (err && err.message));
+  }
+}
+
+// ---------------------------------------------------------------------------
 // Exports
 // ---------------------------------------------------------------------------
 
@@ -619,6 +1534,16 @@ module.exports = {
   SUBREDDITS: SUBREDDITS,
   SEARCH_KEYWORDS: SEARCH_KEYWORDS,
   CAT5_SUBREDDITS: CAT5_SUBREDDITS,
+
+  // Section 01 constants
+  SUBREDDIT_TONE_MAP: SUBREDDIT_TONE_MAP,
+
+  // Section 02 constants
+  REPLY_STRUCTURES: REPLY_STRUCTURES,
+
+  // Section 06 constants
+  NEGATIVE_EXAMPLES: NEGATIVE_EXAMPLES,
+  ANTI_PUMP_RULE: ANTI_PUMP_RULE,
 
   // Original helpers
   buildSearchQueries: buildSearchQueries,
@@ -635,12 +1560,27 @@ module.exports = {
   getISOWeekKey: getISOWeekKey,
   getESTDateString: getESTDateString,
 
-  // State helpers
+  // Section 01 — state helpers + auth
   getState: getState,
   setState: setState,
-  shouldSkipToday: shouldSkipToday,
   getRedditToken: getRedditToken,
+  getRedditLog: getRedditLog,
+
+  // Section 02 — rotation + validation
+  getNextReplyStructure: getNextReplyStructure,
+  validateReply: validateReply,
+
+  // Section 03 — cap + timing + jobs
+  shouldSkipToday: shouldSkipToday,
+  checkDailyCommentLimit: checkDailyCommentLimit,
+  upvoteContext: upvoteContext,
+  insertJob: insertJob,
+  randomBetween: randomBetween,
+  scheduleEditUpdate: scheduleEditUpdate,
   scheduleThreadReply: scheduleThreadReply,
+  scheduleDDReplies: scheduleDDReplies,
+  processScheduledJobs: processScheduledJobs,
+  runCAT4Comments: runCAT4Comments,
 
   // Section 04 — CAT 5
   getDailyThreadTarget: getDailyThreadTarget,
@@ -648,4 +1588,16 @@ module.exports = {
   findDailyDiscussionThread: findDailyDiscussionThread,
   buildDailyThreadComment: buildDailyThreadComment,
   postDailyThread: postDailyThread,
+
+  // Section 05 — CAT 6 DD Posts
+  validateDDPost: validateDDPost,
+  checkDDPostLimit: checkDDPostLimit,
+  buildDDPost: buildDDPost,
+  _selectDDSubreddits: _selectDDSubreddits,
+  _buildSubredditVariants: _buildSubredditVariants,
+  _uploadDDVisuals: _uploadDDVisuals,
+  postDDPost: postDDPost,
+
+  // Section 06 — Anti-AI Detection
+  buildCommentPrompt: buildCommentPrompt,
 };

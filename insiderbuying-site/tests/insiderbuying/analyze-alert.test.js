@@ -4,10 +4,11 @@
 // Mock ai-client BEFORE requiring analyze-alert
 // ---------------------------------------------------------------------------
 jest.mock('../../n8n/code/insiderbuying/ai-client', () => ({
+  createOpusClient: jest.fn(),
   createDeepSeekClient: jest.fn(),
 }));
 
-const { createDeepSeekClient } = require('../../n8n/code/insiderbuying/ai-client');
+const { createOpusClient, createDeepSeekClient } = require('../../n8n/code/insiderbuying/ai-client');
 
 const {
   buildAnalysisPrompt,
@@ -20,6 +21,7 @@ const {
 // ─── helpers ────────────────────────────────────────────────────────────────
 
 const DEEPSEEK_KEY = 'test-deepseek';
+const KIEAI_KEY = 'test-kieai';
 
 // NOTE: GOOD_ANALYSIS is ~42 words and has no score arg in legacy tests.
 // Rule 1 (word count) is skipped when score is undefined/null.
@@ -70,6 +72,7 @@ function makeMockClient(content, throws = null) {
 function makeHelpers(overrides = {}) {
   return {
     deepSeekApiKey: DEEPSEEK_KEY,
+    kieaiApiKey: KIEAI_KEY,
     fetchFn: jest.fn(),
     ...overrides,
   };
@@ -100,6 +103,10 @@ describe('source code checks', () => {
   test('imports createDeepSeekClient from ai-client', () => {
     expect(src).toContain("require('./ai-client')");
     expect(src).toContain('createDeepSeekClient');
+  });
+
+  test('imports createOpusClient from ai-client (for score >= 9 routing)', () => {
+    expect(src).toContain('createOpusClient');
   });
 });
 
@@ -157,9 +164,42 @@ describe('analyze-alert', () => {
     expect(mockClient.complete).toHaveBeenCalledTimes(1);
   });
 
-  // ── Provider ─────────────────────────────────────────────────────────────
+  // ── Provider / split routing ──────────────────────────────────────────────
 
-  test('analyze() calls createDeepSeekClient with fetchFn and deepSeekApiKey', async () => {
+  test('analyze() score < 9 routes to createDeepSeekClient', async () => {
+    const mockClient = makeMockClient(GOOD_ANALYSIS);
+    createDeepSeekClient.mockReturnValue(mockClient);
+    const helpers = makeHelpers();
+    const filing = { ...SAMPLE_FILING, significance_score: 8 };
+    await analyze(filing, helpers);
+
+    expect(createDeepSeekClient).toHaveBeenCalledWith(helpers.fetchFn, DEEPSEEK_KEY);
+    expect(createOpusClient).not.toHaveBeenCalled();
+  });
+
+  test('analyze() score >= 9 routes to createOpusClient', async () => {
+    const mockClient = makeMockClient(GOOD_ANALYSIS);
+    createOpusClient.mockReturnValue(mockClient);
+    const helpers = makeHelpers();
+    const filing = { ...SAMPLE_FILING, significance_score: 9 };
+    await analyze(filing, helpers);
+
+    expect(createOpusClient).toHaveBeenCalledWith(helpers.fetchFn, KIEAI_KEY);
+    expect(createDeepSeekClient).not.toHaveBeenCalled();
+  });
+
+  test('analyze() score 10 routes to createOpusClient', async () => {
+    const mockClient = makeMockClient(GOOD_ANALYSIS);
+    createOpusClient.mockReturnValue(mockClient);
+    const helpers = makeHelpers();
+    const filing = { ...SAMPLE_FILING, significance_score: 10 };
+    await analyze(filing, helpers);
+
+    expect(createOpusClient).toHaveBeenCalled();
+    expect(createDeepSeekClient).not.toHaveBeenCalled();
+  });
+
+  test('analyze() calls createDeepSeekClient with fetchFn and deepSeekApiKey (score 7)', async () => {
     const mockClient = makeMockClient(GOOD_ANALYSIS);
     createDeepSeekClient.mockReturnValue(mockClient);
     const helpers = makeHelpers();
@@ -520,6 +560,32 @@ describe('Structured Analysis (Section 05)', () => {
         env: { DEEPSEEK_API_KEY: 'test-key' },
       });
       expect(result).toBeNull();
+    });
+
+    test('finalScore < 9 routes to createDeepSeekClient', async () => {
+      const mockClient = makeMockClient(GOOD_ANALYSIS);
+      createDeepSeekClient.mockReturnValue(mockClient);
+      const alert = { ...SAMPLE_ALERT_S05, finalScore: 8 };
+      await runAnalyzeAlert(alert, {
+        fetchFn: jest.fn(),
+        sleep: () => Promise.resolve(),
+        env: { DEEPSEEK_API_KEY: 'test-ds', KIEAI_API_KEY: 'test-kieai' },
+      });
+      expect(createDeepSeekClient).toHaveBeenCalled();
+      expect(createOpusClient).not.toHaveBeenCalled();
+    });
+
+    test('finalScore >= 9 routes to createOpusClient', async () => {
+      const mockClient = makeMockClient(GOOD_ANALYSIS);
+      createOpusClient.mockReturnValue(mockClient);
+      const alert = { ...SAMPLE_ALERT_S05, finalScore: 9 };
+      await runAnalyzeAlert(alert, {
+        fetchFn: jest.fn(),
+        sleep: () => Promise.resolve(),
+        env: { DEEPSEEK_API_KEY: 'test-ds', KIEAI_API_KEY: 'test-kieai' },
+      });
+      expect(createOpusClient).toHaveBeenCalled();
+      expect(createDeepSeekClient).not.toHaveBeenCalled();
     });
   });
 });

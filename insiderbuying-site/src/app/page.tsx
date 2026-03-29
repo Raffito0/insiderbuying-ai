@@ -90,7 +90,7 @@ export default function HomePage() {
             <h2 className="font-[var(--font-montaga)] text-[39px] md:text-[length:var(--text-title)] font-normal leading-[1.1] tracking-[0.5px] text-[color:var(--color-text)] text-center">SEC Form 4 Feed</h2>
             <div className="flex items-center gap-[8px] bg-[#00de16]/20 px-[12px] py-[4px] rounded-full">
               <div className="w-[8px] h-[8px] rounded-full bg-[var(--color-signal-green)]" />
-              <span className="text-[12px] font-medium tracking-[0.5px] text-[color:var(--color-signal-green)]">Live</span>
+              <span className="text-[15px] md:text-[12px] font-medium tracking-[0.5px] text-[color:var(--color-signal-green)]">Live</span>
             </div>
           </div>
           {/* Desktop rows — attached block */}
@@ -121,13 +121,13 @@ export default function HomePage() {
                   {a.name.split(" ").map(n => n[0]).join("")}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-[14px] font-medium leading-[18px] text-[color:var(--color-text)] truncate">{a.name}</p>
+                  <p className="text-[16px] font-medium leading-[18px] text-[color:var(--color-text)] truncate">{a.name}</p>
                   <p className="text-[13px] font-normal text-[color:var(--color-text-muted)]">{a.title}</p>
                 </div>
                 <div className="text-right shrink-0">
-                  <p className="text-[13px] font-semibold tracking-[0.5px] text-[color:var(--color-text)] font-[var(--font-mono)]">{a.ticker}</p>
-                  <p className="text-[14px] font-semibold text-[color:var(--color-signal-green)]">{a.amount}</p>
-                  <p className="text-[13px] font-normal text-[color:var(--color-text-muted)]">{a.time}</p>
+                  <p className="text-[14px] font-semibold tracking-[0.5px] text-[color:var(--color-text)] font-[var(--font-mono)]">{a.ticker}</p>
+                  <p className="text-[15px] font-semibold text-[color:var(--color-signal-green)]">{a.amount}</p>
+                  <p className="text-[14px] font-normal text-[color:var(--color-text-muted)]">{a.time}</p>
                 </div>
               </div>
             ))}
@@ -148,7 +148,7 @@ export default function HomePage() {
             ].map((s) => (
               <div key={s.title} className="w-full md:w-[296px] text-center">
                 <div className="w-[64px] h-[64px] rounded-full bg-[var(--color-bg-alt)] mx-auto mb-[var(--gap-tight)]" />
-                <h3 className="font-[var(--font-montaga)] text-[22px] font-normal leading-[28px] text-[color:var(--color-text)] mb-[8px]">{s.title}</h3>
+                <h3 className="font-[var(--font-montaga)] text-[26px] md:text-[22px] font-normal leading-[28px] text-[color:var(--color-text)] mb-[8px]">{s.title}</h3>
                 <p className="text-[16px] font-normal leading-[26px] text-[color:var(--color-text-secondary)]">{s.desc}</p>
               </div>
             ))}
@@ -165,7 +165,7 @@ export default function HomePage() {
               <p className="font-[var(--font-montaga)] text-[40px] lg:text-[48px] font-normal leading-[1.1] tracking-[0.5px] text-[color:var(--color-text)]">{s.value}</p>
               <p className="font-[var(--font-montaga)] text-[21px] font-normal leading-[28px] text-[color:var(--color-text)] mb-[16px] mt-[4px]">{s.label}</p>
               <p className="text-[16px] font-normal leading-[23px] text-[color:var(--color-text-secondary)] mb-[12px]">{s.desc}</p>
-              <p className="text-[13px] font-normal leading-[23px] tracking-[0.5px] text-[color:var(--color-text-muted)]">{s.source}</p>
+              <p className="text-[13px] font-normal leading-[22px] tracking-[0.5px] text-[color:var(--color-text-muted)]">{s.source}</p>
             </div>
           ))}
         </div>

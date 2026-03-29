@@ -18,6 +18,7 @@ const {
   runScoreAlert,
   computeBaseScore,
   callDeepSeekForRefinement,
+  detectSameDaySell,
 } = require('../../n8n/code/insiderbuying/score-alert');
 
 const { NocoDB } = require('../../n8n/code/insiderbuying/nocodb-client');
@@ -801,6 +802,7 @@ describe('computeBaseScore', () => {
 
 describe('callDeepSeekForRefinement', () => {
   const sleep = jest.fn().mockResolvedValue(undefined);
+  beforeEach(() => sleep.mockClear());
 
   function makeClient(responses) {
     let i = 0;
@@ -961,5 +963,431 @@ describe('callDeepSeekForRefinement', () => {
       expect(result.ai_adjustment).toBe(0);
       expect(result.ai_reason.length).toBeGreaterThan(0);
     });
+
+    test('whitespace-only reason field — ai_reason substituted with default', async () => {
+      const client = makeClient(['{"adjustment": 0, "reason": "   "}']);
+      const result = await callDeepSeekForRefinement(BASE_FILING, 6.0, { client, sleep });
+      expect(result.ai_reason).toBe('No reason provided');
+    });
+  });
+});
+
+// ─── detectSameDaySell ───────────────────────────────────────────────────────
+
+describe('detectSameDaySell', () => {
+  function makeNocoSell(sharesSold) {
+    const fn = jest.fn().mockResolvedValue({
+      ok: true, status: 200,
+      json: async () => ({
+        list: [{ transactionCode: 'S', transactionShares: sharesSold, insiderCik: 'cik001', transactionDate: '2024-01-15' }],
+        pageInfo: { isLastPage: true },
+      }),
+    });
+    return makeNocoDB(fn);
+  }
+  function makeNocoEmpty() {
+    const fn = jest.fn().mockResolvedValue({
+      ok: true, status: 200,
+      json: async () => ({ list: [], pageInfo: { isLastPage: true } }),
+    });
+    return makeNocoDB(fn);
+  }
+
+  const EXERCISE_FILING = {
+    transactionCode: 'M', insiderCik: 'cik001',
+    transactionDate: '2024-01-15', sharesExercised: 1000,
+  };
+
+  test('full exercise-and-sell (>=80% sold) returns 0', async () => {
+    const nocodb = makeNocoSell(900); // 900 >= 800 = 80% of 1000
+    const result = await detectSameDaySell(EXERCISE_FILING, { nocodb });
+    expect(result).toBe(0);
+  });
+
+  test('partial sell (30% sold) returns undefined (normal score)', async () => {
+    const nocodb = makeNocoSell(300); // 300 < 800 = 80% of 1000
+    const result = await detectSameDaySell(EXERCISE_FILING, { nocodb });
+    expect(result).toBeUndefined();
+  });
+
+  test('no same-day sell found returns undefined', async () => {
+    const nocodb = makeNocoEmpty();
+    const result = await detectSameDaySell(EXERCISE_FILING, { nocodb });
+    expect(result).toBeUndefined();
+  });
+
+  test('different insiderCik — no match returns undefined', async () => {
+    const nocodb = makeNocoEmpty();
+    const filing = { ...EXERCISE_FILING, insiderCik: 'differentCik' };
+    const result = await detectSameDaySell(filing, { nocodb });
+    expect(result).toBeUndefined();
+  });
+
+  test('NocoDB throws network error — logs WARN and returns undefined', async () => {
+    const nocodb = { list: jest.fn().mockRejectedValue(new Error('network')) };
+    const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+    const result = await detectSameDaySell(EXERCISE_FILING, { nocodb });
+    expect(result).toBeUndefined();
+    expect(warnSpy).toHaveBeenCalled();
+    warnSpy.mockRestore();
+  });
+
+  test('missing nocodb dep — returns undefined without throwing', async () => {
+    const result = await detectSameDaySell(EXERCISE_FILING, {});
+    expect(result).toBeUndefined();
+  });
+
+  test('different transactionDate — no match returns undefined', async () => {
+    const nocodb = makeNocoEmpty();
+    const filing = { ...EXERCISE_FILING, transactionDate: '2024-02-01' };
+    const result = await detectSameDaySell(filing, { nocodb });
+    expect(result).toBeUndefined();
+  });
+});
+
+// ─── runScoreAlert filtering chain (S03) ────────────────────────────────────
+
+describe('runScoreAlert filtering chain', () => {
+  beforeEach(() => jest.clearAllMocks());
+
+  function makeHelpers(adjustmentJson = '{"adjustment": 0, "reason": "ok"}') {
+    const fn = jest.fn().mockResolvedValue({
+      ok: true, status: 200,
+      json: async () => ({ list: [], pageInfo: { isLastPage: true } }),
+    });
+    const mockClient = {
+      complete: jest.fn().mockResolvedValue({ content: adjustmentJson }),
+    };
+    createDeepSeekClient.mockReturnValue(mockClient);
+    return { nocodb: makeNocoDB(fn), fetchFn: fn, deepseekApiKey: DEEPSEEK_KEY };
+  }
+
+  const SCORED_FILING = {
+    ...SAMPLE_FILING,
+    transactionCode: 'P', canonicalRole: 'CEO', marketCapUsd: 5_000_000_000,
+    transactionValue: 1_000_000, insiderCik: 'cik001', direction: 'A',
+    is10b5Plan: false,
+  };
+
+  test('G transaction — excluded from results (skipped)', async () => {
+    const helpers = makeHelpers();
+    const results = await runScoreAlert([{ ...SCORED_FILING, transactionCode: 'G' }], helpers);
+    expect(results).toHaveLength(0);
+  });
+
+  test('F transaction — excluded from results (skipped)', async () => {
+    const helpers = makeHelpers();
+    const results = await runScoreAlert([{ ...SCORED_FILING, transactionCode: 'F' }], helpers);
+    expect(results).toHaveLength(0);
+  });
+
+  test('S transaction (sale) — proceeds to scoring', async () => {
+    const helpers = makeHelpers();
+    const results = await runScoreAlert([{ ...SCORED_FILING, transactionCode: 'S', direction: 'D' }], helpers);
+    expect(results).toHaveLength(1);
+    expect(results[0]).toHaveProperty('significance_score');
+  });
+
+  test('P transaction (purchase) — proceeds to scoring', async () => {
+    const helpers = makeHelpers();
+    const results = await runScoreAlert([SCORED_FILING], helpers);
+    expect(results).toHaveLength(1);
+    expect(results[0]).toHaveProperty('significance_score');
+  });
+
+  test('M transaction with full sell — excluded from results', async () => {
+    const fn = jest.fn().mockResolvedValue({
+      ok: true, status: 200,
+      json: async () => ({
+        list: [{ transactionCode: 'S', transactionShares: 900, insiderCik: 'cik001', transactionDate: '2024-01-12' }],
+        pageInfo: { isLastPage: true },
+      }),
+    });
+    createDeepSeekClient.mockReturnValue({
+      complete: jest.fn().mockResolvedValue({ content: '{"adjustment": 0, "reason": "ok"}' }),
+    });
+    const filing = { ...SCORED_FILING, transactionCode: 'M', sharesExercised: 1000, transactionDate: '2024-01-12' };
+    const results = await runScoreAlert([filing], { nocodb: makeNocoDB(fn), fetchFn: fn, deepseekApiKey: DEEPSEEK_KEY });
+    expect(results).toHaveLength(0);
+  });
+
+  test('scored result has base_score, ai_adjustment, final_score fields', async () => {
+    const helpers = makeHelpers('{"adjustment": 1, "reason": "strong signal"}');
+    const results = await runScoreAlert([SCORED_FILING], helpers);
+    expect(results[0]).toHaveProperty('base_score');
+    expect(results[0]).toHaveProperty('ai_adjustment');
+    expect(results[0]).toHaveProperty('significance_score');
+  });
+});
+
+// ─── structured score logging (S03) ─────────────────────────────────────────
+
+describe('structured score logging', () => {
+  beforeEach(() => jest.clearAllMocks());
+
+  function makeHelpers() {
+    const fn = jest.fn().mockResolvedValue({
+      ok: true, status: 200,
+      json: async () => ({ list: [], pageInfo: { isLastPage: true } }),
+    });
+    createDeepSeekClient.mockReturnValue({
+      complete: jest.fn().mockResolvedValue({ content: '{"adjustment": 0, "reason": "ok"}' }),
+    });
+    return { nocodb: makeNocoDB(fn), fetchFn: fn, deepseekApiKey: DEEPSEEK_KEY };
+  }
+
+  const SCORED_FILING = {
+    ...SAMPLE_FILING,
+    transactionCode: 'P', canonicalRole: 'CEO', marketCapUsd: 5_000_000_000,
+    transactionValue: 1_000_000, insiderCik: 'cik001', direction: 'A', is10b5Plan: false,
+  };
+
+  test('scored alert emits structured log with required fields', async () => {
+    const logSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
+    const helpers = makeHelpers();
+    await runScoreAlert([SCORED_FILING], helpers);
+    // Find a JSON log with finalScore
+    const jsonCalls = logSpy.mock.calls.map(c => c[0]).filter(s => {
+      try { const o = JSON.parse(s); return 'finalScore' in o; } catch { return false; }
+    });
+    expect(jsonCalls.length).toBeGreaterThan(0);
+    const log = JSON.parse(jsonCalls[0]);
+    expect(log).toHaveProperty('ticker');
+    expect(log).toHaveProperty('transactionCode');
+    expect(log).toHaveProperty('finalScore');
+    expect(log).toHaveProperty('timestamp');
+    logSpy.mockRestore();
+  });
+
+  test('skipped alert (G) emits log with skipReason', async () => {
+    const logSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
+    const helpers = makeHelpers();
+    await runScoreAlert([{ ...SCORED_FILING, transactionCode: 'G' }], helpers);
+    const jsonCalls = logSpy.mock.calls.map(c => c[0]).filter(s => {
+      try { const o = JSON.parse(s); return 'skipReason' in o; } catch { return false; }
+    });
+    expect(jsonCalls.length).toBeGreaterThan(0);
+    const log = JSON.parse(jsonCalls[0]);
+    expect(log.skipReason).toMatch(/gift/i);
+    logSpy.mockRestore();
+  });
+
+  test('exercise-and-sell alert emits log with overrideReason and finalScore=0', async () => {
+    const logSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
+    const fn = jest.fn().mockResolvedValue({
+      ok: true, status: 200,
+      json: async () => ({
+        list: [{ transactionCode: 'S', transactionShares: 900, insiderCik: 'cik001', transactionDate: '2024-01-15' }],
+        pageInfo: { isLastPage: true },
+      }),
+    });
+    createDeepSeekClient.mockReturnValue({
+      complete: jest.fn().mockResolvedValue({ content: '{"adjustment": 0, "reason": "ok"}' }),
+    });
+    const helpers = { nocodb: makeNocoDB(fn), fetchFn: fn, deepseekApiKey: DEEPSEEK_KEY };
+    await runScoreAlert([{
+      ...SCORED_FILING, transactionCode: 'M', sharesExercised: 1000,
+      insiderCik: 'cik001', transactionDate: '2024-01-15',
+    }], helpers);
+    const jsonCalls = logSpy.mock.calls.map(c => c[0]).filter(s => {
+      try { const o = JSON.parse(s); return 'overrideReason' in o; } catch { return false; }
+    });
+    expect(jsonCalls.length).toBeGreaterThan(0);
+    const log = JSON.parse(jsonCalls[0]);
+    expect(log.overrideReason).toBe('exercise-and-sell');
+    expect(log.finalScore).toBe(0);
+    logSpy.mockRestore();
+  });
+});
+
+// ─── runWeeklyCalibration (S04) ──────────────────────────────────────────────
+
+const { runWeeklyCalibration } = require('../../n8n/code/insiderbuying/score-alert');
+
+describe('runWeeklyCalibration', () => {
+  const ENV = {
+    NOCODB_BASE_URL: 'http://localhost:8080',
+    NOCODB_API_TOKEN: 'test-token',
+    NOCODB_PROJECT_ID: 'proj1',
+    TELEGRAM_BOT_TOKEN: 'bot123',
+    TELEGRAM_CHAT_ID: '-100111',
+  };
+
+  const ALERTS_TABLE = 'Alerts';
+  const CALIB_TABLE = 'score_calibration_runs';
+
+  // Helper: builds a fetchFn mock that returns given final_scores from NocoDB
+  function makeCalibFetch(scores, { nocoFails = false, telegramFails = false } = {}) {
+    return jest.fn().mockImplementation(async (url) => {
+      if (url.includes('api.telegram.org')) {
+        if (telegramFails) throw new Error('Telegram error');
+        return { ok: true, status: 200, json: async () => ({ ok: true }) };
+      }
+      if (nocoFails) throw new Error('NocoDB down');
+      if (url.includes(ALERTS_TABLE)) {
+        return {
+          ok: true, status: 200,
+          json: async () => ({ list: scores.map(s => ({ final_score: s })), pageInfo: { isLastPage: true } }),
+        };
+      }
+      // calibration write
+      return { ok: true, status: 200, json: async () => ({ Id: 42 }) };
+    });
+  }
+
+  function makeDeps(scores, opts = {}) {
+    const fetchFn = makeCalibFetch(scores, opts);
+    return { fetchFn, sleep: jest.fn().mockResolvedValue(undefined), env: ENV };
+  }
+
+  // ─ Distribution bucketing ──────────────────────────────────────────────────
+
+  test('correctly buckets 10 scores into 4 ranges', async () => {
+    // 1 in 1-3, 2 in 4-5, 3 in 6-7, 4 in 8-10
+    const scores = [2, 4, 5, 6, 6, 7, 8, 9, 10, 8];
+    const result = await runWeeklyCalibration(makeDeps(scores));
+    expect(result).not.toBeNull();
+    expect(result.total).toBe(10);
+    expect(result.buckets.pct_1_3).toBe(10);
+    expect(result.buckets.pct_4_5).toBe(20);
+    expect(result.buckets.pct_6_7).toBe(30);
+    expect(result.buckets.pct_8_10).toBe(40);
+  });
+
+  test('8-10 bucket > 25% sets flagged=true', async () => {
+    const scores = [8, 9, 10, 8, 7, 5, 4, 3, 6, 6]; // 4/10 = 40% in 8-10
+    const result = await runWeeklyCalibration(makeDeps(scores));
+    expect(result.flagged).toBe(true);
+  });
+
+  test('all same score (empty buckets) sets flagged=true', async () => {
+    const scores = Array(14).fill(5); // 100% in 4-5, rest empty
+    const result = await runWeeklyCalibration(makeDeps(scores));
+    expect(result.flagged).toBe(true);
+  });
+
+  test('healthy distribution (all buckets non-empty, 8-10 in range) sets flagged=false', async () => {
+    // ~10% 1-3, ~30% 4-5, ~40% 6-7, ~20% 8-10 → all buckets non-empty, 8-10=20% (5%–25%)
+    const scores = [2, 4, 4, 4, 6, 6, 6, 6, 8, 8];
+    const result = await runWeeklyCalibration(makeDeps(scores));
+    expect(result.flagged).toBe(false);
+  });
+
+  // ─ Telegram ────────────────────────────────────────────────────────────────
+
+  test('Telegram fires when 8-10 bucket > 25%', async () => {
+    const scores = [8, 9, 10, 8, 8, 5, 5, 4, 6, 6]; // 5/10 = 50%
+    const deps = makeDeps(scores);
+    await runWeeklyCalibration(deps);
+    const telegramCalls = deps.fetchFn.mock.calls.filter(c => c[0].includes('api.telegram.org'));
+    expect(telegramCalls.length).toBeGreaterThan(0);
+  });
+
+  test('Telegram fires when 8-10 bucket < 5%', async () => {
+    const scores = [2, 3, 4, 4, 5, 5, 6, 6, 7, 7]; // 0/10 = 0% in 8-10
+    const deps = makeDeps(scores);
+    await runWeeklyCalibration(deps);
+    const telegramCalls = deps.fetchFn.mock.calls.filter(c => c[0].includes('api.telegram.org'));
+    expect(telegramCalls.length).toBeGreaterThan(0);
+  });
+
+  test('Telegram does NOT fire for healthy distribution', async () => {
+    const scores = [2, 4, 4, 4, 6, 6, 6, 6, 8, 8]; // healthy
+    const deps = makeDeps(scores);
+    await runWeeklyCalibration(deps);
+    const telegramCalls = deps.fetchFn.mock.calls.filter(c => c[0].includes('api.telegram.org'));
+    expect(telegramCalls.length).toBe(0);
+  });
+
+  test('Telegram message contains distribution table with all 4 buckets', async () => {
+    const scores = [8, 9, 10, 8, 8, 5, 5, 4, 6, 6]; // flagged
+    const deps = makeDeps(scores);
+    await runWeeklyCalibration(deps);
+    const telegramCall = deps.fetchFn.mock.calls.find(c => c[0].includes('api.telegram.org'));
+    const body = JSON.parse(telegramCall[1].body);
+    expect(body.text).toContain('1-3');
+    expect(body.text).toContain('4-5');
+    expect(body.text).toContain('6-7');
+    expect(body.text).toContain('8-10');
+    expect(body.text).toContain('10'); // total count
+  });
+
+  // ─ NocoDB calibration record ────────────────────────────────────────────────
+
+  test('calibration record is always written (flagged=false)', async () => {
+    const scores = [2, 4, 4, 4, 6, 6, 6, 6, 8, 8]; // healthy
+    const deps = makeDeps(scores);
+    await runWeeklyCalibration(deps);
+    const calibCalls = deps.fetchFn.mock.calls.filter(c => c[0].includes(CALIB_TABLE) && c[1]?.method === 'POST');
+    expect(calibCalls.length).toBeGreaterThan(0);
+  });
+
+  test('calibration record is written when flagged=true', async () => {
+    const scores = [8, 9, 10, 8, 8, 5, 5, 4, 6, 6]; // flagged
+    const deps = makeDeps(scores);
+    await runWeeklyCalibration(deps);
+    const calibCalls = deps.fetchFn.mock.calls.filter(c => c[0].includes(CALIB_TABLE) && c[1]?.method === 'POST');
+    expect(calibCalls.length).toBeGreaterThan(0);
+    const body = JSON.parse(calibCalls[0][1].body);
+    expect(body.flagged).toBe(true);
+    expect(body).toHaveProperty('run_date');
+    expect(body).toHaveProperty('total_alerts');
+    expect(body).toHaveProperty('pct_1_3');
+    expect(body).toHaveProperty('pct_8_10');
+  });
+
+  // ─ Zero alerts early exit ─────────────────────────────────────────────────
+
+  test('zero alerts → returns early, no Telegram, no calibration write', async () => {
+    const deps = makeDeps([]); // empty alerts
+    const result = await runWeeklyCalibration(deps);
+    expect(result).not.toBeNull(); // returns early message, not null
+    const telegramCalls = deps.fetchFn.mock.calls.filter(c => c[0].includes('api.telegram.org'));
+    const calibCalls = deps.fetchFn.mock.calls.filter(c => c[0].includes(CALIB_TABLE) && c[1]?.method === 'POST');
+    expect(telegramCalls).toHaveLength(0);
+    expect(calibCalls).toHaveLength(0);
+  });
+
+  // ─ Error handling ──────────────────────────────────────────────────────────
+
+  test('NocoDB query failure → returns null, no crash, no calibration record', async () => {
+    const deps = makeDeps([], { nocoFails: true });
+    const warnSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+    const result = await runWeeklyCalibration(deps);
+    expect(result).toBeNull();
+    warnSpy.mockRestore();
+  });
+
+  test('Telegram failure does not abort calibration record write', async () => {
+    const scores = [8, 9, 10, 8, 8, 5, 5, 4, 6, 6]; // flagged
+    const deps = makeDeps(scores, { telegramFails: true });
+    const warnSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+    const result = await runWeeklyCalibration(deps); // should not throw
+    // calibration write should still happen
+    const calibCalls = deps.fetchFn.mock.calls.filter(c => c[0].includes(CALIB_TABLE) && c[1]?.method === 'POST');
+    expect(calibCalls.length).toBeGreaterThan(0);
+    warnSpy.mockRestore();
+  });
+
+  test('pct_8_10 exactly 25% → flagged=false (boundary)', async () => {
+    // 5 scores in 8-10 out of 20 total = exactly 25% → not > 25 → not flagged
+    // 1-3: 3 (15%), 4-5: 4 (20%), 6-7: 8 (40%), 8-10: 5 (25%)
+    const scores = [1, 2, 3, 4, 4, 5, 5, 6, 6, 6, 7, 7, 7, 7, 7, 8, 8, 9, 9, 10];
+    const result = await runWeeklyCalibration(makeDeps(scores));
+    expect(result.buckets.pct_8_10).toBe(25);
+    expect(result.flagged).toBe(false);
+  });
+
+  test('missing NOCODB_BASE_URL → returns null, no crash', async () => {
+    const deps = {
+      fetchFn: jest.fn(),
+      sleep: jest.fn().mockResolvedValue(undefined),
+      env: { NOCODB_API_TOKEN: 'tok', TELEGRAM_BOT_TOKEN: 'bot', TELEGRAM_CHAT_ID: '-1' },
+    };
+    const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+    const result = await runWeeklyCalibration(deps);
+    expect(result).toBeNull();
+    expect(deps.fetchFn).not.toHaveBeenCalled();
+    warnSpy.mockRestore();
   });
 });
