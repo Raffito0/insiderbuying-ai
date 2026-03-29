@@ -106,20 +106,6 @@ export default function HomePage() {
         <style>{`@keyframes scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}.logo-ticker{animation:scroll 40s linear infinite}@media(max-width:768px){.logo-ticker{animation-duration:20s}}`}</style>
       </section>
 
-      {/* ═══ LOGO TEST — REMOVE LATER ═══ */}
-      <section className="w-full py-[48px] px-[48px] bg-[#F8F8F8]">
-        <p className="text-[14px] font-bold text-red-500 mb-[24px]">LOGO TEST — Calibrated per-logo sizes applied</p>
-        <div className="flex flex-wrap items-center gap-[24px]">
-          {LOGOS.map((logo) => (
-            <div key={logo.domain} className="flex flex-col items-center gap-[8px]">
-              <div className="flex items-center justify-center p-[4px] bg-white border border-[#e5e5e5]">
-                <img src={`https://cdn.brandfetch.io/domain/${logo.domain}/w/400/h/120/logo?c=1idSo4YEEODo2rW6Anw`} alt={logo.name} className="w-auto object-contain" style={{ height: `${logo.h}px` }} />
-              </div>
-              <span className="text-[11px] text-[#999]">{logo.name} (h:{logo.h})</span>
-            </div>
-          ))}
-        </div>
-      </section>
 
       {/* ═══ 2. LIVE ALERT FEED ═══ */}
       <section className="w-full py-[var(--section-y-mobile)] px-[20px] md:pt-[var(--section-y)] md:px-[48px] md:pb-[var(--section-y)] bg-white">
