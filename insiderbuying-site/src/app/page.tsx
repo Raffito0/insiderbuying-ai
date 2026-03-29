@@ -25,9 +25,9 @@ const REPORTS = [
 ];
 
 const PLANS = [
-  { name: "Free", desc: "Start monitoring.", price: "$0", features: ["SEC Form 4 feed (15-minute delay)", "5 watchlist tickers", "Weekly insider activity digest", "Basic filing data (no AI analysis)"], border: "", btn: "border border-[var(--color-border)] text-[color:var(--color-text)]" },
-  { name: "Analyst", desc: "See what the data means.", price: "$24", features: ["Real-time alerts (under 60 seconds)", "AI conviction scoring on every filing", "Plain-English analysis per transaction", "50 watchlist tickers", "Weekly AI-scored summary report"], border: "border border-[var(--color-primary)]", btn: "bg-[var(--color-primary)] text-white", popular: true },
-  { name: "Investor", desc: "The complete research desk.", price: "$84", features: ["All Analyst features", "Unlimited watchlist tickers", "All deep dive reports included", "Custom ticker report requests", "Webhook and API access"], border: "", btn: "border border-[var(--color-border)] text-[color:var(--color-text)]" },
+  { name: "Free", desc: "Start monitoring.", priceAnnual: "$0", priceMonthly: "$0", features: ["Delayed Form 4 feed (15-minute lag)", "5 watchlist tickers", "Weekly insider digest email", "Basic filing data", "Access to CEO Alpha Report"], border: "", btn: "border border-[var(--color-border)] text-[color:var(--color-text)]", iconType: "check" as const },
+  { name: "Analyst", desc: "See what the data means.", priceAnnual: "$24", priceMonthly: "$29", features: ["Real-time Form 4 alerts (under 60 seconds)", "AI conviction scoring on every filing", "Plain-English analysis per transaction", "25 watchlist tickers with custom filters", "Weekly AI summary with sector patterns", "1 Deep Dive report per month", "Email and Slack delivery"], border: "border border-[var(--color-primary)]", btn: "bg-[var(--color-primary)] text-white", popular: true, iconType: "badge" as const },
+  { name: "Investor", desc: "The complete research desk.", priceAnnual: "$84", priceMonthly: "$99", features: ["Everything in Analyst", "Unlimited Deep Dive reports", "API access: programmatic Form 4 data", "Webhook integration", "Unlimited watchlist tickers", "Priority custom report requests (24h)", "CSV and JSON data export"], border: "", btn: "border border-[var(--color-border)] text-[color:var(--color-text)]", iconType: "check" as const },
 ];
 
 const FAQS = [
@@ -43,6 +43,7 @@ const LOGOS = ["NVIDIA","Apple","Microsoft","Amazon","Meta","Tesla","Google","JP
 
 export default function HomePage() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const [billing, setBilling] = useState<"monthly" | "annual">("annual");
 
   return (
     <div className="bg-white">
@@ -321,19 +322,48 @@ export default function HomePage() {
       <section className="w-full py-[var(--section-y-mobile)] md:pt-[var(--section-y)] md:pb-[var(--section-y)] bg-[var(--color-bg-alt)]">
         <div className="max-w-[1216px] mx-auto px-[20px] md:px-[32px]">
           <h2 className="font-[var(--font-montaga)] text-[39px] md:text-[length:var(--text-title)] leading-[1.1] tracking-[0.5px] text-[color:var(--color-text)] text-center mb-[12px]">Choose Your Signal Level</h2>
-          <p className="text-[16px] leading-[24px] text-[color:var(--color-text-secondary)] text-center mb-[40px] md:mb-[80px]">All plans include the SEC EDGAR real-time feed. Billed annually.</p>
+          <p className="text-[16px] leading-[24px] text-[color:var(--color-text-secondary)] text-center mb-[24px] md:mb-[40px]">All plans include the SEC EDGAR real-time feed.</p>
+
+          {/* Billing toggle */}
+          <div className="flex items-center justify-center gap-[4px] mb-[40px] md:mb-[64px]">
+            <button
+              onClick={() => setBilling("monthly")}
+              className={`px-[20px] py-[10px] text-[14px] font-medium leading-[20px] transition-colors ${billing === "monthly" ? "bg-white text-[color:var(--color-text)] shadow-sm" : "text-[color:var(--color-text-muted)]"}`}
+            >
+              Monthly
+            </button>
+            <button
+              onClick={() => setBilling("annual")}
+              className={`px-[20px] py-[10px] text-[14px] font-medium leading-[20px] transition-colors flex items-center gap-[8px] ${billing === "annual" ? "bg-white text-[color:var(--color-text)] shadow-sm" : "text-[color:var(--color-text-muted)]"}`}
+            >
+              Annually
+              <span className="bg-[var(--color-signal-green)] text-white text-[11px] font-bold px-[8px] py-[2px] rounded-[2px]">SAVE 21%</span>
+            </button>
+          </div>
+
           <div className="max-w-[1024px] mx-auto grid grid-cols-1 md:grid-cols-3 gap-[var(--gap-items)]">
             {PLANS.map((p)=>(
-              <div key={p.name} className={`bg-white p-[48px] relative ${p.border}`}>
-                {p.popular&&<div className="absolute -top-[15px] left-1/2 -translate-x-1/2 bg-[var(--color-primary)] text-white text-[11px] font-medium tracking-[1px] px-[24px] py-[4px] rounded-full whitespace-nowrap">Most Popular</div>}
+              <div key={p.name} className={`bg-white p-[28px] md:p-[48px] relative ${p.border}`}>
+                {p.popular&&<div className="absolute -top-[15px] left-1/2 -translate-x-1/2 bg-[var(--color-signal-green)] text-white text-[11px] font-extrabold tracking-[1px] px-[16px] py-[4px] rounded-[2px] whitespace-nowrap">MOST POPULAR</div>}
                 <h3 className="font-[var(--font-montaga)] text-[32px] leading-[32px] tracking-[1px] text-[color:var(--color-text)] mb-[8px]">{p.name}</h3>
-                <p className="text-[14px] leading-[20px] tracking-[1px] text-[color:var(--color-text-secondary)] mb-[32px]">{p.desc}</p>
-                <div className="flex items-baseline mb-[48px]">
-                  <span className="font-[var(--font-montaga)] text-[48px] leading-[48px] tracking-[0.5px] text-[color:var(--color-text)]">{p.price}</span>
+                <p className="text-[14px] leading-[20px] tracking-[1px] text-[color:var(--color-text-secondary)] mb-[16px]">{p.desc}</p>
+                <div className="flex items-baseline mb-[8px]">
+                  <span className="font-[var(--font-montaga)] text-[48px] leading-[48px] tracking-[0.5px] text-[color:var(--color-text)]">{billing === "annual" ? p.priceAnnual : p.priceMonthly}</span>
                   <span className="text-[16px] leading-[24px] text-[color:var(--color-text-muted)] ml-[4px]">/mo</span>
                 </div>
-                <ul className="space-y-[var(--gap-tight)] mb-[48px]">
-                  {p.features.map(f=>(<li key={f} className="flex items-center gap-[12px] text-[14px] leading-[20px] text-[color:var(--color-text)]"><div className="w-[11px] h-[11px] rounded-full border-2 border-[var(--color-signal-green)] flex items-center justify-center"><div className="w-[5px] h-[5px] rounded-full bg-[var(--color-signal-green)]"/></div>{f}</li>))}
+                {billing === "annual" && p.name !== "Free" && <p className="text-[12px] font-normal leading-[16px] text-[color:var(--color-text-muted)] mb-[32px]">billed annually</p>}
+                {(billing !== "annual" || p.name === "Free") && <div className="mb-[32px]" />}
+                <ul className="flex flex-col gap-[16px] mb-[48px]">
+                  {p.features.map(f=>(<li key={f} className="flex items-center gap-[12px] text-[14px] leading-[20px] text-[color:var(--color-text)]">
+                    {p.iconType === "badge" ? (
+                      <div className="w-[15px] h-[15px] rounded-full bg-[var(--color-primary)] flex items-center justify-center shrink-0">
+                        <svg className="w-[8px] h-[8px]" viewBox="0 0 8 8"><path d="M1 4l2 2L7 2" stroke="white" strokeWidth="1.5" fill="none"/></svg>
+                      </div>
+                    ) : (
+                      <svg className="w-[11px] h-[8px] shrink-0" viewBox="0 0 11 8"><path d="M1 4l3 3L10 1" stroke="#006d34" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                    )}
+                    {f}
+                  </li>))}
                 </ul>
                 <Link href="/signup" className={`flex items-center justify-center w-full h-[58px] text-[16px] font-medium tracking-[1px] transition-colors ${p.btn}`}>{p.name === "Free" ? "Start Monitoring Free" : "Get Access"}</Link>
               </div>
