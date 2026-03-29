@@ -165,17 +165,17 @@ export default function PricingPage() {
             <div className="min-w-0">
             {/* Header */}
             <div className="flex bg-[#00058f]">
-              <div className="flex-1 py-[20px] md:py-[24px] px-[12px] md:px-[32px]">
-                <span className="text-[10px] md:text-[14px] font-bold leading-[16px] md:tracking-[0.5px] text-white uppercase">Feature Matrix</span>
+              <div className="w-[45%] md:flex-1 py-[20px] md:py-[24px] px-[8px] md:px-[32px]">
+                <span className="text-[12px] md:text-[14px] font-bold leading-[16px] md:tracking-[0.5px] text-white uppercase">Feature Matrix</span>
               </div>
-              <div className="w-[36px] md:w-[139px] py-[20px] md:py-[24px] px-[2px] md:px-[16px] text-center">
-                <span className="text-[10px] md:text-[14px] font-bold leading-[16px] md:tracking-[0.5px] text-white uppercase">Free</span>
+              <div className="w-[18%] md:w-[139px] py-[20px] md:py-[24px] px-[2px] md:px-[16px] text-center">
+                <span className="text-[12px] md:text-[14px] font-bold leading-[16px] md:tracking-[0.5px] text-white uppercase">Free</span>
               </div>
-              <div className="w-[48px] md:w-[122px] py-[20px] md:py-[24px] px-[2px] md:px-[16px] text-center">
-                <span className="text-[10px] md:text-[14px] font-bold leading-[16px] md:tracking-[0.5px] text-white uppercase">Analyst</span>
+              <div className="w-[18%] md:w-[122px] py-[20px] md:py-[24px] px-[2px] md:px-[16px] text-center">
+                <span className="text-[12px] md:text-[14px] font-bold leading-[16px] md:tracking-[0.5px] text-white uppercase">Analyst</span>
               </div>
-              <div className="w-[52px] md:w-[189px] py-[20px] md:py-[24px] px-[2px] md:px-[16px] text-center">
-                <span className="text-[10px] md:text-[14px] font-bold leading-[16px] md:tracking-[0.5px] text-white uppercase">Investor</span>
+              <div className="w-[19%] md:w-[189px] py-[20px] md:py-[24px] px-[2px] md:px-[16px] text-center">
+                <span className="text-[12px] md:text-[14px] font-bold leading-[16px] md:tracking-[0.5px] text-white uppercase">Investor</span>
               </div>
             </div>
 
@@ -189,16 +189,16 @@ export default function PricingPage() {
                 {/* Rows */}
                 {cat.rows.map((row) => (
                   <div key={row.feature} className="flex border-b border-[var(--color-bg-alt)]">
-                    <div className="flex-1 py-[16px] md:py-[20px] px-[12px] md:px-[32px]">
+                    <div className="w-[45%] md:flex-1 py-[16px] md:py-[20px] px-[8px] md:px-[32px]">
                       <span className="text-[12px] md:text-[14px] font-normal leading-[18px] md:leading-[20px] text-[color:var(--color-text)]">{row.feature}</span>
                     </div>
-                    <div className="w-[36px] md:w-[139px] py-[16px] md:py-[18px] flex items-center justify-center">
+                    <div className="w-[18%] md:w-[139px] py-[16px] md:py-[18px] flex items-center justify-center">
                       {row.free ? DOT : DASH}
                     </div>
-                    <div className="w-[48px] md:w-[122px] py-[16px] md:py-[18px] flex items-center justify-center">
+                    <div className="w-[18%] md:w-[122px] py-[16px] md:py-[18px] flex items-center justify-center">
                       {row.pro ? DOT : DASH}
                     </div>
-                    <div className="w-[52px] md:w-[189px] py-[16px] md:py-[18px] flex items-center justify-center">
+                    <div className="w-[19%] md:w-[189px] py-[16px] md:py-[18px] flex items-center justify-center">
                       {row.premium ? DOT : DASH}
                     </div>
                   </div>
