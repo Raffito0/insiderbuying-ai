@@ -223,11 +223,11 @@ export default function HomePage() {
               </div>
             </div>
           </div>
-          <p className="text-[14px] leading-[20px] text-[color:var(--color-text-secondary)] text-center italic px-[32px] py-[24px]">
+          <p className="text-[14px] leading-[20px] text-[color:var(--color-text-secondary)] text-center italic px-[32px] pt-[16px] pb-[20px]">
             &ldquo;Huang&apos;s purchase is the largest individual open-market buy since Q2 2026, signaling immense internal confidence in upcoming product cycles.&rdquo;
           </p>
         </div>
-        <div className="flex flex-col md:flex-row items-center justify-center gap-[32px] md:gap-[60px] pt-[50px]">
+        <div className="flex flex-col md:flex-row items-center justify-center gap-[32px] md:gap-[60px] pt-[60px] pb-[16px]">
           {[{v:"$4.2B",l:"Tracked Monthly"},{v:"2,847",l:"Alerts Sent (24h)"},{v:"17,325+",l:"Companies Monitored"}].map((m,i)=>(
             <div key={m.v} className="flex items-center gap-[60px]">
               <div className="text-center md:text-left">
