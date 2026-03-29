@@ -100,9 +100,12 @@ export default function ReportsPage() {
                 <span className="font-[var(--font-montaga)] text-[32px] md:text-[36px] font-normal leading-[40px] text-[color:var(--color-text)]">{FEATURED.price}</span>
                 <span className="text-[16px] font-normal leading-[24px] text-[color:var(--color-text-muted)] line-through">{FEATURED.oldPrice}</span>
               </div>
-              <Link href="/signup" className="inline-flex items-center justify-center w-full sm:w-[233px] h-[52px] bg-[var(--color-primary)] text-white text-[16px] font-medium tracking-[1px] leading-[20px] hover:bg-[var(--color-primary-dark)] transition-colors">
-                Download Report
-              </Link>
+              <div className="flex items-center gap-[16px]">
+                <Link href="/signup" className="inline-flex items-center justify-center w-full sm:w-[233px] h-[52px] bg-[var(--color-primary)] text-white text-[16px] font-medium tracking-[1px] leading-[20px] hover:bg-[var(--color-primary-dark)] transition-colors">
+                  Get Report
+                </Link>
+                <Link href="/reports" className="text-[14px] font-medium text-[color:var(--color-primary)] hover:underline">Preview</Link>
+              </div>
             </div>
           </div>
         </div>
@@ -133,16 +136,19 @@ export default function ReportsPage() {
               </div>
               <div className="flex items-center justify-between pt-[24px] border-t border-[var(--color-border-light)]">
                 <span className="font-[var(--font-montaga)] text-[28px] md:text-[32px] font-normal leading-[36px] text-[color:var(--color-text)]">{card.price}</span>
-                <Link
-                  href="/signup"
-                  className={`h-[40px] px-[20px] flex items-center justify-center text-[14px] font-medium tracking-[1px] leading-[16px] transition-colors ${
-                    card.highlight
-                      ? "bg-[var(--color-primary)] text-white border border-[var(--color-primary)]"
-                      : "border border-[var(--color-primary)] text-[color:var(--color-primary)] hover:bg-[var(--color-primary)] hover:text-white"
-                  }`}
-                >
-                  Download
-                </Link>
+                <div className="flex items-center gap-[12px]">
+                  <Link href="/reports" className="text-[13px] font-medium text-[color:var(--color-primary)] hover:underline">Preview</Link>
+                  <Link
+                    href="/signup"
+                    className={`h-[40px] px-[20px] flex items-center justify-center text-[14px] font-medium tracking-[1px] leading-[16px] transition-colors ${
+                      card.highlight
+                        ? "bg-[var(--color-primary)] text-white border border-[var(--color-primary)]"
+                        : "border border-[var(--color-primary)] text-[color:var(--color-primary)] hover:bg-[var(--color-primary)] hover:text-white"
+                    }`}
+                  >
+                    Get Report
+                  </Link>
+                </div>
               </div>
             </div>
           ))}
