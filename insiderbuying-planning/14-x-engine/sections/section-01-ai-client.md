@@ -165,3 +165,15 @@ None. This section has no dependency on other sections in this plan. It can be i
 - `require('./ai-client')` in both `x-engagement.js` and `x-auto-post.js` resolves without error
 - No credentials appear in thrown error messages
 - Existing tests still pass: `node --test n8n/tests/x-engagement.test.js n8n/tests/x-auto-post.test.js`
+
+## Implementation Notes
+
+Implemented as standalone functions added to the existing `ai-client.js` (unit 10 factory-based API preserved unchanged). New exports: `claude`, `deepseek` alongside existing `AIClient`, `createOpusClient`, etc.
+
+**Actual changes from plan:**
+- `claude()` response parsing uses `content.find(b => b.type === 'text')` (safe, matches AIClient class) instead of `content[0].text` — handles empty content array from policy stops
+- Both functions: `parseInt(Retry-After)` NaN guard added — HTTP-date format headers fall back to `_RETRY_DELAYS[attempt-1]`
+- `deepseek()` intentionally has no `systemPrompt` path (by spec: callers embed system context in prompt string)
+- `helpers._sleep` injection used for testable retry path (no real delays in tests)
+
+**Tests: 17 new tests in 4 describe blocks, all passing.**

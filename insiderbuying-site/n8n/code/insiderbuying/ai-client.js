@@ -453,7 +453,8 @@ async function claude(prompt, opts, helpers) {
 
     if (res.ok) {
       var resData = await res.json();
-      return resData.content[0].text;
+      var textBlock = resData.content && resData.content.find(function(b) { return b.type === 'text'; });
+      return textBlock ? textBlock.text : '';
     }
 
     var resStatus = res.status;
@@ -466,8 +467,9 @@ async function claude(prompt, opts, helpers) {
 
     if (attempt < 3) {
       var retryAfterVal = res.headers && res.headers.get ? res.headers.get('Retry-After') : null;
-      var waitMs = retryAfterVal
-        ? Math.min(parseInt(retryAfterVal, 10) * 1000, _MAX_RETRY_AFTER_MS)
+      var retryAfterMs = retryAfterVal ? parseInt(retryAfterVal, 10) * 1000 : NaN;
+      var waitMs = !isNaN(retryAfterMs)
+        ? Math.min(retryAfterMs, _MAX_RETRY_AFTER_MS)
         : _RETRY_DELAYS[attempt - 1];
       await sleep(waitMs);
     }
@@ -526,8 +528,9 @@ async function deepseek(prompt, opts, helpers) {
 
     if (attempt < 3) {
       var retryAfterVal = res.headers && res.headers.get ? res.headers.get('Retry-After') : null;
-      var waitMs = retryAfterVal
-        ? Math.min(parseInt(retryAfterVal, 10) * 1000, _MAX_RETRY_AFTER_MS)
+      var retryAfterMs = retryAfterVal ? parseInt(retryAfterVal, 10) * 1000 : NaN;
+      var waitMs = !isNaN(retryAfterMs)
+        ? Math.min(retryAfterMs, _MAX_RETRY_AFTER_MS)
         : _RETRY_DELAYS[attempt - 1];
       await sleep(waitMs);
     }
