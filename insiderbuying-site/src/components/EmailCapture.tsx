@@ -105,7 +105,7 @@ export function EmailCapture({
   return (
     <div className={variant === "hero" ? "max-w-[600px]" : "max-w-[540px]"}>
       {topLabel && (
-        <p className="text-[13px] font-semibold tracking-[0.5px] mb-[10px]" style={{ color: "#070f91" }}>
+        <p className="text-[17px] md:text-[18px] font-semibold tracking-[0.5px] mb-[10px]" style={{ color: "#3c46d2" }}>
           {topLabel}
         </p>
       )}
@@ -118,17 +118,17 @@ export function EmailCapture({
         </h3>
       )}
       {subheading && (
-        <p className={`text-[15px] leading-[22px] ${secondaryColor} mb-[16px]`}>
+        <p className={`text-[15px] leading-[22px] ${secondaryColor} mb-[28px]`}>
           {subheading}
         </p>
       )}
       {subLabel && (
-        <p className="text-[16px] font-semibold mb-[20px]" style={{ color: "#070f91" }}>
+        <p className="text-[17px] md:text-[18px] font-semibold mb-[20px]" style={{ color: "#3c46d2" }}>
           {subLabel}
         </p>
       )}
       {bullets && bullets.length > 0 && (
-        <ul className="space-y-[10px] mb-[24px] text-left">
+        <ul className="space-y-[10px] mb-[32px] text-left">
           {bullets.map((b) => (
             <li key={b} className={`flex items-start gap-[10px] text-[14px] leading-[20px] ${textColor}`}>
               <svg className="w-[11px] h-[8px] shrink-0 mt-[6px]" viewBox="0 0 11 8">
