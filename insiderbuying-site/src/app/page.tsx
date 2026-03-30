@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { EmailCapture } from "@/components/EmailCapture";
 
 /* ── ALERT DATA ─────────────────────────────────────────── */
 const ALERTS = [
@@ -339,6 +340,26 @@ export default function HomePage() {
           <div className="text-center">
             <Link href="/reports" className="text-[16px] font-medium tracking-[1px] text-white hover:underline">Browse Research Library &rarr;</Link>
           </div>
+        </div>
+      </section>
+
+      {/* ═══ 7.5 NEWSLETTER CAPTURE ═══ */}
+      <section className="w-full py-[var(--section-y-mobile)] md:py-[var(--section-y)] bg-[var(--color-bg-dark)]">
+        <div className="max-w-[720px] mx-auto px-[20px] md:px-[32px] text-center">
+          <EmailCapture
+            heading="The CEO Alpha Report"
+            subheading="50,247 CEO stock purchases. 12 years of data. 7 filters that separated the 23.4% winners from the noise. Updated monthly. Free."
+            bullets={[
+              "Every CEO purchase that scored 75+ conviction in the last 30 days",
+              "The 7-filter methodology: what we track, how we score it, what we ignore",
+              "Sector-by-sector insider sentiment — which industries executives are buying into",
+              "One explicit verdict per featured stock: BUY, CAUTION, or WAIT",
+            ]}
+            ctaText="Get the Free Report"
+            placement="homepage_newsletter"
+            variant="hero"
+            dark
+          />
         </div>
       </section>
 

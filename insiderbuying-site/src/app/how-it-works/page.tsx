@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { EmailCapture } from "@/components/EmailCapture";
 
 export const metadata: Metadata = {
   title: "How It Works | EarlyInsider",
@@ -575,6 +576,18 @@ export default function HowItWorksPage() {
           >
             Start Monitoring Free
           </Link>
+        </div>
+      </section>
+
+      {/* ═══ NEWSLETTER CAPTURE ═══ */}
+      <section className="w-full py-[48px] bg-[var(--color-bg-alt)] border-t border-[var(--color-border)]">
+        <div className="max-w-[540px] mx-auto px-[20px] text-center">
+          <EmailCapture
+            heading="See the Output"
+            subheading="Want to see what the system produces? The CEO Alpha Report applies everything described on this page to real insider trades. Free."
+            ctaText="Get the Free Report"
+            placement="how_it_works"
+          />
         </div>
       </section>
     </div>
