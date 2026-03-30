@@ -65,10 +65,10 @@ export function ExitIntentPopup() {
       />
 
       {/* Modal */}
-      <div className="relative bg-[var(--color-bg-dark)] p-[32px] md:p-[48px] max-w-[520px] w-full shadow-2xl animate-[fadeIn_0.2s_ease-out]">
+      <div className="relative bg-white p-[32px] md:p-[48px] max-w-[520px] w-full shadow-2xl animate-[fadeIn_0.2s_ease-out] text-center">
         <button
           onClick={() => setShow(false)}
-          className="absolute top-[16px] right-[16px] text-white/40 hover:text-white/70 transition-colors"
+          className="absolute top-[16px] right-[16px] text-gray-400 hover:text-gray-600 transition-colors"
           aria-label="Close"
         >
           <svg className="w-[20px] h-[20px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -80,17 +80,20 @@ export function ExitIntentPopup() {
           Before you go
         </p>
 
-        <EmailCapture
-          heading="The Data Is Public. The Speed Is Not."
-          subheading="SEC Form 4 filings are public. But 25% of abnormal returns accrue in the first 5 trading days. The CEO Alpha Report identifies which insider buys scored 75+ conviction. Monthly. Free."
-          ctaText="Get the Free Report"
-          placement="exit_intent"
-          dark
-        />
+        <div className="flex justify-center">
+          <EmailCapture
+            heading={"The Data Is Public.\nThe Speed Is Not."}
+            subheading="SEC Form 4 filings are public. But 25% of abnormal returns accrue in the first 5 trading days. The CEO Alpha Report identifies which insider buys scored 75+ conviction."
+            subLabel="Monthly. Free."
+            ctaText="Get the Free Report"
+            trustLine="No spam. One email with the report. Unsubscribe anytime."
+            placement="exit_intent"
+          />
+        </div>
 
         <button
           onClick={() => setShow(false)}
-          className="mt-[16px] text-[12px] text-white/30 hover:text-white/50 transition-colors"
+          className="mt-[16px] text-[12px] text-gray-400 hover:text-gray-600 transition-colors"
         >
           No thanks, I&apos;ll check EDGAR manually
         </button>

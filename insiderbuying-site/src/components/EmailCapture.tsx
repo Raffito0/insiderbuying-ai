@@ -3,6 +3,8 @@
 import { useState } from "react";
 
 interface EmailCaptureProps {
+  topLabel?: string;
+  subLabel?: string;
   heading?: string;
   subheading?: string;
   bullets?: string[];
@@ -14,6 +16,8 @@ interface EmailCaptureProps {
 }
 
 export function EmailCapture({
+  topLabel,
+  subLabel,
   heading = "The CEO Alpha Report",
   subheading = "50,247 CEO stock purchases. 12 years of data. 7 filters that separated the 23.4% winners from the noise. Updated monthly. Free.",
   bullets,
@@ -81,7 +85,7 @@ export function EmailCapture({
           onChange={(e) => setEmail(e.target.value)}
           placeholder="you@example.com"
           required
-          className={`flex-1 h-[44px] px-[16px] text-[14px] border ${
+          className={`sm:flex-1 h-[44px] px-[16px] text-[14px] border ${
             dark
               ? "bg-white/10 border-white/20 text-white placeholder:text-white/40"
               : "bg-white border-[var(--color-border)] text-[color:var(--color-text)] placeholder:text-[color:var(--color-text-muted)]"
@@ -100,18 +104,31 @@ export function EmailCapture({
 
   return (
     <div className={variant === "hero" ? "max-w-[600px]" : "max-w-[540px]"}>
+      {topLabel && (
+        <p className="text-[13px] font-semibold tracking-[0.5px] mb-[10px]" style={{ color: "#070f91" }}>
+          {topLabel}
+        </p>
+      )}
       {heading && (
-        <h3 className={`font-[var(--font-montaga)] ${variant === "hero" ? "text-[32px] md:text-[39px]" : "text-[24px] md:text-[28px]"} leading-[1.15] tracking-[0.5px] ${textColor} mb-[12px]`}>
+        <h3
+          className={`font-[var(--font-montaga)] ${variant === "hero" ? "text-[32px] md:text-[39px]" : "text-[24px] md:text-[28px]"} leading-[1.15] tracking-[0.5px] ${textColor} mb-[12px]`}
+          style={{ whiteSpace: "pre-line" }}
+        >
           {heading}
         </h3>
       )}
       {subheading && (
-        <p className={`text-[15px] leading-[22px] ${secondaryColor} mb-[20px]`}>
+        <p className={`text-[15px] leading-[22px] ${secondaryColor} mb-[16px]`}>
           {subheading}
         </p>
       )}
+      {subLabel && (
+        <p className="text-[16px] font-semibold mb-[20px]" style={{ color: "#070f91" }}>
+          {subLabel}
+        </p>
+      )}
       {bullets && bullets.length > 0 && (
-        <ul className="space-y-[10px] mb-[24px]">
+        <ul className="space-y-[10px] mb-[24px] text-left">
           {bullets.map((b) => (
             <li key={b} className={`flex items-start gap-[10px] text-[14px] leading-[20px] ${textColor}`}>
               <svg className="w-[11px] h-[8px] shrink-0 mt-[6px]" viewBox="0 0 11 8">
@@ -129,7 +146,7 @@ export function EmailCapture({
           onChange={(e) => setEmail(e.target.value)}
           placeholder="you@example.com"
           required
-          className={`flex-1 h-[50px] px-[16px] text-[15px] border ${
+          className={`sm:flex-1 min-h-[50px] px-[16px] text-[15px] border ${
             dark
               ? "bg-white/10 border-white/20 text-white placeholder:text-white/40"
               : "bg-white border-[var(--color-border)] text-[color:var(--color-text)] placeholder:text-[color:var(--color-text-muted)]"
@@ -138,7 +155,7 @@ export function EmailCapture({
         <button
           type="submit"
           disabled={state === "loading"}
-          className="h-[50px] px-[28px] bg-[var(--color-primary)] text-white text-[16px] font-medium tracking-[0.5px] hover:bg-[var(--color-primary-dark)] transition-colors disabled:opacity-50 whitespace-nowrap"
+          className="min-h-[50px] px-[28px] bg-[var(--color-primary)] text-white text-[16px] font-medium tracking-[0.5px] hover:bg-[var(--color-primary-dark)] transition-colors disabled:opacity-50 whitespace-nowrap"
         >
           {state === "loading" ? "Subscribing..." : ctaText}
         </button>

@@ -347,8 +347,9 @@ export default function HomePage() {
       <section className="w-full py-[var(--section-y-mobile)] md:py-[var(--section-y)] bg-[var(--color-bg-dark)]">
         <div className="max-w-[720px] mx-auto px-[20px] md:px-[32px] text-center">
           <EmailCapture
+            topLabel="Monthly. Free."
             heading="The CEO Alpha Report"
-            subheading="50,247 CEO stock purchases. 12 years of data. 7 filters that separated the 23.4% winners from the noise. Updated monthly. Free."
+            subheading="50,247 CEO stock purchases. 12 years of data. 7 filters that separated the 23.4% winners from the noise."
             bullets={[
               "Every CEO purchase that scored 75+ conviction in the last 30 days",
               "The 7-filter methodology: what we track, how we score it, what we ignore",
