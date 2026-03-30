@@ -53,7 +53,7 @@ export function StickyBar() {
 
         {/* ── Mobile layout: title centered above, then row ── */}
         <div className="md:hidden py-[10px] flex flex-col items-center gap-[8px]">
-          <p className="text-[12px] text-white/80 leading-[16px] text-center">
+          <p className="text-[12px] text-[color:var(--color-text)] leading-[16px] text-center">
             <span style={{ color: "#236c37" }} className="font-semibold">Free</span>
             {" "}CEO Alpha Report
           </p>
@@ -64,7 +64,7 @@ export function StickyBar() {
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Email"
               required
-              className="w-[160px] h-[34px] px-[12px] text-[13px] bg-white/10 border border-white/20 text-white placeholder:text-white/40 focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)]"
+              className="w-[160px] h-[34px] px-[12px] text-[13px] bg-white border border-[var(--color-border)] text-[color:var(--color-text)] placeholder:text-[color:var(--color-text-muted)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)]"
             />
             <button
               type="submit"
